@@ -1,0 +1,12 @@
+// 全局混入样式
+
+@mixin clearfix {
+  &:after {
+    display: block;
+    visibility: hidden;
+    height: 0;
+    content: '.';
+    display: table;
+    clear: both;
+  }
+}
