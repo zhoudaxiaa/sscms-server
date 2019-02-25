@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:56:22
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-02-25 09:41:14
+ * @LastEditTime: 2019-02-25 11:25:49
  -->
 
 <template>
@@ -14,6 +14,7 @@
   <el-scrollbar wrap-class="scrollbar">
     <!-- 菜单 -->
     <el-menu
+      class="scrollbar-menu"
       mode="vertical"
       :default-active="$route.path"
       :collapse="isCollapse"
@@ -44,7 +45,7 @@ export default {
   name: 'Sidebar',
   data() {
     return {
-      isCollapse: true,
+      isCollapse: false,
       imgLogo
     }
   },
@@ -57,9 +58,20 @@ export default {
 }
 </script>
 
+<style>
+.el-scrollbar__view {
+  height: 100%;
+}
+</style>
+
 <style lang="scss" scoped>
 .scrollbar {
   overflow-x: hidden !important;
+}
+
+.scrollbar-menu:not(.el-menu--collapse) {
+  width: 100%;
+  height: 100%;
 }
 
 .logo {

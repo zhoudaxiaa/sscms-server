@@ -1,12 +1,12 @@
 # sscms-server
 
-> A Vue.js project
+> 一个博客内容管理系统，采用vue全家桶，基于element-ui，网络请求使用axios，scss 样式，yarn 包管理器， webpack 构建，mock 写模拟数据。
 
-## Build Setup
+## 启动项目
 
 ``` bash
 # install dependencies
-npm install
+yarn install
 
 # serve with hot reload at localhost:8080
 npm run dev
