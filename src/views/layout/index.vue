@@ -12,21 +12,34 @@
 <template>
   <div class="app-wrap">
     <sidebar class="sidebar-wrap"></sidebar>
-    <div class="main">
+    <div
+    class="main-wrap"
+    :class="{'sidebar-close':sidebarCollapse}">
       <navbar></navbar>
+      <tag-view :tags="tags"></tag-view>
       <app-main></app-main>
     </div>
   </div>
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain } from './components/index'
+import { Navbar, Sidebar, AppMain, TagView } from './components'
 export default {
   name: 'layout',
   components: {
     Navbar,
+    TagView,
     Sidebar,
     AppMain
+  },
+  computed: {
+    tags () {
+      return this.$store.getters.tagView
+    },
+    
+    sidebarCollapse () {
+      return this.$store.getters.sidebarCollapse
+    }
   }
 }
 </script>
@@ -45,12 +58,32 @@ export default {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 180px;
+  width: 200px;
   height: 100%;
+
+  // 重置element-ui 的样式
+  /deep/ .el-scrollbar__view {
+    height: 100%;
+  }
+
+  /deep/ .el-menu {
+    border-right: none;
+  }
 }
 
-.main {
-  margin-left: -180px;
+.main-wrap {
+  // 脱离文档流加速动画
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin-left: 200px;
   height: 100%;
+  transition: margin .3s ease-in-out
+}
+
+.sidebar-close {
+  margin-left: 55px;
 }
 </style>

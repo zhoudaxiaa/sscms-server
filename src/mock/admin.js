@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-21 10:09:01
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-10 14:02:11
+ * @LastEditTime: 2019-02-28 14:11:35
  */
 import qs from 'qs'
 
@@ -23,7 +23,8 @@ Mock.mock(apiPath.login, 'post', req => {
     return Mock.mock({
       code: 0,
       data: {
-        name: 'admin'
+        name: 'admin',
+        avatar: 'https://www.html-js.cn/upload/images/defaultlogo.png'
       },
       'token|30': '',
       msg: '登录成功'

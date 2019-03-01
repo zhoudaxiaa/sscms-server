@@ -6,17 +6,19 @@
  * @Version: 1.0
  * @Date: 2019-01-10 10:33:10
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-10 10:48:21
+ * @LastEditTime: 2019-03-01 16:54:31
  */
 
 // admin 的mutations
 export const SET_TOKEN = 'set_token' // 存储token
-export const DELETE_TOKEN = 'delete_token' // 删除token
-export const SET_ACCOUNT = 'set_account' // 存储管理员帐号
-export const DELETE_ACCOUNT = 'delete_account' // 删除管理员帐号
+export const SET_ADMIN_NAME = 'set_name' // 存储管理员名
 export const SET_RESOURCE = 'set_resource' // 存储角色资源
-export const DELETE_RESOURCE = 'delete_resource' // 删除角色资源
+export const SET_ADMIN_AVATAR = 'set_admin_avatar' // 存储管理员头像
 
-// permission 的mutations
-export const SET_DYNAMIC_ROUTES = 'set_dynamic_routes' // 存储动态生成的路由
-export const DELETE_DYNAMIC_ROUTES = 'delete_dynamic_routes' // 删除动态生成的路由
+// menus 的mutations
+export const SET_DYNAMIC_MENUS = 'set_dynamic_menus' // 存储动态生成的菜单
+export const DELETE_DYNAMIC_MENUS = 'delete_dynamic_menus' // 删除动态生成的菜单
+
+// app 的mutations
+export const TOGGLE_SIDEBAR_COLLAPSE = 'toggle_sidebar_collapse' // 切换并存储侧边栏展开状态
+export const ADD_TAG_VIEW = 'add_tag_view' // 添加切换页面标签的状态

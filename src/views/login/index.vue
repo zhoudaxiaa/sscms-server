@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-17 17:05:56
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-10 12:56:01
+ * @LastEditTime: 2019-02-28 14:12:37
  -->
 
 <template>
@@ -58,6 +58,8 @@
 import dragVerify from 'vue-drag-verify' // 滑动验证插件
 
 import { loginByAccount } from '@/api/admin'
+
+import * as types from '@/store/mutation-types'
 
 export default {
   components: {
@@ -137,7 +139,11 @@ export default {
           const data = await loginByAccount(this.loginForm)
           loading.close()
           if (data.code === 0) {
-            // 登录成功，进入主页
+
+            // 登录成功，进入存储帐号信息并跳转页面
+            this.$store.commit(types.SET_ADMIN_NAME, data.data.name)
+            this.$store.commit(types.SET_ADMIN_AVATAR, data.data.avatar)
+
             this.$router.replace({ path: '/' })
           }
 
@@ -145,6 +151,7 @@ export default {
             this.$message.error('用户名不存在或密码错误！')
           }
         } catch (err) {
+          loading.close()
           this.$message.error(err)
         }
       }

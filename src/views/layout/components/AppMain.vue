@@ -6,16 +6,25 @@
  * @Version: 1.0
  * @Date: 2019-01-17 17:49:50
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-17 22:03:15
+ * @LastEditTime: 2019-02-27 15:40:24
  -->
 
 <template>
-  <div></div>
+  <div class="main-container">
+    <keep-alive>
+      <router-view :key="key"></router-view>
+    </keep-alive>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'AppMain'
+  name: 'AppMain',
+  computed: {
+    key () {
+      return this.$route + new Date()
+    }
+  }
 }
 </script>
 

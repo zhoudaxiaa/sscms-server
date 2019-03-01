@@ -7,7 +7,7 @@ import store from './store'
 
 import './icons' // svg注册
 import 'normalize.css/normalize.css' // 重置样式
-import './styles/global.scss' // 全局样式
+import './scss/global.scss' // 全局样式
 import './permission' // 权限控制
 
 // ui 组件

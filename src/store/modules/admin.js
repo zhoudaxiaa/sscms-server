@@ -6,64 +6,64 @@
  * @Version: 1.0
  * @Date: 2018-12-20 13:27:38
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-19 15:21:30
+ * @LastEditTime: 2019-02-28 15:33:27
  */
 
-import { getAdminResource } from '@/api/resource'
+import { getResourceByToken } from '@/api/resource'
 import * as types from '@/store/mutation-types'
 
-import { getter, setMutation, deleteMutation } from '@/utils/store' // 简化getters，mutations 的方法
+import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
 
 export default {
   state: {
-    token: '',
-    resource: '', // 角色资源
-    account: '' // 管理员帐号
+    token: null,
+    resource: null, // 角色资源
+    name: null, // 管理员名
+    avatar: null // 头像
   },
   getters: {
     // 获取token
-    getToken(state) {
+    token (state) {
       return getter(state, 'token')
     },
-    // 获取角色资源
-    getResource(state) {
-      return getter(state, 'resource')
+    // 获取角色资源( 不从本地获取，以备刷新浏览器重新获取角色资源来重新生成动态路由)
+    resource (state) {
+      return state.resource
     },
-    // 获取管理员帐号
-    getAccount(state) {
-      return getter(state, 'account')
+    // 获取管理员名
+    adminName (state) {
+      return getter(state, 'name')
+    },
+    // 管理员头像
+    adminAvatar (state) {
+      return getter(state, 'avatar')
     }
   },
   mutations: {
     // 存储token
-    [types.SET_TOKEN](state, token) {
-      setMutation(state, 'token', token)
+    [types.SET_TOKEN] (state, token) {
+      setMutation(state, token, 'token',)
     },
-    // 删除token
-    [types.DELETE_TOKEN](state) {
-      deleteMutation(state, 'token')
-    },
+
     // 存储管理员帐号
-    [types.SET_ACCOUNT](state, account) {
-      setMutation(state, 'account', account)
+    [types.SET_ADMIN_NAME] (state, name) {
+      setMutation(state, name, 'name', )
     },
-    // 删除管理员帐号
-    [types.DELETE_ACCOUNT](state) {
-      deleteMutation(state, 'account')
+
+    // 存储角色资源（不从存储到本地，以备刷新浏览器重新获取角色资源来重新生成动态路由）
+    [types.SET_RESOURCE] (state, resource) {
+      state.resource = resource
     },
-    // 存储角色资源
-    [types.SET_RESOURCE](state, resource) {
-      setMutation(state, 'resource', resource)
-    },
-    // 删除角色资源
-    [types.DELETE_RESOURCE](state) {
-      deleteMutation(state, 'resource')
+
+    // 存储管理员头像
+    [types.SET_ADMIN_AVATAR] (state, avatar) {
+      setMutation(state, avatar, 'avatar')
     }
   },
   actions: {
     // 根据token获取角色资源
-    async GetAdminResource({ commit, getters }) {
-      const data = await getAdminResource(getters.getToken)
+    async GetResourceByToken ({ commit, getters }) {
+      const data = await getResourceByToken(getters.token)
       if (data.code === 0) {
         commit(types.SET_RESOURCE, JSON.parse(data.data.resource))
         return

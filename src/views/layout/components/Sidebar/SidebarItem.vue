@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-17 20:46:58
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-20 22:02:14
+ * @LastEditTime: 2019-02-26 09:43:58
  -->
 
 <template>
@@ -48,5 +48,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.sidebar-item {
+  /deep/ .svg-icon{
+    margin-right: 16px;
+  }
+}
 </style>

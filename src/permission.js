@@ -6,10 +6,12 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-19 16:57:11
+ * @LastEditTime: 2019-03-01 13:41:11
  */
 
-import router, { buildRouter, baseRouter } from '@/router/index.js'
+import router, { baseRouter } from '@/router/index.js'
+import { buildRouter } from '@/utils/router.js'  // 构建动态路由方法
+
 import store from './store/index.js'
 import NProgress from 'nprogress' // 加载条插件
 import 'nprogress/nprogress.css'
@@ -24,23 +26,26 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start() //加载条开始
 
   // 判断是否登录了，没登录就不去获取动态路由
-  if (store.getters.getToken) {
+  if (store.getters.token) {
+
     // 判断是否已经获取到了角色资源信息
-    if (store.getters.getResource.length === 0) {
-      //没有就去获取角色资源信息
+    if (store.getters.resource === null) {
+
+      //没有就去获取角色资源信息（刷新浏览器也重新获取，来重新生成动态路由）
       try {
-        await store.dispatch('GetAdminResource')
+        await store.dispatch('GetResourceByToken')
       } catch (err) {
         Message.error(err)
         // NProgress.done()
         next(false)
       }
       // 根据角色资源生产动态路由，并连接基础路由
-      const dynamicRoutes = buildRouter(store.getters.getResource)
+      const dynamicRoutes = buildRouter(store.getters.resource)
 
-      store.commit(types.SET_DYNAMIC_ROUTES, dynamicRoutes) // 存储动态路由
+      router.addRoutes(dynamicRoutes.concat(baseRouter)) // 加载动态路由
+      
+      store.commit(types.SET_DYNAMIC_MENUS, dynamicRoutes) // 存储动态路由(用来生成侧边栏菜单)
 
-      router.addRoutes(store.getters.getDynamicRoutes.concat(baseRouter)) // 加载动态路由
       next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
     } else {
       next() // 已登录，已获取角色资源
@@ -52,7 +57,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next() // 没登录，跳转的是登录页
   }
-  NProgress.done()
+  NProgress.done() //加载条结束
 })
 
 router.afterEach(() => {

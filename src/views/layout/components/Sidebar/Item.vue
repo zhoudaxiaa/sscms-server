@@ -5,7 +5,7 @@ export default {
   props: {
     icon: {
       type: String,
-      default: 'component'
+      default: ''
     },
     title: {
       type: String,
@@ -16,8 +16,10 @@ export default {
     const { icon, title } = context.props
     const vnodes = []
 
-    vnodes.push(<svg-icon icon-class={icon} />)
-
+    if (icon) {
+      vnodes.push(<svg-icon icon-class={icon} />)
+    }
+    
     vnodes.push(<span slot="title">{title}</span>)
 
     return vnodes

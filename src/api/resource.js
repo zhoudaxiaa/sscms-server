@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-25 13:40:02
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-08 14:43:53
+ * @LastEditTime: 2019-02-26 16:03:48
  */
 
 import http from '@/utils/http.js'
@@ -17,7 +17,7 @@ import apiPath from './apiPath.js'
  * @param {string} account 管理员帐号
  * @return: 数据
  */
-export function getAdminResource(token) {
+export function getResourceByToken(token) {
   return http({
     url: apiPath.resource,
     method: 'post',

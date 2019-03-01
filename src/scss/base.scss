@@ -1,5 +1,18 @@
 // 基础公共样式
 
+a:focus,
+a:active {
+    outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
 html {
   height: 100%;
   box-sizing: border-box;

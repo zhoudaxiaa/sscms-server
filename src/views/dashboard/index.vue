@@ -2,15 +2,18 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: new project
+ * @Description: 后台首页
  * @Version: 1.0
  * @Date: 2019-01-17 21:57:22
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-17 21:58:10
+ * @LastEditTime: 2019-02-27 11:39:48
  -->
 
 <template>
-  <div>666</div>
+  <div>
+    <!-- <component :is="componentId"></component> -->
+    666
+  </div>
 </template>
 
 <script>

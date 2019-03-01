@@ -6,18 +6,18 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:56:22
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-02-25 11:25:49
+ * @LastEditTime: 2019-02-27 14:45:16
  -->
 
 <template>
   <!-- 侧边滑动区域 -->
-  <el-scrollbar wrap-class="scrollbar">
+  <el-scrollbar wrap-class="scrollbar-container">
     <!-- 菜单 -->
     <el-menu
       class="scrollbar-menu"
       mode="vertical"
       :default-active="$route.path"
-      :collapse="isCollapse"
+      :collapse="sidebarCollapse"
       background-color="#304156"
       text-color="#bfdbd9"
       active-text-color="#409eff"
@@ -30,7 +30,7 @@
       </div>
 
       <!-- 单个菜单 -->
-      <sidebar-item v-for="route in sidebar_menu" :key="route.name" :item="route"></sidebar-item>
+      <sidebar-item v-for="route in dynamicMenus" :key="route.name" :item="route"></sidebar-item>
     </el-menu>
   </el-scrollbar>
 </template>
@@ -45,27 +45,25 @@ export default {
   name: 'Sidebar',
   data() {
     return {
-      isCollapse: false,
       imgLogo
     }
   },
   components: {
     SidebarItem
   },
-  computed: mapGetters({
-    sidebar_menu: 'getDynamicRoutes' // 路由菜单
-  })
+  computed: {
+    ...mapGetters([
+      'dynamicMenus', // 路由菜单
+      'sidebarCollapse'
+    ])
+  }
 }
 </script>
 
-<style>
-.el-scrollbar__view {
-  height: 100%;
-}
-</style>
-
 <style lang="scss" scoped>
-.scrollbar {
+
+// 重置element-ui 样式
+.scrollbar-container {
   overflow-x: hidden !important;
 }
 
@@ -74,7 +72,25 @@ export default {
   height: 100%;
 }
 
+.el-menu--collapse {
+  height: 100%;
+  width: 55px;
+
+  /deep/ .el-submenu__title {
+    span, i {
+      transition: all .1s ease-in-out;
+      visibility: hidden;
+    }
+  }
+}
+
+// 自身样式
 .logo {
+
+  a {
+    display: block;
+  }
+  
   img {
     width: 100%;
   }

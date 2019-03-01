@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-01-17 21:50:47
+ * @LastEditTime: 2019-02-27 13:14:43
  */
 
 import axios from 'axios'
@@ -46,7 +46,7 @@ server.interceptors.request.use(
     }
 
     // 每次请求携带token
-    if (store.getters.getToken) config.headers.Authorization = store.getters.getToken
+    if (store.getters.token) config.headers.Authorization = store.getters.getToken
 
     return config
   },
