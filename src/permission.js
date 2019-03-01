@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-01 13:41:11
+ * @LastEditTime: 2019-03-01 17:00:48
  */
 
 import router, { baseRouter } from '@/router/index.js'

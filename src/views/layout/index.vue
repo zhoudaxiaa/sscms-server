@@ -15,9 +15,19 @@
     <div
     class="main-wrap"
     :class="{'sidebar-close':sidebarCollapse}">
+
+      <!-- 顶部导航 -->
       <navbar></navbar>
-      <tag-view :tags="tags"></tag-view>
+
+      <!-- 标签切换页面 -->
+      <tag-view
+        :changeView="chagneView"
+        :tags="tags">
+      </tag-view>
+
+      <!-- 内容显示区域 -->
       <app-main></app-main>
+
     </div>
   </div>
 </template>
@@ -32,11 +42,19 @@ export default {
     Sidebar,
     AppMain
   },
+  methods: {
+    changeView () {
+      
+    }
+  },
   computed: {
+
+    // 页面切换标签
     tags () {
       return this.$store.getters.tagView
     },
-    
+
+    // 侧边栏展开状态
     sidebarCollapse () {
       return this.$store.getters.sidebarCollapse
     }
