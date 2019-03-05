@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-09 15:12:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-01 13:06:46
+ * @LastEditTime: 2019-03-04 09:49:04
  */
 
 /**
@@ -31,6 +31,10 @@ export function getter(state, name, value) {
     state[name] = result
   }
 
+  if (state[name] === null) {
+    return null
+  }
+  
   // 本地没值，或者有值存储到了state后，返回state值
   return state[name][value] !== undefined ? state[name][value] : state[name]
   

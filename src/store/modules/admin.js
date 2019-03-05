@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-20 13:27:38
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-02-28 15:33:27
+ * @LastEditTime: 2019-03-04 09:26:24
  */
 
 import { getResourceByToken } from '@/api/resource'
@@ -16,10 +16,10 @@ import { getter, setMutation } from '@/utils/store' // 封装本地存储的 get
 
 export default {
   state: {
-    token: null,
+    token: '',
     resource: null, // 角色资源
-    name: null, // 管理员名
-    avatar: null // 头像
+    name: '', // 管理员名
+    avatar: '' // 头像
   },
   getters: {
     // 获取token

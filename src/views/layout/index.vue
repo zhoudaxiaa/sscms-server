@@ -20,10 +20,7 @@
       <navbar></navbar>
 
       <!-- 标签切换页面 -->
-      <tag-view
-        :changeView="chagneView"
-        :tags="tags">
-      </tag-view>
+      <tag-view></tag-view>
 
       <!-- 内容显示区域 -->
       <app-main></app-main>
@@ -42,17 +39,7 @@ export default {
     Sidebar,
     AppMain
   },
-  methods: {
-    changeView () {
-      
-    }
-  },
   computed: {
-
-    // 页面切换标签
-    tags () {
-      return this.$store.getters.tagView
-    },
 
     // 侧边栏展开状态
     sidebarCollapse () {

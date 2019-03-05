@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:45:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-01 11:06:32
+ * @LastEditTime: 2019-03-04 14:17:35
  -->
 
 <template>
@@ -117,6 +117,7 @@ export default {
 .navbar-wrap {
   @include clearfix;
   height: 50px;
+  border-bottom: 1px solid rgba(0,0,0,.02)
 }
 
 .hamburger-wrap {

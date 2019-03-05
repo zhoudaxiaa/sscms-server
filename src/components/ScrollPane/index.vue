@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-01 14:36:19
- * @LastEditTime: 2019-03-01 15:46:38
+ * @LastEditTime: 2019-03-04 15:15:12
  -->
 
 <template>
@@ -29,7 +29,10 @@ export default {
   }
 }
 </script>
-
 <style scoped>
-
+.el-scrollbar {
+  width: 100%;
+  padding-left: 15px;
+  top: -5px;
+}
 </style>

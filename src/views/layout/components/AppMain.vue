@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-17 17:49:50
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-02-27 15:40:24
+ * @LastEditTime: 2019-03-04 15:16:48
  -->
 
 <template>
@@ -22,7 +22,7 @@ export default {
   name: 'AppMain',
   computed: {
     key () {
-      return this.$route + new Date()
+      return this.$router + new Date()
     }
   }
 }

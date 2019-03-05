@@ -6,20 +6,22 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-01 09:18:12
- * @LastEditTime: 2019-03-01 16:56:36
+ * @LastEditTime: 2019-03-04 14:12:39
  -->
 
 <template>
-  <div>
+  <div class="tag-view-wrap">
     <scroll-pane>
       <router-link 
         class="tag-view-item"
         v-for="tag in tagList"
+        :class="{active: tag.active}"
         :key="tag.name"
         :to="tag.path">
           {{tag.name}}
         <span
-          class="el-icon-close">
+          class="el-icon-close"
+          @click.prevent="deleteTag(tag.path)">
         </span>
       </router-link>
     </scroll-pane>
@@ -32,51 +34,108 @@ import * as types from '@/store/mutation-types'
 
 export default {
   name: 'TagView',
-  data () {
-    return {
-      tagList: []
-    }
-  },
-  compoents: {
+  components: {
     ScrollPane
   },
-  props: {
-    changeView: {
-      type: Function,
-      default: () => {}
+
+  computed: {
+    tagList () {
+      return this.$store.getters.tagView
     }
   },
 
   methods: {
-    createdTags () {
-      this.tagList = this.$store.getters.tagView.filter( (tag) => {
-        return tag.name
+    
+    // 添加新的tag
+    addTags (route) {
+      this.$store.commit(types.ADD_TAG_VIEW, {
+        name: route.meta.title,
+        path: route.path,
+        active: true
       })
+    },
+
+    // 删除tag和关闭页面
+    deleteTag (path) {
+
+      let tagView, // 删除tag页面后的tagview
+          lastTagView // 跳转的tag 标签的最后一个页面
+
+      // 删除标签
+      this.$store.commit(types.DELETE_TAG_VIEW, path)
+
+      tagView = this.tagList
+
+      lastTagView = tagView[tagView.length-1]
+
+      // 跳转到最后一个标签页面
+      this.$router.push({path: lastTagView.path})
     }
   },
 
   watch: {
     $route (to, from) {
-      this.tagList.forEach( (tag) => {
-        if (tag.path === to.path) {
-          // this.$store.commit(types.TOGGLE_TAG_VIEW_ACTIVE)
-        } else {
-          this.$store.commit(types.ADD_TAG_VIEW, {
-            name: to.meta.title,
-            path: to.path,
-            active: true
-          })
-        }
-      })
-    }
-  },
 
-  created () {
-    this.createdTags()
+      let hasTag = false;  // 跳转的tag 是否存在
+
+      hasTag = this.tagList.some( (tag) => {
+        return tag.path === to.path
+      })
+
+      if (hasTag) {
+        // 存在就改变下新标签和旧标签的激活状态
+        this.$store.commit(types.CHANGE_TAG_VIEW, {oldPath:from.path, newPath:to.path})
+      } else {
+        // 不存在就改变旧标签的激活状态，并添加新标签
+        this.$store.commit(types.CHANGE_TAG_VIEW, {oldPath:from.path})
+        this.addTags(to)
+      }
+    }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.tag-view-wrap {
+  height: 34px;
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #d8dce5;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+}
 
+.tag-view-item {
+  display: inline-block;
+  position: relative;
+  height: 26px;
+  line-height: 26px;
+  border: 1px solid #d8dce5;
+  color: #495060;
+  background: #fff;
+  padding: 0 8px;
+  font-size: 12px;
+  margin-left: 5px;
+  margin-top: 4px;
+
+  .el-icon-close {
+    padding-left: 5px;
+  }
+  
+}
+.active {
+  background-color: #409eff;
+  color: #fff;
+  border-color: #409eff;
+
+  &:before {
+    content: "";
+    background: #fff;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    position: relative;
+    margin-right: 2px;
+  }
+}
 </style>
