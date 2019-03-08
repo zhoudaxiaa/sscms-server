@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-03-04 13:59:47
+ * @LastEditTime: 2019-03-08 13:24:24
  */
 
 import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
@@ -25,7 +25,6 @@ export default {
       {
         name: '首页', // String 切换页面的标签名
         path: '/dashboard', // String 标签指向的页面
-        active: true // Boolean 当前标签是否激活状态(处于当钱标签)
       }
     ]
   },
@@ -55,29 +54,12 @@ export default {
       setMutation(state, isCollapse, 'sidebar', 'collapse')
     },
 
-    // 添加 切换页面标签
+    // 添加页面标签
     [types.ADD_TAG_VIEW] (state, tag) {
       let tagView = this.getters.tagView
       tagView.push(tag)
       
       setMutation(state, tagView, 'tagView')
-    },
-
-    // 切换页面标签时，改变标签激活状态
-    [types.CHANGE_TAG_VIEW] (state, path) {
-      let newTagView,
-          tagView = this.getters.tagView
-
-      // 遍历数组，切换相应的激活状态，并返回改变后的新数组
-      newTagView = tagView.map((tag) => {
-        if (tag.path === path.oldPath || tag.path === path.newPath) {
-          tag.active = !tag.active
-        }
-
-        return tag
-      })
-
-      setMutation(state, newTagView, 'tagView')
     },
 
     // 删除页面标签

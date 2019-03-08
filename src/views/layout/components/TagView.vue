@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-01 09:18:12
- * @LastEditTime: 2019-03-04 14:12:39
+ * @LastEditTime: 2019-03-08 16:40:09
  -->
 
 <template>
@@ -15,7 +15,7 @@
       <router-link 
         class="tag-view-item"
         v-for="tag in tagList"
-        :class="{active: tag.active}"
+        :class="{active: tag.path === $route.path}"
         :key="tag.name"
         :to="tag.path">
           {{tag.name}}
@@ -82,12 +82,8 @@ export default {
         return tag.path === to.path
       })
 
-      if (hasTag) {
-        // 存在就改变下新标签和旧标签的激活状态
-        this.$store.commit(types.CHANGE_TAG_VIEW, {oldPath:from.path, newPath:to.path})
-      } else {
+      if (!hasTag) {
         // 不存在就改变旧标签的激活状态，并添加新标签
-        this.$store.commit(types.CHANGE_TAG_VIEW, {oldPath:from.path})
         this.addTags(to)
       }
     }
@@ -97,11 +93,11 @@ export default {
 
 <style lang="scss" scoped>
 .tag-view-wrap {
-  height: 34px;
-    width: 100%;
-    background: #fff;
-    border-bottom: 1px solid #d8dce5;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  height: 38px;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #d8dce5;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
 }
 
 .tag-view-item {
@@ -119,6 +115,10 @@ export default {
 
   .el-icon-close {
     padding-left: 5px;
+  }
+
+  &:first-of-type {
+    margin-left: 15px;
   }
   
 }

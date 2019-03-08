@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-17 20:46:58
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-02-26 09:43:58
+ * @LastEditTime: 2019-03-07 13:10:52
  -->
 
 <template>
@@ -21,7 +21,8 @@
       <!-- 二级菜单 -->
       <template v-for="child in item.children">
         <router-link :to="child.path" :key="child.name">
-          <el-menu-item :index="child.name">
+          <el-menu-item
+            :index="getPath(child.path)">
             <!-- 菜单名和icon -->
             <item :icon="child.meta.icon" :title="child.meta.title"></item>
           </el-menu-item>
@@ -40,11 +41,21 @@ export default {
     item: {
       type: Object,
       default: () => {}
+    },
+    basePath: {
+      type: String,
+      default: ''
     }
   },
   components: {
     Item
+  },
+  methods: {
+    getPath (routePath) {
+      return this.basePath + routePath
+    }
   }
+
 }
 </script>
 

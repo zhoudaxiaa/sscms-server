@@ -2,24 +2,25 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: 入口页面
+ * @Description: 分页组件
  * @Version: 1.0
- * @Date: 2018-12-10 09:18:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-08 14:25:38
+ * @Date: 2019-03-07 14:00:42
+ * @LastEditTime: 2019-03-07 14:01:30
  -->
 
 <template>
-  <div id="app">
-    <router-view></router-view>
+  <div>
+    pagination
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'Pagination'
 }
 </script>
 
-<style>
+<style scoped>
+
 </style>

@@ -2,24 +2,25 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: 入口页面
+ * @Description: 数据添加组件
  * @Version: 1.0
- * @Date: 2018-12-10 09:18:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-08 14:25:38
+ * @Date: 2019-03-07 13:57:06
+ * @LastEditTime: 2019-03-07 17:01:11
  -->
 
 <template>
-  <div id="app">
-    <router-view></router-view>
+  <div>
+    addData
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'AddData'
 }
 </script>
 
-<style>
+<style scoped>
+
 </style>

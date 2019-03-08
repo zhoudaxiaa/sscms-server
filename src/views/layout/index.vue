@@ -67,13 +67,20 @@ export default {
   height: 100%;
 
   // 重置element-ui 的样式
-  /deep/ .el-scrollbar__view {
-    height: 100%;
+  /deep/ {
+    .el-scrollbar__view {
+      height: 100%;
+    }
+
+    .el-scrollbar__wrap {
+      overflow-x:hidden;
+    }
+
+    .el-menu {
+      border-right: none;
+    }
   }
 
-  /deep/ .el-menu {
-    border-right: none;
-  }
 }
 
 .main-wrap {

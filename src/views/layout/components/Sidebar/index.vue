@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:56:22
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-02-27 14:45:16
+ * @LastEditTime: 2019-03-08 16:26:36
  -->
 
 <template>
@@ -30,7 +30,12 @@
       </div>
 
       <!-- 单个菜单 -->
-      <sidebar-item v-for="route in dynamicMenus" :key="route.name" :item="route"></sidebar-item>
+      <sidebar-item
+        v-for="route in dynamicMenus"
+        :key="route.name"
+        :item="route"
+        :basePath="route.path">
+      </sidebar-item>
     </el-menu>
   </el-scrollbar>
 </template>
@@ -45,7 +50,7 @@ export default {
   name: 'Sidebar',
   data() {
     return {
-      imgLogo
+      imgLogo,
     }
   },
   components: {

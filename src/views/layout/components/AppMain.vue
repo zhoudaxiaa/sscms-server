@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-17 17:49:50
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-04 15:16:48
+ * @LastEditTime: 2019-03-08 15:09:59
  -->
 
 <template>
@@ -22,11 +22,14 @@ export default {
   name: 'AppMain',
   computed: {
     key () {
-      return this.$router + new Date()
+      return this.$route.fullPath
     }
   }
 }
 </script>
 
 <style scoped>
+.main-container {
+  padding: 20px 15px;
+}
 </style>

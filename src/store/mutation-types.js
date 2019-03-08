@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-10 10:33:10
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-04 13:25:33
+ * @LastEditTime: 2019-03-07 12:40:15
  */
 
 // admin 的mutations
@@ -22,5 +22,4 @@ export const DELETE_DYNAMIC_MENUS = 'delete_dynamic_menus' // 删除动态生成
 // app 的mutations
 export const TOGGLE_SIDEBAR_COLLAPSE = 'toggle_sidebar_collapse' // 切换并存储侧边栏展开状态
 export const ADD_TAG_VIEW = 'add_tag_view' // 添加切换页面标签的状态
-export const CHANGE_TAG_VIEW = 'change_tag_view' // 切换页面标签时，改变标签激活状态
 export const DELETE_TAG_VIEW = 'delete_tag_view' // 删除页面标签
