@@ -6,13 +6,15 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 14:00:42
- * @LastEditTime: 2019-03-07 14:01:30
+ * @LastEditTime: 2019-03-12 21:18:44
  -->
 
 <template>
-  <div>
-    pagination
-  </div>
+  <el-pagination
+    background
+    layout="prev, pager, next"
+    :total="100">
+  </el-pagination>
 </template>
 
 <script>

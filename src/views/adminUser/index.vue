@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-08 18:12:17
+ * @LastEditTime: 2019-03-12 22:15:26
  -->
 
 <template>
@@ -54,6 +54,10 @@ import UserForm from './UserForm'
 import AddData from '@/views/common/AddData'
 import Pagination from '@/components/Pagination'
 
+import NProgress from 'nprogress' // 加载条插件
+
+import { getAdminUser } from '@/api/adminUser'
+
 export default {
   name: 'adminUser',
   components: {
@@ -64,35 +68,13 @@ export default {
   },
   data () {
     return {
-      tableData: [
-        {
-          id: 'lghjslajg',
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          enable: true
-        }, {
-          id: 'lghjslajg',
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          enable: false
-        }, {
-          id: 'lghjslajg',
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          enable: true
-        }, {
-          id: 'lghjslajg',
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
-          enable: false
-        }
-      ],
-
+      tableData: [],
+      // 表格的标题和宽度
       tableTile: {
+        id: {
+          title: '',
+          width: '0'
+        },
         date: {
           title: '日期',
           width: '120'
@@ -134,6 +116,22 @@ export default {
   methods: {
     editData (e) {
       console.log(e)
+    }
+  },
+
+  created() {
+    NProgress.start() //加载条开始
+
+    ;async () => {
+      try {
+        const data = await getAdminUser(0, 20)
+
+        this.tableData = data.data
+      } catch (err) {
+        this.$message.error(err)
+      } finally {
+        NProgress.done()
+      }
     }
   }
 }

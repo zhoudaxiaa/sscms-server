@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-17 17:05:56
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-02-28 14:12:37
+ * @LastEditTime: 2019-03-12 21:51:56
  -->
 
 <template>
@@ -57,7 +57,7 @@
 <script>
 import dragVerify from 'vue-drag-verify' // 滑动验证插件
 
-import { loginByAccount } from '@/api/admin'
+import { loginByAccount } from '@/api/adminUser'
 
 import * as types from '@/store/mutation-types'
 
@@ -137,10 +137,10 @@ export default {
         // 发送登录请求
         try {
           const data = await loginByAccount(this.loginForm)
-          loading.close()
           if (data.code === 0) {
 
             // 登录成功，进入存储帐号信息并跳转页面
+            this.$store.commit(types.SET_ADMIN_ID, data.data.id)
             this.$store.commit(types.SET_ADMIN_NAME, data.data.name)
             this.$store.commit(types.SET_ADMIN_AVATAR, data.data.avatar)
 
@@ -151,8 +151,9 @@ export default {
             this.$message.error('用户名不存在或密码错误！')
           }
         } catch (err) {
-          loading.close()
           this.$message.error(err)
+        } finally {
+          loading.close()
         }
       }
     }
@@ -194,8 +195,9 @@ $svgColor: #889aa4; // svg 图标颜色
 
 .svg-container {
   display: inline-block;
-  padding: 6px 5px 6px 15px;
+  padding: 6px 5px 11px 15px;
   width: 22px;
+  vertical-align: bottom;
   color: $svgColor;
 }
 
@@ -203,9 +205,8 @@ $svgColor: #889aa4; // svg 图标颜色
   outline: none;
   color: #fff;
   font-size: 14px;
-  padding-left: 15px;
   height: 47px;
-  width: 85%;
+  width: 76%;
   border: none;
   background: 0, 0;
 

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:40:15
- * @LastEditTime: 2019-03-08 18:12:12
+ * @LastEditTime: 2019-03-12 20:16:19
  -->
 
 <template>
@@ -14,6 +14,7 @@
     :data="tableData"
     style="100%">
 
+    <!-- 选择框 -->
     <el-table-column
       type="selection"
       width="55">
@@ -30,9 +31,15 @@
 
       <template slot-scope="scope">
 
+        <!-- 数据的唯一标示id -->
+        <input
+          v-if="name === 'id'"
+          type="hidden"
+          :value="scope.row[name]">
+
         <!-- 根据属性值是不是布尔值来条件渲染，是布尔，就展示一个图标，否则展示数据 -->
         <i
-          v-if="typeof scope.row[name] === 'boolean'"
+          v-else-if="typeof scope.row[name] === 'boolean'"
           :class="scope.row[name] ? 'el-icon-success' : 'el-icon-error'"
           :style="scope.row[name] ? green : red">
         </i>
