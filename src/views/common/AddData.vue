@@ -6,11 +6,11 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:57:06
- * @LastEditTime: 2019-03-07 17:01:11
+ * @LastEditTime: 2019-03-13 17:08:54
  -->
 
 <template>
-  <div>
+  <div ref="addData" >
     addData
   </div>
 </template>

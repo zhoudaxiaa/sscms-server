@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-12 22:15:26
+ * @LastEditTime: 2019-03-13 15:57:39
  -->
 
 <template>
@@ -42,7 +42,7 @@
       </data-table>
       
       <!-- 分页组件 -->
-      <pagination></pagination>
+      <pagination class="pagination-wrap"></pagination>
       
     </div>
   </div>
@@ -54,9 +54,7 @@ import UserForm from './UserForm'
 import AddData from '@/views/common/AddData'
 import Pagination from '@/components/Pagination'
 
-import NProgress from 'nprogress' // 加载条插件
-
-import { getAdminUser } from '@/api/adminUser'
+import { getAdminUser } from '@/api/adminUser.js'
 
 export default {
   name: 'adminUser',
@@ -73,23 +71,29 @@ export default {
       tableTile: {
         id: {
           title: '',
-          width: '0'
-        },
-        date: {
-          title: '日期',
-          width: '120'
+          width: '10'
         },
         name: {
-          title: '姓名',
+          title: '昵称',
           width: ''
         },
-        address: {
-          title: '地址'
+        adminUser: {
+          title: '帐号名',
+          width: ''
+        },
+        role: {
+          title: '角色组',
+          width: ''
+        },
+        email: {
+          title: '邮箱',
+          width: ''
         },
         enable: {
-          title: '展示',
-          width: '50'
+          title: '是否启用',
+          width: ''
         }
+
       },
 
       formData: {
@@ -114,29 +118,28 @@ export default {
   },
   
   methods: {
+    async initData () {
+      try {
+        const data = await getAdminUser(0, 20)
+        console.log(data)
+        this.tableData = data.data
+      } catch (err) {
+        this.$message.error(err)
+      }
+    },
     editData (e) {
       console.log(e)
     }
   },
 
   created() {
-    NProgress.start() //加载条开始
-
-    ;async () => {
-      try {
-        const data = await getAdminUser(0, 20)
-
-        this.tableData = data.data
-      } catch (err) {
-        this.$message.error(err)
-      } finally {
-        NProgress.done()
-      }
-    }
+    this.initData() // 初始化数据
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.pagination-wrap {
+  text-align: center;
+}
 </style>

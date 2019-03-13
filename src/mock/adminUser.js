@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-21 10:09:01
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-12 21:50:28
+ * @LastEditTime: 2019-03-13 15:49:04
  */
 import qs from 'qs'
 
@@ -39,60 +39,29 @@ Mock.mock(apiPath.login, 'post', req => {
   }
 })
 
-// 根据管理员名获取管理员信息mock
-Mock.mock(apiPath.admin, 'get', {
-  'code': 0,
-  'data': {
-    'name': 'Super Admin',
-    'roles': 'admin',
-    'introduce': '超级管理员',
-    'avatar': 'https://www.html-js.cn/upload/images/defaultlogo.png'
-  },
-  'msg': ''
-})
+// 根据管理员id获取管理员信息mock
+// Mock.mock(apiPath.admin, 'get', {
+//   'code': 0,
+//   'data': {
+//     'name': 'Super Admin',
+//     'roles': 'admin',
+//     'introduce': '超级管理员',
+//     'avatar': 'https://www.html-js.cn/upload/images/defaultlogo.png'
+//   },
+//   'msg': ''
+// })
 
-Mock.mock(apiPath.adminUser, 'get', {
+Mock.mock(RegExp(apiPath.adminUser + '.*'), 'get', {
   'code': 0,
-  'data': [
+  'data|20': [
     {
       'id|10': '',
       'adminUser': 'sscms',
-      'role': [
-        {
-          'id|10': '',
-          'name': '超级管理员'
-        }
-      ],
+      'role': '超级管理员',
       'name': '@cname()',
-      'email': '@cemail()',
+      'email': '@email()',
       'enable': true
-    }, 
-    {
-      'id|10': '',
-      'adminUser': 'sscms',
-      'role': [
-        {
-          'id|10': '',
-          'name': '超级管理员'
-        }
-      ],
-      'name': '@cname()',
-      'email': '@cemail()',
-      'enable': true
-    }, 
-    {
-      'id|10': '',
-      'adminUser': 'sscms',
-      'role': [
-        {
-          'id|10': '',
-          'name': '超级管理员'
-        }
-      ],
-      'name': '@cname()',
-      'email': '@cemail()',
-      'enable': true
-    }, 
+    }
   ],
   'msg': ''
 })

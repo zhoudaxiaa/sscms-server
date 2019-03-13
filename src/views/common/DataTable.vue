@@ -6,13 +6,13 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:40:15
- * @LastEditTime: 2019-03-12 20:16:19
+ * @LastEditTime: 2019-03-13 15:45:44
  -->
 
 <template>
   <el-table
-    :data="tableData"
-    style="100%">
+    class="table-container"
+    :data="tableData">
 
     <!-- 选择框 -->
     <el-table-column
@@ -82,5 +82,8 @@ export default {
 </script>
 
 <style scoped>
-
+.table-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
 </style>

@@ -6,14 +6,14 @@
  * @Version: 1.0
  * @Date: 2019-01-17 17:49:50
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-08 15:09:59
+ * @LastEditTime: 2019-03-13 15:59:46
  -->
 
 <template>
   <div class="main-container">
-    <keep-alive>
+    <!-- <keep-alive> -->
       <router-view :key="key"></router-view>
-    </keep-alive>
+    <!-- </keep-alive> -->
   </div>
 </template>
 
