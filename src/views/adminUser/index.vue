@@ -6,13 +6,14 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-13 15:57:39
+ * @LastEditTime: 2019-03-13 21:39:43
  -->
 
 <template>
   <div>
     <user-form
-      :formData="formData">
+      :formData="formData"
+      :formVisible="formVisible">
     </user-form>
 
     <div class="table-wrap">
@@ -28,11 +29,11 @@
         <el-table-column
           width="100"
           label="操作">
-          <template>
+          <template slot-scope="op">
             <div>
               <i
                 class="op-icon el-icon-edit"
-                @click="editData">
+                @click="editTable(op.$index)">
               </i>
               <i class="op-icon el-icon-delete"></i>
             </div>
@@ -54,7 +55,9 @@ import UserForm from './UserForm'
 import AddData from '@/views/common/AddData'
 import Pagination from '@/components/Pagination'
 
-import { getAdminUser } from '@/api/adminUser.js'
+import { getAdminUser, getRoles } from '@/api/adminUser.js'
+
+import { deepCopy } from '@/utils/utils'
 
 export default {
   name: 'adminUser',
@@ -66,18 +69,22 @@ export default {
   },
   data () {
     return {
-      tableData: [],
-      // 表格的标题和宽度
-      tableTile: {
+      tableData: [],  // 表格数据
+      
+      tableTile: {  // 表格的标题和宽度，title为空，标示不显示
         id: {
           title: '',
-          width: '10'
+          width: ''
         },
         name: {
           title: '昵称',
           width: ''
         },
-        adminUser: {
+        avatar: {
+          title: '',
+          width: '5'
+        },
+        userName: {
           title: '帐号名',
           width: ''
         },
@@ -89,46 +96,59 @@ export default {
           title: '邮箱',
           width: ''
         },
-        enable: {
+        isActive: {
           title: '是否启用',
+          width: ''
+        },
+        introduce: {
+          title: '',
           width: ''
         }
 
       },
 
-      formData: {
-        id: '7fx9RQ6gH',
-        name: '管理员',
-        avatar: 'https://www.html-js.cn/upload/images/defaultlogo.png',
-        userName: 'admin',
-        passWord: '',
-        email: '1250198256@qq.com',
-        role: [
-          {
-            id: 'sghj340olE',
-            name: 'admin'
-          }
-        ],
-        isActive: true,
-        instroduce: '超级管理员'
+      userFormData: {},  // 表单数据
 
-      }
+      dialogFormVisible: false  // 表单是否显示
     
     }
   },
   
   methods: {
+    // 页面初始化时获取数据
     async initData () {
       try {
-        const data = await getAdminUser(0, 20)
-        console.log(data)
+        const data = await getAdminUser(0, 20)  // 获取第一页，20条数据
+
         this.tableData = data.data
       } catch (err) {
         this.$message.error(err)
       }
     },
-    editData (e) {
-      console.log(e)
+
+    async editTable (i) {
+      this.dialogFormVisible = false  // 因为每次都需要这个值为true，但是值不变，就不会数据响应，所以每次改变值再改回来，强制数据响应
+      this.dialogFormVisible = true  // 让表单框出现
+
+      const data = await getRoles()
+
+      let tableData = deepCopy(this.tableData[i])  // 深拷贝数据后再修改，防止修改了原来的数据
+
+      tableData.role = data.data // 把获取到的角色组列表覆盖原来的值
+      
+      console.log(tableData)
+
+      this.userFormData = tableData
+    }
+  },
+
+  computed: {
+    formVisible () {
+      return this.dialogFormVisible
+    },
+
+    formData () {
+      return this.userFormData
     }
   },
 

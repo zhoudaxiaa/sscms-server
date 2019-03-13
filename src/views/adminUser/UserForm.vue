@@ -6,16 +6,18 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-03-08 14:38:13
+ * @LastEditTime: 2019-03-13 21:45:44
  -->
 
 <template>
   <el-dialog
     title="填写用户信息"
-    :visible.sync="dialogFormVisible">
+    :visible.sync="formVisible">
       <el-form
         :model="formData"
         label-width="80px">
+
+        <input type="hidden" value="formData.id">
 
         <el-form-item
           label="帐号昵称"
@@ -91,8 +93,8 @@
             <el-option
               v-for="data in formData.role"
               :key="data.id"
-              label="data.name"
-              value="data.id">
+              :label="data.name"
+              :value="data.id">
             </el-option>
 
           </el-select>
@@ -125,11 +127,15 @@ export default {
     formData: {
       type: Object,
       default: () => {}
+    },
+
+    formVisible: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      dialogFormVisible: true
     }
   }
 }

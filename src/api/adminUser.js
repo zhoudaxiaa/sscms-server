@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 22:01:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-13 14:47:39
+ * @LastEditTime: 2019-03-13 21:26:18
  */
 
 import http from '@/utils/http.js'
@@ -18,7 +18,7 @@ import apiPath from './apiPath.js'
  * @param {string} passWord 密码
  * @return: 请求数据
  */
-export function loginByAccount(loginForm) {
+export function loginByAccount (loginForm) {
   return http({
     url: apiPath.login,
     method: 'post',
@@ -30,13 +30,27 @@ export function loginByAccount(loginForm) {
 }
 
 /**
- * @description: 
+ * @description: 获取管理员列表
+ * @param {number} offset 第几页
+ * @param {number} limit 一页多少条数据
+ * @return: 
+ */
+export function getAdminUser (offset, limit) {
+  return http({
+    url: `${apiPath.adminUser}?offset=${offset}&limit=${limit}`,
+    method: 'get'
+  })
+}
+
+/**
+ * @description: 获取角色组列表
  * @param {type} 
  * @return: 
  */
-export function getAdminUser(offset, limit) {
+
+export function getRoles () {
   return http({
-    url: `${apiPath.adminUser}?offset=${offset}&limit=${limit}`,
+    url: apiPath.roles,
     method: 'get'
   })
 }
