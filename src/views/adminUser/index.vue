@@ -6,16 +6,12 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-14 17:01:41
+ * @LastEditTime: 2019-03-14 21:42:54
  -->
 
 <template>
   <div>
-    <user-form
-      class="form-wrap"
-      :formData="formData"
-      :formVisible="formVisible">
-    </user-form>
+    <user-form class="form-wrap"></user-form>
 
     <div class="table-wrap">
 
@@ -23,20 +19,10 @@
       <div class="public-op-wrap">
 
         <!-- 添加数据 -->
-        <el-button
-          @click="addTable"
-          type="primary"
-          icon="el-icon-plus"
-          circle>
-        </el-button>
+        <addTable :addTable="handleAddTable"></addTable>
 
-        <!-- 多条数据的删除 -->
-
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          circle>
-        </el-button>
+        <!-- 删除数据 -->
+        <deleteTable :deleteTable="handleDeleteTable"></deleteTable>
         
       </div>
       
@@ -81,6 +67,8 @@
 
 <script>
 import DataTable from '@/views/common/DataTable'
+import AddTable from '@/views/common/AddTable'
+import DeleteTable from '@/views/common/DeleteTable'
 import UserForm from './UserForm'
 import Pagination from '@/components/Pagination'
 
@@ -94,6 +82,8 @@ export default {
   name: 'adminUser',
   components: {
     DataTable,
+    AddTable,
+    DeleteTable,
     UserForm,
     Pagination
   },
@@ -101,13 +91,9 @@ export default {
     return {
       tableData: [],  // 表格数据(对象数组)
 
-      filterData: 'id,name,user_name,role,email,is_active',  // 需要数据的字段名的字符串组合
+      filterData: 'name,user_name,role,email,is_active',  // 需要数据的字段名的字符串组合
       
       tableTile: {  // 表格的标题和宽度，title为空，标示不显示
-        id: {
-          title: '',
-          width: '5'
-        },
         name: {
           title: '昵称',
           width: ''
@@ -127,11 +113,9 @@ export default {
         is_active: {
           title: '是否启用',
           width: ''
-        }
+        },
 
       },
-
-      userFormData: {},  // 表单数据
     
     }
   },
@@ -157,15 +141,25 @@ export default {
     },
 
     /**
+     * @description: 切换表单显示状态和切换表单是不是修改操作，多次使用，提取出来
+     * @param {type} 
+     * @return: 
+     */
+    toggleOperation () {
+      this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)  // 切换表单显示状态
+      this.$store.commit(types.CHANGE_IS_FORM_EDIT_OP)  // 切换表单是不是修改操作
+    },
+
+    /**
      * @description: 修改表格
      * @param {number} i 操作的表格索引 
      * @return: 
      */
     editTable (i) {
-      this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)  // 切换表单显示状态
-      this.$store.commit(types.CHANGE_IS_FORM_EDIT_OP)  // 切换表单是不是修改操作
+      this.toggleOperation()
 
-      this.userFormData = this.tableData[i]
+      this.$store.commit(types.SET_ADMIN_USER_FORM, this.tableData[i])  // 存储表单数据
+
     },
 
     /**
@@ -173,41 +167,38 @@ export default {
      * @param {type} 
      * @return: 
      */
-    addTable () {
-      this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)  // 切换表单显示状态
-      this.$store.commit(types.CHANGE_IS_FORM_EDIT_OP)  // 切换表单是不是修改操作
+    handleAddTable () {
+      this.toggleOperation()
       
       // 添加表格时，传入初始的表单项
-      this.userFormData = {
+      this.$store.commit(types.SET_ADMIN_USER_FORM, {
         name: '',
         avatar: '',
         user_name: '',
         pass_word: '',
         email: '',
-        roleId: '',
+        role_id: '',
         is_active: true,
-        instroduce: ''
-      }
-    }
-
-  },
-
-  computed: {
-    // 因为需要通过改变数据的方式来改变传入子组件的数据，所以采用计算属性传入改变后数据
-    formVisible () {  // 表单的显示状态
-      return this.dialogFormVisible
+        instroduce: '',
+      })
     },
 
-    formData () {  // 表单的数据
-      return this.userFormData
-    }
+    /**
+     * @description: 删除表格
+     * @param {type} 
+     * @return: 
+     */    
+    handleDeleteTable () {
+
+    },
+
   },
 
   created() {
     this.initData() // 初始化数据
 
     this.$store.dispatch('getRoles')  // 分发获取并存储角色组列表
-  }
+  },
 }
 </script>
 

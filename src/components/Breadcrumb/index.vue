@@ -6,29 +6,33 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-25 15:50:51
- * @LastEditTime: 2019-03-04 10:10:19
+ * @LastEditTime: 2019-03-14 20:30:55
  -->
 
 <template>
   <el-breadcrumb separator="/">
 
   <transition-group name="breadcrumb">
-    <el-breadcrumb-item
-    v-for="(item, index) in list"
-    v-if="item.meta.title"
-    :key="item.path">
-      <!-- 根据是不是当前页面，生成文字或链接 -->
-      <span
-        v-if="index === list.length-1">
-        {{item.meta.title === 'dashboard' ? '首页' : item.meta.title}}
-      </span>
+    <template v-for="(item, index) in list">
 
-      <router-link
-        v-else :to="item.path">
-        {{item.meta.title}}
-      </router-link>
+      <el-breadcrumb-item
+        v-if="item.meta.title"
+        :key="item.path">
+        <!-- 根据是不是当前页面，生成文字或链接 -->
+        <span
+          v-if="index === list.length-1">
+          {{item.meta.title === 'dashboard' ? '首页' : item.meta.title}}
+        </span>
+
+        <router-link
+          v-else :to="item.path">
+          {{item.meta.title}}
+        </router-link>
 
       </el-breadcrumb-item>
+        
+      </template>
+    
     </transition-group>
 
   </el-breadcrumb>

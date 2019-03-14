@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:45:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-04 14:17:35
+ * @LastEditTime: 2019-03-14 20:32:27
  -->
 
 <template>
@@ -16,7 +16,7 @@
       class="hamburger-wrap fl"
       :isActive="sidebarCollapse"
       :toggleClick="toggleSidebar">
-      </hamburger>
+    </hamburger>
 
     <!-- 面包屑导航 -->
     <breadcrumb class="breadcrumb-wrap fl"></breadcrumb>

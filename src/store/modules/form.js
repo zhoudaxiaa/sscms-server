@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 17:04:28
- * @LastEditTime: 2019-03-14 17:07:37
+ * @LastEditTime: 2019-03-14 20:48:29
  */
 
 import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
@@ -18,6 +18,9 @@ export default {
     dialogFormVisible: false, // 表单框的显示状态
 
     isFormEditOp: true, // 是不是表单修改操作
+
+
+    adminUserForm: {}, // 管理员表单
   },
   
   getters: {
@@ -31,6 +34,11 @@ export default {
     isFormEditOp (state) {
       return getter(state, 'isFormEditOp')
     },
+
+    // 读取管理员信息表单
+    adminUserForm (state) {
+      return getter(state, 'adminUserForm')
+    }
   },
 
   mutations: {
@@ -46,5 +54,10 @@ export default {
       let isEdit = !this.getters.isFormEditOp
       setMutation(state, isEdit, 'isFormEditOp')
     },
+
+    // 存储管理员信息表单
+    [types.SET_ADMIN_USER_FORM] (state, form) {
+      setMutation(state, form, 'adminUserForm')
+    }
   }
 }

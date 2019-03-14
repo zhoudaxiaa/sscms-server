@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:40:15
- * @LastEditTime: 2019-03-14 12:38:17
+ * @LastEditTime: 2019-03-14 21:25:28
  -->
 
 <template>
@@ -31,15 +31,9 @@
 
       <template slot-scope="scope">
 
-        <!-- 数据的唯一标示id -->
-        <input
-          v-if="key === 'id'"
-          type="hidden"
-          :value="scope.row[key]">
-
         <!-- 根据属性值是不是布尔值来条件渲染，是布尔，就展示一个图标，否则展示数据 -->
         <i
-          v-else-if="typeof scope.row[key] === 'boolean'"
+          v-if="typeof scope.row[key] === 'boolean'"
           :class="scope.row[key] ? 'el-icon-success' : 'el-icon-error'"
           :style="scope.row[key] ? green : red">
         </i>

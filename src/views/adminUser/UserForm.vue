@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-03-14 17:00:32
+ * @LastEditTime: 2019-03-14 22:02:13
  -->
 
 <template>
@@ -16,18 +16,12 @@
     :before-close="closeForm">
       <el-form
         :model="formData"
+        :rules="rules"
         label-width="80px">
-
-        <!-- 当是修改数据，存在数据id时才显示 -->
-        <input
-          v-if="formData.id"
-          type="hidden"
-          :value="formData.id">
 
         <el-form-item
           label="帐号昵称"
-          prop="formData.name"
-          required>
+          prop="name">
 
           <el-input v-model="formData.name"></el-input>
 
@@ -57,8 +51,7 @@
 
         <el-form-item
           label="登录名"
-          prop="formData.user_name"
-          required>
+          prop="user_name">
 
           <el-input v-model="formData.user_name"></el-input>
 
@@ -66,38 +59,38 @@
 
         <el-form-item
           label="密码"
-          prop="formData.passWord"
-          required>
+          prop="pass_word">
           
           <el-input
             type="password"
-            v-model="formData.passWord">
+            v-model="formData.pass_word">
           </el-input>
 
         </el-form-item>
 
         <el-form-item
-          label="确认密码"
-          required>
+          label="确认密码">
 
           <el-input
             type="password"
-            v-model="formData.passWord">
+            v-model="formData.pass_word">
           </el-input>
 
         </el-form-item>
 
         <el-form-item
           label="邮箱"
-          prop="formData.email">
+          prop="email">
 
           <el-input v-model="formData.email"></el-input>
 
         </el-form-item>
 
-        <el-form-item label="角色组">
+        <el-form-item
+          label="角色组"
+          prop="role_id">
           <el-select
-            v-model="roleId"
+            v-model="formData.role_id"
             placeholder="请选择角色组">
             
             <el-option
@@ -111,14 +104,17 @@
         </el-form-item>
 
         <el-form-item label="是否开启">
-          <el-switch v-model="formData.isActive"></el-switch>
+          <el-switch v-model="formData.is_active"></el-switch>
         </el-form-item>
 
-        <el-form-item label="描述">
+        <el-form-item
+          label="描述">
+
           <el-input
             type="textarea"
             v-model="formData.introduce">
           </el-input>
+
         </el-form-item>
 
         <el-form-item>
@@ -145,21 +141,59 @@
 
 <script>
 import apiPath from '@/api/apiPath'
+import { mapGetters } from 'vuex'
 
 import * as types from '@/store/mutation-types'
 
 export default {
   name: 'userForm',
-  props: {
-    formData: {  // 表单数据
-      type: Object,
-      default: () => {}
-    }
-  },
   data() {
     return {
       apiPath,  // api路径表
-      roleId: ''  // 要提交的角色id
+      rules: {  // 表单验证规则
+        name: [
+          {
+            required: true,
+            message: '请输入用户昵称',
+            trigger: 'blur'
+          },
+          {
+            min: 3,
+            max: 10,
+            message: '长度在3到10个字符',
+            trigger: 'change'
+          }
+        ],
+        user_name: [
+          {
+            required: true,
+            message: '请输入登录账号',
+            trigger: 'blur'
+          }
+        ],
+        pass_word: [
+          {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+          }
+        ],
+        email: [
+          {
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: 'change'
+          }
+        ],
+        role_id: [
+          {
+            required: true,
+            message: '请选择一个角色组',
+            trigger: 'blur'
+          }
+        ],
+
+      }
     }
   },
 
@@ -200,25 +234,17 @@ export default {
      */  
     closeForm () {
       this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)
-    }
+    },
   },
 
   computed: {
-    // 从store里获取角色组列表
-    roles () {
-      return this.$store.getters.roles
-    },
-
-    // 从store里读取表单框显示状态
-    formVisible () {
-      return this.$store.getters.dialogFormVisible
-    },
-
-    // 从store里读取是不是表单修改操作
-    isEdit () {
-      return this.$store.getters.isFormEditOp
-    }
-  }
+    ...mapGetters({
+      formData: 'adminUserForm',
+      roles: 'roles',  // 从store里获取角色组列表
+      formVisible: 'dialogFormVisible',  // 从store里读取表单框显示状态
+      isEdit: 'isFormEditOp',  // 从store里读取是不是表单修改操作
+    })
+  },
 }
 </script>
 
