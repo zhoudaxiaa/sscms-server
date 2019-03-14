@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-21 10:09:01
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-13 21:28:44
+ * @LastEditTime: 2019-03-14 14:24:01
  */
 import qs from 'qs'
 
@@ -39,18 +39,6 @@ Mock.mock(apiPath.login, 'post', req => {
   }
 })
 
-// 根据管理员id获取管理员信息mock
-// Mock.mock(apiPath.admin, 'get', {
-//   'code': 0,
-//   'data': {
-//     'name': 'Super Admin',
-//     'roles': 'admin',
-//     'introduce': '超级管理员',
-//     'avatar': 'https://www.html-js.cn/upload/images/defaultlogo.png'
-//   },
-//   'msg': ''
-// })
-
 // 获取管理员列表mock
 Mock.mock(RegExp(apiPath.adminUser + '.*'), 'get', {
   'code': 0,
@@ -59,23 +47,11 @@ Mock.mock(RegExp(apiPath.adminUser + '.*'), 'get', {
       'id|10': '',
       'name': '@cname()',
       'avatar': '',
-      'userName': 'sscms',
+      'user_name': 'sscms',
       'role': '超级管理员',
       'email': '@email()',
-      'isActive|1-2': true,
+      'is_active|1-2': true,
       'introduce|5-20': ''
-    }
-  ],
-  'msg': ''
-})
-
-// 获取角色组列表mock
-Mock.mock(apiPath.roles, 'get', {
-  'code': 0,
-  'data|5': [
-    {
-      'id|10': '',
-      'name': '超级管理员'
     }
   ],
   'msg': ''

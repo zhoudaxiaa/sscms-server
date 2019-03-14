@@ -6,24 +6,43 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-13 21:39:43
+ * @LastEditTime: 2019-03-14 17:01:41
  -->
 
 <template>
   <div>
     <user-form
+      class="form-wrap"
       :formData="formData"
       :formVisible="formVisible">
     </user-form>
 
     <div class="table-wrap">
 
-      <!-- 添加数据组件 -->
-      <add-data></add-data>
+      <!-- 公共操作 -->
+      <div class="public-op-wrap">
+
+        <!-- 添加数据 -->
+        <el-button
+          @click="addTable"
+          type="primary"
+          icon="el-icon-plus"
+          circle>
+        </el-button>
+
+        <!-- 多条数据的删除 -->
+
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          circle>
+        </el-button>
+        
+      </div>
       
       <!-- 数据table展示组件 -->
       <data-table
-        :tableData="tableData"
+        :tableData="tableData | filterTableData(filterData)"
         :tableTile="tableTile">
 
         <el-table-column
@@ -31,11 +50,22 @@
           label="操作">
           <template slot-scope="op">
             <div>
-              <i
-                class="op-icon el-icon-edit"
-                @click="editTable(op.$index)">
-              </i>
-              <i class="op-icon el-icon-delete"></i>
+              
+              <el-button
+                size="small"
+                @click="editTable(op.$index)"
+                type="primary"
+                icon="el-icon-edit"
+                circle>
+              </el-button>
+
+              <el-button
+                size="small"
+                type="danger"
+                icon="el-icon-delete"
+                circle>
+              </el-button>
+
             </div>
           </template>
         </el-table-column>
@@ -52,39 +82,37 @@
 <script>
 import DataTable from '@/views/common/DataTable'
 import UserForm from './UserForm'
-import AddData from '@/views/common/AddData'
 import Pagination from '@/components/Pagination'
 
-import { getAdminUser, getRoles } from '@/api/adminUser.js'
+import { getAdminUser } from '@/api/adminUser.js'
 
-import { deepCopy } from '@/utils/utils'
+import { filterTableData } from '@/filter/dataFilter'
+
+import * as types from '@/store/mutation-types'
 
 export default {
   name: 'adminUser',
   components: {
     DataTable,
     UserForm,
-    AddData,
     Pagination
   },
   data () {
     return {
-      tableData: [],  // 表格数据
+      tableData: [],  // 表格数据(对象数组)
+
+      filterData: 'id,name,user_name,role,email,is_active',  // 需要数据的字段名的字符串组合
       
       tableTile: {  // 表格的标题和宽度，title为空，标示不显示
         id: {
           title: '',
-          width: ''
+          width: '5'
         },
         name: {
           title: '昵称',
           width: ''
         },
-        avatar: {
-          title: '',
-          width: '5'
-        },
-        userName: {
+        user_name: {
           title: '帐号名',
           width: ''
         },
@@ -96,26 +124,28 @@ export default {
           title: '邮箱',
           width: ''
         },
-        isActive: {
+        is_active: {
           title: '是否启用',
-          width: ''
-        },
-        introduce: {
-          title: '',
           width: ''
         }
 
       },
 
       userFormData: {},  // 表单数据
-
-      dialogFormVisible: false  // 表单是否显示
     
     }
   },
+
+  filters: {
+    filterTableData
+  },
   
   methods: {
-    // 页面初始化时获取数据
+    /**
+     * @description: 页面初始化时获取数据
+     * @param {type} 
+     * @return: 
+     */
     async initData () {
       try {
         const data = await getAdminUser(0, 20)  // 获取第一页，20条数据
@@ -126,40 +156,61 @@ export default {
       }
     },
 
-    async editTable (i) {
-      this.dialogFormVisible = false  // 因为每次都需要这个值为true，但是值不变，就不会数据响应，所以每次改变值再改回来，强制数据响应
-      this.dialogFormVisible = true  // 让表单框出现
+    /**
+     * @description: 修改表格
+     * @param {number} i 操作的表格索引 
+     * @return: 
+     */
+    editTable (i) {
+      this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)  // 切换表单显示状态
+      this.$store.commit(types.CHANGE_IS_FORM_EDIT_OP)  // 切换表单是不是修改操作
 
-      const data = await getRoles()
+      this.userFormData = this.tableData[i]
+    },
 
-      let tableData = deepCopy(this.tableData[i])  // 深拷贝数据后再修改，防止修改了原来的数据
-
-      tableData.role = data.data // 把获取到的角色组列表覆盖原来的值
+    /**
+     * @description: 添加表格
+     * @param {type} 
+     * @return: 
+     */
+    addTable () {
+      this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)  // 切换表单显示状态
+      this.$store.commit(types.CHANGE_IS_FORM_EDIT_OP)  // 切换表单是不是修改操作
       
-      console.log(tableData)
-
-      this.userFormData = tableData
+      // 添加表格时，传入初始的表单项
+      this.userFormData = {
+        name: '',
+        avatar: '',
+        user_name: '',
+        pass_word: '',
+        email: '',
+        roleId: '',
+        is_active: true,
+        instroduce: ''
+      }
     }
+
   },
 
   computed: {
-    formVisible () {
+    // 因为需要通过改变数据的方式来改变传入子组件的数据，所以采用计算属性传入改变后数据
+    formVisible () {  // 表单的显示状态
       return this.dialogFormVisible
     },
 
-    formData () {
+    formData () {  // 表单的数据
       return this.userFormData
     }
   },
 
   created() {
     this.initData() // 初始化数据
+
+    this.$store.dispatch('getRoles')  // 分发获取并存储角色组列表
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.pagination-wrap {
-  text-align: center;
-}
+
 </style>

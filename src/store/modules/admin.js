@@ -6,10 +6,11 @@
  * @Version: 1.0
  * @Date: 2018-12-20 13:27:38
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-12 20:48:17
+ * @LastEditTime: 2019-03-14 16:20:02
  */
 
 import { getResourceById } from '@/api/resource'
+
 import * as types from '@/store/mutation-types'
 
 import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
@@ -75,8 +76,8 @@ export default {
     }
   },
   actions: {
-    // 根据token获取角色资源
-    async GetResourceById ({ commit, getters }) {
+    // 根据管理员id获取角色资源
+    async getResourceById ({ commit, getters }) {
       const data = await getResourceById(getters.id)
       if (data.code === 0) {
         commit(types.SET_RESOURCE, JSON.parse(data.data.resource))

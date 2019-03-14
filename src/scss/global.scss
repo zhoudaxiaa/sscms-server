@@ -3,27 +3,12 @@
 @import "./base.scss"; // 基础样式
 @import "./element-ui.scss"; // 覆盖element-ui样式
 
-// 表单里修改按钮和删除按钮的样式
-.table-wrap {
-  .op-icon {
-    cursor: pointer;
-    font-size: 20px;
-    padding: 0 5px;
-  }
+// 公用的分页组件样式
+.pagination-wrap {
+  text-align: center;
+}
 
-  .el-icon-edit {
-    color: #b3d8ff;
-
-    &:hover {
-      color: #409EFF;
-    }
-  }
-
-  .el-icon-delete {
-    color: #fbc4c4;
-
-    &:hover {
-      color: #f56c6c;
-    }
-  }
+// 公共的表格数据操作按钮样式
+.public-op-wrap {
+  margin-bottom: 10px;
 }

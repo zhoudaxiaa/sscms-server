@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 22:01:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-13 21:26:18
+ * @LastEditTime: 2019-03-14 13:56:07
  */
 
 import http from '@/utils/http.js'
@@ -42,15 +42,3 @@ export function getAdminUser (offset, limit) {
   })
 }
 
-/**
- * @description: 获取角色组列表
- * @param {type} 
- * @return: 
- */
-
-export function getRoles () {
-  return http({
-    url: apiPath.roles,
-    method: 'get'
-  })
-}

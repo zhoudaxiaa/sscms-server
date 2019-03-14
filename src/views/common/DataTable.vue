@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:40:15
- * @LastEditTime: 2019-03-13 15:45:44
+ * @LastEditTime: 2019-03-14 12:38:17
  -->
 
 <template>
@@ -23,29 +23,29 @@
 
     <!-- 循环输出数据，取数据的第一项循环，得出属性名 - name，填入 -->
     <el-table-column
-      v-for="(data, name) in tableData[0]"
-      :key="name"
-      :prop="name"
-      :width="tableTile[name].width"
-      :label="tableTile[name].title">
+      v-for="(value, key) in tableData[0]"
+      :key="key"
+      :prop="key"
+      :width="tableTile[key].width"
+      :label="tableTile[key].title">
 
       <template slot-scope="scope">
 
         <!-- 数据的唯一标示id -->
         <input
-          v-if="name === 'id'"
+          v-if="key === 'id'"
           type="hidden"
-          :value="scope.row[name]">
+          :value="scope.row[key]">
 
         <!-- 根据属性值是不是布尔值来条件渲染，是布尔，就展示一个图标，否则展示数据 -->
         <i
-          v-else-if="typeof scope.row[name] === 'boolean'"
-          :class="scope.row[name] ? 'el-icon-success' : 'el-icon-error'"
-          :style="scope.row[name] ? green : red">
+          v-else-if="typeof scope.row[key] === 'boolean'"
+          :class="scope.row[key] ? 'el-icon-success' : 'el-icon-error'"
+          :style="scope.row[key] ? green : red">
         </i>
 
         <div v-else>
-          {{scope.row[name]}}
+          {{scope.row[key]}}
         </div>
 
       </template>

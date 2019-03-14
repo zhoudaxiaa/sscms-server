@@ -1,4 +1,5 @@
 export default {
+  avatar: '/v1/avatar',
   login: '/v1/adminUser/login',  // 登录
   admin: '/v1/admin',  
   adminUser: 'v1/adminUsers',  // 管理员资源

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-12 20:49:57
+ * @LastEditTime: 2019-03-14 13:33:04
  */
 
 import router, { baseRouter } from '@/router/index.js'
@@ -33,7 +33,7 @@ router.beforeEach(async (to, from, next) => {
 
       //没有就去获取角色资源信息（刷新浏览器也重新获取，来重新生成动态路由）
       try {
-        await store.dispatch('GetResourceById')
+        await store.dispatch('getResourceById')
       } catch (err) {
         Message.error(err)
         // NProgress.done()

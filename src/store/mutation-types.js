@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-10 10:33:10
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-12 20:35:58
+ * @LastEditTime: 2019-03-14 16:45:47
  */
 
 // admin 的mutations
@@ -22,5 +22,8 @@ export const DELETE_DYNAMIC_MENUS = 'delete_dynamic_menus' // 删除动态生成
 
 // app 的mutations
 export const TOGGLE_SIDEBAR_COLLAPSE = 'toggle_sidebar_collapse' // 切换并存储侧边栏展开状态
-export const ADD_TAG_VIEW = 'add_tag_view' // 添加切换页面标签的状态
+export const ADD_TAG_VIEW = 'add_tag_view' // 添加切换页面的标签
 export const DELETE_TAG_VIEW = 'delete_tag_view' // 删除页面标签
+export const TOGGLE_DIALOG_FORM_VISIBLE = 'toggle_dialog_form_visible'  // 存储表单框显示状态
+export const CHANGE_IS_FORM_EDIT_OP = 'change_is_form_edit_op'  // 存储是不是表单修改操作
+export const SET_ROLES = 'set_roles' // 存储角色组列表

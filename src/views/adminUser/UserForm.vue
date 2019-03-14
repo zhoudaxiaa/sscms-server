@@ -6,18 +6,23 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-03-13 21:45:44
+ * @LastEditTime: 2019-03-14 17:00:32
  -->
 
 <template>
   <el-dialog
     title="填写用户信息"
-    :visible.sync="formVisible">
+    :visible.sync="formVisible"
+    :before-close="closeForm">
       <el-form
         :model="formData"
         label-width="80px">
 
-        <input type="hidden" value="formData.id">
+        <!-- 当是修改数据，存在数据id时才显示 -->
+        <input
+          v-if="formData.id"
+          type="hidden"
+          :value="formData.id">
 
         <el-form-item
           label="帐号昵称"
@@ -31,9 +36,14 @@
         <el-form-item label="头像">
           
           <el-upload
-            action="https://www.zhoudaxiaa.com">
+            class="avatar-wrap"
+            :show-file-list="false"
+            :action="apiPath.avatar"
+            :on-success="uploadAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
 
             <img
+              class="avatar-img"
               v-if="formData.avatar"
               :src="formData.avatar">
 
@@ -47,10 +57,10 @@
 
         <el-form-item
           label="登录名"
-          prop="formData.userName"
+          prop="formData.user_name"
           required>
 
-          <el-input v-model="formData.userName"></el-input>
+          <el-input v-model="formData.user_name"></el-input>
 
         </el-form-item>
 
@@ -87,11 +97,11 @@
 
         <el-form-item label="角色组">
           <el-select
-            v-model="formData.role"
+            v-model="roleId"
             placeholder="请选择角色组">
             
             <el-option
-              v-for="data in formData.role"
+              v-for="data in roles"
               :key="data.id"
               :label="data.name"
               :value="data.id">
@@ -112,8 +122,21 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary">更新</el-button>
+
+          <el-button
+            v-if="isEdit"
+            type="primary">
+            更新
+          </el-button>
+
+          <el-button
+            v-else
+            type="primary">
+            添加
+          </el-button>
+          
           <el-button>取消</el-button>
+
         </el-form-item>
          
       </el-form>
@@ -121,26 +144,109 @@
 </template>
 
 <script>
+import apiPath from '@/api/apiPath'
+
+import * as types from '@/store/mutation-types'
+
 export default {
   name: 'userForm',
   props: {
-    formData: {
+    formData: {  // 表单数据
       type: Object,
       default: () => {}
-    },
-
-    formVisible: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
     return {
+      apiPath,  // api路径表
+      roleId: ''  // 要提交的角色id
+    }
+  },
+
+  methods: {
+    /**
+     * @description: 头像上传成功后的回调函数
+     * @param {object} res 响应数据 
+     * @return: 
+     */
+    uploadAvatarSuccess (res) {
+      // 把本地上传的图片地址转化为网络地址
+      this.formData.avatar = res.data.url
+    },
+    
+    /**
+     * @description: 上传之前的回调函数
+     * @param {object} 上传的文件对象（element-ui提供）
+     * @return: 
+     */
+    beforeAvatarUpload (file) {
+      const isPass = 'image/jpeg,image/png'.indexOf(file.type) > -1
+      const isOverZise = file.size >= 200 * 1024
+
+        if (!isPass) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+          return false
+        }
+        if (isOverZise) {
+          this.$message.error('上传头像图片大小不能超过 300KB!');
+          return false
+        }
+    },
+
+    /**
+     * @description: 关闭表单框之前把表单的显示状态切换下
+     * @param {type} 
+     * @return: 
+     */  
+    closeForm () {
+      this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)
+    }
+  },
+
+  computed: {
+    // 从store里获取角色组列表
+    roles () {
+      return this.$store.getters.roles
+    },
+
+    // 从store里读取表单框显示状态
+    formVisible () {
+      return this.$store.getters.dialogFormVisible
+    },
+
+    // 从store里读取是不是表单修改操作
+    isEdit () {
+      return this.$store.getters.isFormEditOp
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.avatar-wrap {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
 
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .el-icon-plus {
+    width: 80px;
+    height: 80px;
+    font-size: 36px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 50%;
+    line-height: 80px;
+
+    &:hover {
+      border-color: #409EFF;
+    }
+  }
+}
 </style>

@@ -6,11 +6,13 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-03-08 13:24:24
+ * @LastEditTime: 2019-03-14 17:07:36
  */
 
 import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
 import * as types from '@/store/mutation-types'
+
+import { getRoles } from '@/api/roles'
 
 export default {
   state: {
@@ -26,7 +28,9 @@ export default {
         name: '首页', // String 切换页面的标签名
         path: '/dashboard', // String 标签指向的页面
       }
-    ]
+    ],
+
+    roles: []  // 角色组列表
   },
 
   getters: {
@@ -44,6 +48,11 @@ export default {
     tagView (state) {
 
       return getter(state, 'tagView')
+    },
+
+    // 读取角色组里列表
+    roles (state) {
+      return getter(state, 'roles')
     }
   },
 
@@ -69,16 +78,28 @@ export default {
 
       newTagView = tagView.filter((tag) => tag.path !== path)
 
-      if (newTagView.length === 0) {
+      if (newTagView.length === 0) {  // 当tagview 为空时，添加首页的tagview
         newTagView = [{
           name: '首页',
-          path: '/dashboard',
-          // 激活状态取决于删除时，当前标签是不是首页，如果是，就是true，因为此时页面的路由不会有变化，不会触发watch的 $route
-          active: path === '/dashboard'
+          path: '/dashboard'
         }]
       }
       
       setMutation(state, newTagView, 'tagView')
+    },
+
+    // 存储角色组列表
+    [types.SET_ROLES] (state, roles) {
+      setMutation(state, roles, 'roles')
+    }
+  },
+
+  actions: {
+    // 请求角色组列表数据并commit
+    async getRoles ({ commit }) {
+      const data = await getRoles()
+
+      commit(types.SET_ROLES, data.data)
     }
   }
 }
