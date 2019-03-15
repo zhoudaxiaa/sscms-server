@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-03-14 22:02:13
+ * @LastEditTime: 2019-03-15 17:16:40
  -->
 
 <template>
@@ -51,29 +51,30 @@
 
         <el-form-item
           label="登录名"
-          prop="user_name">
+          prop="username">
 
-          <el-input v-model="formData.user_name"></el-input>
+          <el-input v-model="formData.username"></el-input>
 
         </el-form-item>
 
         <el-form-item
           label="密码"
-          prop="pass_word">
+          prop="password">
           
           <el-input
             type="password"
-            v-model="formData.pass_word">
+            v-model="formData.password">
           </el-input>
 
         </el-form-item>
 
         <el-form-item
-          label="确认密码">
+          label="确认密码"
+          prop="check_pass">
 
           <el-input
             type="password"
-            v-model="formData.pass_word">
+            v-model="formData.check_pass">
           </el-input>
 
         </el-form-item>
@@ -120,18 +121,20 @@
         <el-form-item>
 
           <el-button
+            @click="uploadSubmit"
             v-if="isEdit"
             type="primary">
             更新
           </el-button>
 
           <el-button
+            @click="addSubmit"
             v-else
             type="primary">
             添加
           </el-button>
           
-          <el-button>取消</el-button>
+          <el-button @click="closeForm">取消</el-button>
 
         </el-form-item>
          
@@ -142,6 +145,8 @@
 <script>
 import apiPath from '@/api/apiPath'
 import { mapGetters } from 'vuex'
+
+import { addAdminUser } from '@/api/adminUser'
 
 import * as types from '@/store/mutation-types'
 
@@ -158,23 +163,50 @@ export default {
             trigger: 'blur'
           },
           {
-            min: 3,
+            min: 2,
             max: 10,
-            message: '长度在3到10个字符',
+            message: '长度在2到10个字符',
             trigger: 'change'
           }
         ],
-        user_name: [
+        username: [
           {
             required: true,
             message: '请输入登录账号',
             trigger: 'blur'
           }
         ],
-        pass_word: [
+        password: [
           {
-            required: true,
-            message: '请输入密码',
+            // 使用箭头函数绑定this
+            validator: (rule, value, callback) => {
+
+              // 如果是新增数据，必须输入密码
+              if (!this.isEdit) callback(new Error('请输入密码'))
+
+              // 如果是修改密码，输入了就必须符合规范
+              if (!value && /^(\d|[a-z]|[A-Z]|_){6,}$/.test(value)) {
+                callback(new Error('6 到 12 位,只能包含字母、数字和下划线!'))
+              }
+              
+              callback()
+            },
+            trigger: 'blur'
+          }
+        ],
+        check_pass: [
+          {
+            // 使用箭头函数绑定this
+            validator: (rule, value, callback) => {
+
+              // 如果输入了密码，这个确认密码也得输入
+              if (this.formData.password) callback(new Error('请再次输入密码'))
+
+              // 一致就通过
+              if (value !== this.formData.password) callback(new Error('两次输入的密码不一致！'))
+
+              callback()
+            },
             trigger: 'blur'
           }
         ],
@@ -225,6 +257,40 @@ export default {
           this.$message.error('上传头像图片大小不能超过 300KB!');
           return false
         }
+    },
+
+    /**
+     * @description: 表单更新数据操作
+     * @param {type} 
+     * @return: 
+     */
+    uploadSubmit () {
+
+    },
+
+    /**
+     * @description: 表单新增数据操作
+     * @param {type} 
+     * @return: 
+     */
+    async addSubmit () {
+      try {
+        const data = await addAdminUser (this.formData)
+
+        if (data.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '添加成功！'
+          })
+        }
+
+        this.closeForm();
+      } catch (e) {
+        this.message({
+          type: 'error',
+          message: e
+        })
+      }
     },
 
     /**

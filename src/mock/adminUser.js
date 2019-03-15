@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-21 10:09:01
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-14 14:24:01
+ * @LastEditTime: 2019-03-15 17:00:59
  */
 import qs from 'qs'
 
@@ -47,12 +47,18 @@ Mock.mock(RegExp(apiPath.adminUser + '.*'), 'get', {
       'id|10': '',
       'name': '@cname()',
       'avatar': '',
-      'user_name': 'sscms',
+      'username': 'sscms',
       'role': '超级管理员',
       'email': '@email()',
       'is_active|1-2': true,
       'introduce|5-20': ''
     }
   ],
+  'msg': ''
+})
+
+// 新增管理员mock
+Mock.mock(apiPath.adminUser, 'post', {
+  'code': 0,
   'msg': ''
 })

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 22:01:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-14 13:56:07
+ * @LastEditTime: 2019-03-15 17:01:11
  */
 
 import http from '@/utils/http.js'
@@ -39,6 +39,19 @@ export function getAdminUser (offset, limit) {
   return http({
     url: `${apiPath.adminUser}?offset=${offset}&limit=${limit}`,
     method: 'get'
+  })
+}
+
+/**
+ * @description: 新增管理员
+ * @param {type} 
+ * @return: 
+ */
+
+export function addAdminUser (form) {
+  return http({
+    url: apiPath.adminUser,
+    method: 'post'
   })
 }
 

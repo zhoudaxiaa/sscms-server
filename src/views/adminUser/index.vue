@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-14 21:42:54
+ * @LastEditTime: 2019-03-15 17:17:46
  -->
 
 <template>
@@ -74,7 +74,7 @@ import Pagination from '@/components/Pagination'
 
 import { getAdminUser } from '@/api/adminUser.js'
 
-import { filterTableData } from '@/filter/dataFilter'
+import { filterTableData } from '@/filter/dataFilter'  // 数据过滤器
 
 import * as types from '@/store/mutation-types'
 
@@ -91,14 +91,14 @@ export default {
     return {
       tableData: [],  // 表格数据(对象数组)
 
-      filterData: 'name,user_name,role,email,is_active',  // 需要数据的字段名的字符串组合
+      filterData: 'name,username,role,email,is_active',  // 需要数据的字段名的字符串组合
       
       tableTile: {  // 表格的标题和宽度，title为空，标示不显示
         name: {
           title: '昵称',
           width: ''
         },
-        user_name: {
+        username: {
           title: '帐号名',
           width: ''
         },
@@ -158,7 +158,15 @@ export default {
     editTable (i) {
       this.toggleOperation()
 
-      this.$store.commit(types.SET_ADMIN_USER_FORM, this.tableData[i])  // 存储表单数据
+      this.$store.commit(  // 存储表单数据
+        types.SET_ADMIN_USER_FORM,
+        Object.assign(  // 把密码和验证密码字段合并到表单里
+          this.tableData[i],
+          {
+            check_pass:'',
+            password: ''
+          })
+        )
 
     },
 
@@ -174,8 +182,9 @@ export default {
       this.$store.commit(types.SET_ADMIN_USER_FORM, {
         name: '',
         avatar: '',
-        user_name: '',
-        pass_word: '',
+        username: '',
+        password: '',
+        check_pass: '',  // 非必要字段，只为了表单效验
         email: '',
         role_id: '',
         is_active: true,
