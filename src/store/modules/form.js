@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 17:04:28
- * @LastEditTime: 2019-03-14 20:48:29
+ * @LastEditTime: 2019-03-16 19:43:59
  */
 
 import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
@@ -20,7 +20,10 @@ export default {
     isFormEditOp: true, // 是不是表单修改操作
 
 
-    adminUserForm: {}, // 管理员表单
+    adminUser: {  // 管理员
+      form: null,  // 表单
+      currentPage: 0, // 当前页码
+    },
   },
   
   getters: {
@@ -37,7 +40,12 @@ export default {
 
     // 读取管理员信息表单
     adminUserForm (state) {
-      return getter(state, 'adminUserForm')
+      return getter(state, 'adminUser', 'form')
+    },
+
+    // 读取管理员页面的当前页码
+    adminUserCurrentPage (state) {
+      return getter(state, 'adminUser', 'currentPage')
     }
   },
 
@@ -50,14 +58,18 @@ export default {
     },
 
     // 改变表单是不是修改操作
-    [types.CHANGE_IS_FORM_EDIT_OP] (state) {
-      let isEdit = !this.getters.isFormEditOp
+    [types.CHANGE_IS_FORM_EDIT_OP] (state, isEdit = true) {
       setMutation(state, isEdit, 'isFormEditOp')
     },
 
     // 存储管理员信息表单
     [types.SET_ADMIN_USER_FORM] (state, form) {
-      setMutation(state, form, 'adminUserForm')
+      setMutation(state, form, 'adminUser', 'form')
+    },
+
+    // 存储管理员页面的当前页码
+    [types.SET_ADMIN_USER_CURRENT_PAGE] (state, page) {
+      setMutation(state, page, 'adminUser', 'currentPage')
     }
   }
 }

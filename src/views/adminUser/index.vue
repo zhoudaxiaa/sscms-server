@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-15 17:17:46
+ * @LastEditTime: 2019-03-17 15:48:46
  -->
 
 <template>
@@ -28,6 +28,7 @@
       
       <!-- 数据table展示组件 -->
       <data-table
+        @selectionOperation="selectionOperation"
         :tableData="tableData | filterTableData(filterData)"
         :tableTile="tableTile">
 
@@ -38,14 +39,15 @@
             <div>
               
               <el-button
-                size="small"
                 @click="editTable(op.$index)"
+                size="small"
                 type="primary"
                 icon="el-icon-edit"
                 circle>
               </el-button>
 
               <el-button
+                @click='deleteTable(op.row.id)'
                 size="small"
                 type="danger"
                 icon="el-icon-delete"
@@ -58,8 +60,15 @@
 
       </data-table>
       
-      <!-- 分页组件 -->
-      <pagination class="pagination-wrap"></pagination>
+      <!-- 分页组件，当数据大于10才显示 -->
+      <el-pagination
+        v-if="total > 10"
+        class="pagination-wrap"
+        layout="total, prev, pager, next"
+        :total="total"
+        :current-page.sync="currentPage"
+        @current-change="pageChange">
+      </el-pagination>
       
     </div>
   </div>
@@ -69,10 +78,10 @@
 import DataTable from '@/views/common/DataTable'
 import AddTable from '@/views/common/AddTable'
 import DeleteTable from '@/views/common/DeleteTable'
-import UserForm from './UserForm'
-import Pagination from '@/components/Pagination'
 
-import { getAdminUser } from '@/api/adminUser.js'
+import UserForm from './UserForm'
+
+import { getAdminUser, deleteAdminUser } from '@/api/adminUser'
 
 import { filterTableData } from '@/filter/dataFilter'  // 数据过滤器
 
@@ -85,15 +94,24 @@ export default {
     AddTable,
     DeleteTable,
     UserForm,
-    Pagination
   },
   data () {
     return {
       tableData: [],  // 表格数据(对象数组)
 
-      filterData: 'name,username,role,email,is_active',  // 需要数据的字段名的字符串组合
+      currentPage: 1, // 当前的页码
+
+      total: 0, // 总计数据的数
+
+      selectionIdList: '', // 多选的id字符串组合
+
+      filterData: 'id,name,username,role_name,email,is_active',  // 需要数据的字段名的字符串组合
       
       tableTile: {  // 表格的标题和宽度，title为空，标示不显示
+        id: {
+          title: '',
+          width: '1'
+        },
         name: {
           title: '昵称',
           width: ''
@@ -102,7 +120,7 @@ export default {
           title: '帐号名',
           width: ''
         },
-        role: {
+        role_name: {
           title: '角色组',
           width: ''
         },
@@ -132,9 +150,10 @@ export default {
      */
     async initData () {
       try {
-        const data = await getAdminUser(0, 20)  // 获取第一页，20条数据
+        const data = await getAdminUser(0, 10)  // 获取第一页，20条数据
 
-        this.tableData = data.data
+        this.tableData = data.data.list  // 数据数组
+        this.total = data.data.total  // 数量
       } catch (err) {
         this.$message.error(err)
       }
@@ -142,12 +161,12 @@ export default {
 
     /**
      * @description: 切换表单显示状态和切换表单是不是修改操作，多次使用，提取出来
-     * @param {type} 
+     * @param {boolean} isEdit 是不是修改操作，默认是 
      * @return: 
      */
-    toggleOperation () {
+    toggleOperation (isEdit = true) {
       this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)  // 切换表单显示状态
-      this.$store.commit(types.CHANGE_IS_FORM_EDIT_OP)  // 切换表单是不是修改操作
+      this.$store.commit(types.CHANGE_IS_FORM_EDIT_OP, isEdit)  // 切换表单是不是修改操作
     },
 
     /**
@@ -171,12 +190,39 @@ export default {
     },
 
     /**
-     * @description: 添加表格
+     * @description: 删除表格
+     * @param {number} i 操作的表格索引 
+     * @return: 
+     */
+    async deleteTable (idList) {
+
+      try {
+        const data = await deleteAdminUser(idList)
+
+        if (data.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '删除成功！'
+          })
+        }
+      } catch (err) {
+        this.$message.error(err)
+      }
+
+    },
+
+    selectionOperation (ids) {
+      this.selectionIdList = ids
+    },
+
+    /**
+     * @description: 添加表格(传入子组件的方法)
      * @param {type} 
      * @return: 
      */
     handleAddTable () {
-      this.toggleOperation()
+
+      this.toggleOperation(false)
       
       // 添加表格时，传入初始的表单项
       this.$store.commit(types.SET_ADMIN_USER_FORM, {
@@ -193,18 +239,62 @@ export default {
     },
 
     /**
-     * @description: 删除表格
+     * @description: 删除表格（传入子组件的方法) 此处和单个删除是一个函数
      * @param {type} 
      * @return: 
      */    
-    handleDeleteTable () {
+    async handleDeleteTable () {
+      // const idList = this.selectionIdList
+      let list = ''
 
+      console.log(list)
+
+      // if (!idList) {
+      //   this.$message({
+      //     type: 'error',
+      //     massage: '请至少选择一项进行删除操作！'
+      //   })
+      // }
+
+      // try {
+      //   const data = await deleteAdminUser(idList)
+
+      //   if (data.code === 0) {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '删除成功！'
+      //     })
+      //   }
+      // } catch (err) {
+      //   this.$message.error(err)
+      // }
+    },
+
+    /**
+     * @description: 当前页面改变时调用，获取数据
+     * @param {type} 
+     * @return: 
+     */
+    async pageChange (page) {
+
+      this.$store.commit(types.SET_ADMIN_USER_CURRENT_PAGE, page)  // 存储当前的页码
+
+      try {
+        const data = await getAdminUser(page, 10)  // 获取第一页，20条数据
+
+        this.tableData = data.data.list  // 数据数组
+        
+      } catch (err) {
+        this.$message.error(err)
+      }
     },
 
   },
 
   created() {
     this.initData() // 初始化数据
+
+    this.currentPage = this.$store.getters.adminUserCurrentPage  // 从store 从获取当前页码
 
     this.$store.dispatch('getRoles')  // 分发获取并存储角色组列表
   },

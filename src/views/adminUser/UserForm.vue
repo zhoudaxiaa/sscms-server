@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-03-15 17:16:40
+ * @LastEditTime: 2019-03-16 19:56:12
  -->
 
 <template>
@@ -121,7 +121,7 @@
         <el-form-item>
 
           <el-button
-            @click="uploadSubmit"
+            @click="updateSubmit"
             v-if="isEdit"
             type="primary">
             更新
@@ -146,12 +146,12 @@
 import apiPath from '@/api/apiPath'
 import { mapGetters } from 'vuex'
 
-import { addAdminUser } from '@/api/adminUser'
+import { addAdminUser, updateAdminUser } from '@/api/adminUser'
 
 import * as types from '@/store/mutation-types'
 
 export default {
-  name: 'userForm',
+  name: 'UserForm',
   data() {
     return {
       apiPath,  // api路径表
@@ -185,7 +185,7 @@ export default {
               if (!this.isEdit) callback(new Error('请输入密码'))
 
               // 如果是修改密码，输入了就必须符合规范
-              if (!value && /^(\d|[a-z]|[A-Z]|_){6,}$/.test(value)) {
+              if (value && /^(\d|[a-z]|[A-Z]|_){6,}$/.test(value)) {
                 callback(new Error('6 到 12 位,只能包含字母、数字和下划线!'))
               }
               
@@ -264,7 +264,25 @@ export default {
      * @param {type} 
      * @return: 
      */
-    uploadSubmit () {
+    async updateSubmit () {
+      try {
+        const data = await updateAdminUser (this.formData)
+
+        if (data.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '更新成功！'
+          })
+        }
+
+        this.closeForm();
+        
+      } catch (e) {
+        this.message({
+          type: 'error',
+          message: e
+        })
+      }
 
     },
 
@@ -285,6 +303,7 @@ export default {
         }
 
         this.closeForm();
+
       } catch (e) {
         this.message({
           type: 'error',

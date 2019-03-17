@@ -6,13 +6,14 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:40:15
- * @LastEditTime: 2019-03-14 21:25:28
+ * @LastEditTime: 2019-03-16 22:21:04
  -->
 
 <template>
   <el-table
     class="table-container"
-    :data="tableData">
+    :data="tableData"
+    @selection-change="selectionChange">
 
     <!-- 选择框 -->
     <el-table-column
@@ -31,9 +32,14 @@
 
       <template slot-scope="scope">
 
+        <input
+          v-if="key === 'id'"
+          type="hidden"
+          value="scope.row[key]">
+
         <!-- 根据属性值是不是布尔值来条件渲染，是布尔，就展示一个图标，否则展示数据 -->
         <i
-          v-if="typeof scope.row[key] === 'boolean'"
+          v-else-if="typeof scope.row[key] === 'boolean'"
           :class="scope.row[key] ? 'el-icon-success' : 'el-icon-error'"
           :style="scope.row[key] ? green : red">
         </i>
@@ -53,7 +59,7 @@
 
 <script>
 export default {
-  name: 'dataTable',
+  name: 'DataTable',
   props: {
     tableData: {
       type: Array,
@@ -68,6 +74,18 @@ export default {
     return {
       green: { color: "#13CE66" },
       red: { color: "#FF4949" },
+    }
+  },
+
+  methods: {
+    selectionChange (val) {
+      let ids = []
+
+      val.forEach((v) => {
+        ids.push(v.id)
+      })
+
+      this.$emit('selectionOperation', ids.join(','))
     }
   },
 

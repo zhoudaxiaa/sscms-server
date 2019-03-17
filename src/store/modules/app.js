@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-03-14 17:07:36
+ * @LastEditTime: 2019-03-16 17:24:48
  */
 
 import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
@@ -99,7 +99,7 @@ export default {
     async getRoles ({ commit }) {
       const data = await getRoles()
 
-      commit(types.SET_ROLES, data.data)
+      commit(types.SET_ROLES, data.data.list)
     }
   }
 }

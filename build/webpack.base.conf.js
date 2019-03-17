@@ -36,7 +36,7 @@ module.exports = {
       '@': resolve('src')
     }
   },
-  devServer: { disableHostCheck: true, }, // 开启外网访问
+  // devServer: { disableHostCheck: true, }, // 开启外网访问
   module: {
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),

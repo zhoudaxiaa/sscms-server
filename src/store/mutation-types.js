@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-10 10:33:10
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-14 20:48:27
+ * @LastEditTime: 2019-03-16 19:44:13
  */
 
 // admin 的mutations
@@ -29,4 +29,7 @@ export const SET_ROLES = 'set_roles' // 存储角色组列表
 // form 的mutations
 export const TOGGLE_DIALOG_FORM_VISIBLE = 'toggle_dialog_form_visible'  // 存储表单框显示状态
 export const CHANGE_IS_FORM_EDIT_OP = 'change_is_form_edit_op'  // 存储是不是表单修改操作
+
+// form 下adminUser 的mutations
 export const SET_ADMIN_USER_FORM = 'set_admin_user_form' // 存储管理员表单数据
+export const SET_ADMIN_USER_CURRENT_PAGE = 'set_admin_user_current_page'  // 存储管理员页面的当前页码

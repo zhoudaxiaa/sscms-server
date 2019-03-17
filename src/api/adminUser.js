@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 22:01:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-15 17:01:11
+ * @LastEditTime: 2019-03-16 21:42:26
  */
 
 import http from '@/utils/http.js'
@@ -44,7 +44,7 @@ export function getAdminUser (offset, limit) {
 
 /**
  * @description: 新增管理员
- * @param {type} 
+ * @param {object} form 管理员信息表 
  * @return: 
  */
 
@@ -55,3 +55,28 @@ export function addAdminUser (form) {
   })
 }
 
+/**
+ * @description: 更新管理员信息
+ * @param {type} 
+ * @return: 
+ */
+
+export function updateAdminUser (form) {
+  return http({
+    url: apiPath.adminUser,
+    method: 'put'
+  })
+}
+
+/**
+ * @description: 删除管理员
+ * @param {type} 
+ * @return: 
+ */
+
+export function deleteAdminUser (idList) {
+  return http({
+    url: apiPath.adminUser,
+    method: 'delete'
+  })
+}
