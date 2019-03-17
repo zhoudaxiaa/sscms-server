@@ -6,14 +6,14 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-02-27 13:14:43
+ * @LastEditTime: 2019-03-17 19:25:49
  */
 
 import axios from 'axios'
 import store from '@/store'
 import qs from 'qs' // 序列化序列化模块
 import { Message } from 'element-ui'
-import router from '@/router/'
+import router from '@/router/index'
 
 import * as types from '@/store/mutation-types'
 
@@ -79,9 +79,9 @@ server.interceptors.response.use(
     return response
   },
   err => {
-    console.log(err)
-    if (err.response.status == 504 || err.response.status == 404) {
-      router.push('/404')
+    if (err.response.status === 504 || err.response.status === 404) {
+      Message.error({ message: '网络错误！' })
+      router.push('404')
     } else if (err.response.status == 403) {
       Message.error({ message: '权限不足,请联系管理员!' })
     } else {

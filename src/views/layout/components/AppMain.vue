@@ -6,13 +6,13 @@
  * @Version: 1.0
  * @Date: 2019-01-17 17:49:50
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-17 16:06:27
+ * @LastEditTime: 2019-03-17 16:39:22
  -->
 
 <template>
   <div class="main-container">
     <!-- <keep-alive> -->
-      <!-- <router-view :key="key"></router-view> -->
+      <router-view :key="key"></router-view>
     <!-- </keep-alive> -->
   </div>
 </template>
@@ -24,11 +24,6 @@ export default {
     key () {
       return this.$route.fullPath
     }
-  },
-
-  created(){
-    let a = ''
-    console.log(a)
   }
 }
 </script>

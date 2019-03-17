@@ -35,12 +35,12 @@ exports.cssLoaders = function (options) {
 
     if (loader) {
       loaders.push({
-        loader: loader + '-loader',
+        loader: loader + "-loader",
         options: Object.assign({}, loaderOptions, {
           sourceMap: options.sourceMap
         })
-      })
-
+      });
+    
       // sass-resources-loader 配置
       if (loader === 'sass') {
         loaders.push({

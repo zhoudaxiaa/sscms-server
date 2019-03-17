@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-17 15:48:46
+ * @LastEditTime: 2019-03-17 22:36:25
  -->
 
 <template>
@@ -239,35 +239,41 @@ export default {
     },
 
     /**
-     * @description: 删除表格（传入子组件的方法) 此处和单个删除是一个函数
+     * @description: 删除表格（传入子组件的方法)
      * @param {type} 
      * @return: 
      */    
     async handleDeleteTable () {
-      // const idList = this.selectionIdList
-      let list = ''
+      const idList = this.selectionIdList
 
-      console.log(list)
+      if (!idList) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一项进行删除操作！'
+        })
+        return
+      }
 
-      // if (!idList) {
-      //   this.$message({
-      //     type: 'error',
-      //     massage: '请至少选择一项进行删除操作！'
-      //   })
-      // }
+      // let result = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   type: 'warning'
+      // })
 
-      // try {
-      //   const data = await deleteAdminUser(idList)
+      // console.log(result)
 
-      //   if (data.code === 0) {
-      //     this.$message({
-      //       type: 'success',
-      //       message: '删除成功！'
-      //     })
-      //   }
-      // } catch (err) {
-      //   this.$message.error(err)
-      // }
+      try {
+        const data = await deleteAdminUser(idList)
+
+        if (data.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '删除成功！'
+          })
+        }
+      } catch (err) {
+        this.$message.error(err)
+      }
     },
 
     /**

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-14 13:33:04
+ * @LastEditTime: 2019-03-17 19:25:14
  */
 
 import router, { baseRouter } from '@/router/index.js'
@@ -51,8 +51,9 @@ router.beforeEach(async (to, from, next) => {
       next() // 已登录，已获取角色资源
     }
   } else if (to.path !== '/login') {
+    console.log(to.path)
     // 没登录，且去往的页面也不是登录页，跳转登录页
-    Message('登录超时，请重新登录')
+    Message('登录超时，请重新登录!')
     next('login')
   } else {
     next() // 没登录，跳转的是登录页
