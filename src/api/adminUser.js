@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 22:01:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-16 21:42:26
+ * @LastEditTime: 2019-03-18 11:34:16
  */
 
 import http from '@/utils/http.js'
@@ -35,7 +35,7 @@ export function loginByAccount (loginForm) {
  * @param {number} limit 一页多少条数据
  * @return: 
  */
-export function getAdminUser (offset, limit) {
+export function getAdminUser (offset = 1, limit = 10) {
   return http({
     url: `${apiPath.adminUser}?offset=${offset}&limit=${limit}`,
     method: 'get'

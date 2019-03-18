@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-21 10:09:01
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-16 21:42:46
+ * @LastEditTime: 2019-03-18 13:34:24
  */
 import qs from 'qs'
 
@@ -45,7 +45,7 @@ Mock.mock(RegExp(apiPath.adminUser + '.*'), 'get', {
   'data': {
     'list': [
       {
-        'id|10': '',
+        'id': 'tttttt',
         'name': '@cname()',
         'avatar': '',
         'username': 'sscms',

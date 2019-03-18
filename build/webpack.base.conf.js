@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const { VueLoaderPlugin } = require('vue-loader')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -20,6 +21,7 @@ const createLintingRule = () => ({
 })
 
 module.exports = {
+  mode: 'development',  // 新加的
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js'
@@ -52,8 +54,17 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
+        test: /\.svg$/,
+        loader: "svg-sprite-loader",
+        include: [resolve("src/icons")],
+        options: {
+          symbolId: "icon-[name]"
+        }
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: [resolve('src/icons')],  // 过滤icons下的svg图
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
@@ -88,5 +99,8 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  plugins: [  // 新加的
+    new VueLoaderPlugin()
+  ]
 }

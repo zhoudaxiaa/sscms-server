@@ -6,11 +6,13 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 17:04:28
- * @LastEditTime: 2019-03-16 19:43:59
+ * @LastEditTime: 2019-03-18 15:38:32
  */
 
 import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
 import * as types from '@/store/mutation-types'
+
+import { getRoles } from '@/api/roles'
 
 export default {
   state: {
@@ -19,10 +21,15 @@ export default {
 
     isFormEditOp: true, // 是不是表单修改操作
 
-
     adminUser: {  // 管理员
       form: null,  // 表单
-      currentPage: 0, // 当前页码
+      currentPage: 1, // 当前页码
+    },
+
+    roles: {  // 角色
+      list: [],  // 角色列表
+      form: null,  // 表单
+      currentPage: 1, // 当前页码
     },
   },
   
@@ -46,6 +53,21 @@ export default {
     // 读取管理员页面的当前页码
     adminUserCurrentPage (state) {
       return getter(state, 'adminUser', 'currentPage')
+    },
+
+    // 读取角色组里列表
+    rolesList (state) {
+      return getter(state, 'roles')
+    },
+
+    // 读取角色信息表单
+    rolesForm (state) {
+      return getter(state, 'roles', 'form')
+    },
+
+    // 读取角色页面的当前页码
+    rolesCurrentPage (state) {
+      return getter(state, 'roles', 'currentPage')
     }
   },
 
@@ -70,6 +92,37 @@ export default {
     // 存储管理员页面的当前页码
     [types.SET_ADMIN_USER_CURRENT_PAGE] (state, page) {
       setMutation(state, page, 'adminUser', 'currentPage')
+    },
+
+    // 存储角色组列表
+    [types.SET_ROLES_LIST] (state, roles) {
+      setMutation(state, roles, 'roles', 'list')
+    },
+
+    // 存储角色信息表单
+    [types.SET_ROLES_FORM] (state, form) {
+      setMutation(state, form, 'roles', 'form')
+    },
+
+    // 存储角色页面的当前页码
+    [types.SET_ROLES_CURRENT_PAGE] (state, page) {
+      setMutation(state, page, 'roles', 'currentPage')
+    },
+
+  },
+
+  actions: {
+    // 请求角色组列表数据并commit
+    async getRoles ({ commit }) {
+
+      try {
+        const data = await getRoles() // 获取所有角色列表
+        commit(types.SET_ROLES_LIST, data.data.list)
+
+      } catch (e) {
+        console.log(e)
+      }
+
     }
-  }
+  },
 }

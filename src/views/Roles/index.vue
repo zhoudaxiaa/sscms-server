@@ -2,16 +2,16 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: 用户管理页面
+ * @Description: 管理员角色页面
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
- * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-03-18 17:00:35
+ * @Date: 2019-03-07 11:07:59
+ * @LastEditTime: 2019-03-18 15:15:46
  -->
 
 <template>
   <div>
-    <user-form class="form-wrap"></user-form>
+    <role-form class="form-wrap"></role-form>
 
     <div class="table-wrap">
 
@@ -23,10 +23,10 @@
 
         <!-- 删除数据 -->
         <deleteTable
-          :httpDeleteMethod="deleteAdminUser"
+          :httpDeleteMethod="deleteRoles"
           :deleteIdList="deleteIdList">
         </deleteTable>
-        
+
       </div>
       
       <!-- 数据table展示组件 -->
@@ -82,28 +82,25 @@ import DataTable from '@/views/common/DataTable'
 import AddTable from '@/views/common/AddTable'
 import DeleteTable from '@/views/common/DeleteTable'
 
-import mixins from '@/views/common/mixins.js'
+import RoleForm from './RoleForm'
 
-import UserForm from './UserForm'
-
-import { getAdminUser, deleteAdminUser } from '@/api/adminUser'
+import { getRoles, deleteRoles } from '@/api/roles'
 
 import { filterTableData } from '@/filter/dataFilter'  // 数据过滤器
 
 import * as types from '@/store/mutation-types'
 
 export default {
-  name: 'adminUser',
+  name: 'Roles',
   components: {
     DataTable,
     AddTable,
     DeleteTable,
-    UserForm,
+    RoleForm,
   },
-  mixins: [mixins],
   data () {
     return {
-      deleteAdminUser,  // http删除方法，需要穿到子组件，所以先赋值给变量
+      deleteRoles,  // http删除方法，需要穿到子组件，所以先赋值给变量
 
       tableData: [],  // 表格数据(对象数组)
 
@@ -111,21 +108,14 @@ export default {
 
       total: 0, // 总计数据的数
 
-      selectionIdList: '', // 多选的id字符串组合
+      deleteIdList: '', // 多选的id字符串组合
 
       initForm: {  // 添加管理员信息初始表格
         name: '',
-        avatar: '',
-        username: '',
-        password: '',
-        check_pass: '',  // 非必要字段，只为了表单效验
-        email: '',
-        role_id: '',
-        is_active: true,
         instroduce: '',
       }, 
 
-      filterData: 'id,name,username,role_name,email,is_active',  // 需要数据的字段名的字符串组合
+      filterData: 'id,name,instroduce',  // 需要数据的字段名的字符串组合
       
       tableTile: {  // 表格的标题和宽度，title为空，标示不显示
         id: {
@@ -136,20 +126,8 @@ export default {
           title: '昵称',
           width: ''
         },
-        username: {
-          title: '帐号名',
-          width: ''
-        },
-        role_name: {
-          title: '角色组',
-          width: ''
-        },
-        email: {
-          title: '邮箱',
-          width: ''
-        },
-        is_active: {
-          title: '是否启用',
+        introduce: {
+          title: '角色描述',
           width: ''
         },
 
@@ -170,13 +148,23 @@ export default {
      */
     async initData () {
       try {
-        const data = await getAdminUser()  // 获取第一页，20条数据
+        const data = await getRoles(0, 10)  // 获取第一页，20条数据
 
         this.tableData = data.data.list  // 数据数组
         this.total = data.data.total  // 数量
       } catch (err) {
         this.$message.error(err)
       }
+    },
+
+    /**
+     * @description: 切换表单显示状态和切换表单是不是修改操作，多次使用，提取出来
+     * @param {boolean} isEdit 是不是修改操作，默认是 
+     * @return: 
+     */
+    toggleOperation (isEdit = true) {
+      this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)  // 切换表单显示状态
+      this.$store.commit(types.CHANGE_IS_FORM_EDIT_OP, isEdit)  // 切换表单是不是修改操作
     },
 
     /**
@@ -212,7 +200,7 @@ export default {
         type: 'warning'
       }).then(() => {
 
-        return deleteAdminUser(idList)
+        return deleteRoles(idList)
 
       }).then((result) => {
         if (result.code === 0) {
@@ -230,15 +218,8 @@ export default {
 
     },
 
-    /**
-     * @description: 子组件触发的事件，传入子组件选中的id字符串组合
-     * @param {type} 
-     * @return: 
-     */
     selectionOperation (ids) {
-      let id = ids.slice(2,)
-      console.log(id)
-      this.selectionIdList = id
+      this.deleteIdList = ids
     },
 
     /**
@@ -251,7 +232,7 @@ export default {
       this.$store.commit(types.SET_ADMIN_USER_CURRENT_PAGE, page)  // 存储当前的页码
 
       try {
-        const data = await getAdminUser(page, 10)  // 获取第page页，20条数据
+        const data = await getRoles(page, 10)  // 获取第一页，20条数据
 
         this.tableData = data.data.list  // 数据数组
         
@@ -262,20 +243,10 @@ export default {
 
   },
 
-  computed: {
-    deleteIdList () {  // 删除的id字符串组合
-      return this.selectionIdList
-    }
-  },
-
   created() {
     this.initData() // 初始化数据
 
     this.currentPage = this.$store.getters.adminUserCurrentPage  // 从store 从获取当前页码
-
-    const roles = this.$store.getters.rolesList
-
-    if (roles.length > 0) return  // 有缓存就返回
 
     this.$store.dispatch('getRoles')  // 分发获取并存储角色组列表
   },

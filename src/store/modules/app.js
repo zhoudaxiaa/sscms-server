@@ -6,13 +6,11 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-03-16 17:24:48
+ * @LastEditTime: 2019-03-18 15:22:39
  */
 
 import { getter, setMutation } from '@/utils/store' // 封装本地存储的 getters，mutations 的方法
 import * as types from '@/store/mutation-types'
-
-import { getRoles } from '@/api/roles'
 
 export default {
   state: {
@@ -30,7 +28,6 @@ export default {
       }
     ],
 
-    roles: []  // 角色组列表
   },
 
   getters: {
@@ -50,10 +47,6 @@ export default {
       return getter(state, 'tagView')
     },
 
-    // 读取角色组里列表
-    roles (state) {
-      return getter(state, 'roles')
-    }
   },
 
   mutations: {
@@ -88,18 +81,7 @@ export default {
       setMutation(state, newTagView, 'tagView')
     },
 
-    // 存储角色组列表
-    [types.SET_ROLES] (state, roles) {
-      setMutation(state, roles, 'roles')
-    }
   },
 
-  actions: {
-    // 请求角色组列表数据并commit
-    async getRoles ({ commit }) {
-      const data = await getRoles()
-
-      commit(types.SET_ROLES, data.data.list)
-    }
-  }
+  
 }

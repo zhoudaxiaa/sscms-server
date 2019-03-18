@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-03-17 19:36:22
+ * @LastEditTime: 2019-03-18 15:42:08
  -->
 
 <template>
@@ -325,7 +325,7 @@ export default {
   computed: {
     ...mapGetters({
       formData: 'adminUserForm',
-      roles: 'roles',  // 从store里获取角色组列表
+      roles: 'rolesList',  // 从store里获取角色组列表
       formVisible: 'dialogFormVisible',  // 从store里读取表单框显示状态
       isEdit: 'isFormEditOp',  // 从store里读取是不是表单修改操作
     })
