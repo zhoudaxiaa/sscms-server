@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-09 15:12:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-04 09:49:04
+ * @LastEditTime: 2019-04-13 20:14:01
  */
 
 /**
@@ -50,6 +50,10 @@ export function getter(state, name, value) {
  */
 export function setMutation(state, data, name, value) {
 
+  if (data === undefined) return
+
+  let localData = null
+
   // 当存储的name 属性是个对象时
   if (value) {
     state[name][value] = data
@@ -58,9 +62,9 @@ export function setMutation(state, data, name, value) {
   }
 
   // 不管是不是对象，本地只能存储（state[name]） 序列化化后的值
-  data = JSON.stringify(state[name])
+  localData = JSON.stringify(state[name])
 
-  localStorage[name] = data
+  localStorage[name] = localData
 }
 
 /**

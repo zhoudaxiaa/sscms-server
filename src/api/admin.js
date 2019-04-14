@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 22:01:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-18 11:34:16
+ * @LastEditTime: 2019-04-13 17:49:21
  */
 
 import http from '@/utils/http.js'
@@ -18,26 +18,38 @@ import apiPath from './apiPath.js'
  * @param {string} passWord 密码
  * @return: 请求数据
  */
-export function loginByAccount (loginForm) {
+export function login (loginForm) {
   return http({
-    url: apiPath.login,
+    url: `${apiPath.v1.admin}/login`,
     method: 'post',
     data: {
-      adminName: loginForm.adminName,
-      passWord: loginForm.passWord
+      username: loginForm.adminName,
+      password: loginForm.passWord
     }
   })
 }
 
 /**
+ * @description: 根据管理员id获取操作菜单
+ * @param {string} id 管理员id
+ * @return: 数据
+ */
+export function getAdminOpMenu(id) {
+  return http({
+    url: `${apiPath.v1.admin}/${id}/resource?type=0`,
+    method: 'get',
+  })
+}
+
+/**
  * @description: 获取管理员列表
- * @param {number} offset 第几页
- * @param {number} limit 一页多少条数据
+ * @param {number} start 从第几条数据开始
+ * @param {number} count 一页多少条数据
  * @return: 
  */
-export function getAdminUser (offset = 1, limit = 10) {
+export function getAdminUser (start = 0, count = 10) {
   return http({
-    url: `${apiPath.adminUser}?offset=${offset}&limit=${limit}`,
+    url: `${apiPath.v1.admin}?start=${start}&count=${count}`,
     method: 'get'
   })
 }
@@ -50,7 +62,7 @@ export function getAdminUser (offset = 1, limit = 10) {
 
 export function addAdminUser (form) {
   return http({
-    url: apiPath.adminUser,
+    url: apiPath.v1.admin,
     method: 'post'
   })
 }
@@ -63,7 +75,7 @@ export function addAdminUser (form) {
 
 export function updateAdminUser (form) {
   return http({
-    url: apiPath.adminUser,
+    url: apiPath.v1.admin,
     method: 'put'
   })
 }
@@ -76,7 +88,7 @@ export function updateAdminUser (form) {
 
 export function deleteAdminUser (idList) {
   return http({
-    url: apiPath.adminUser,
+    url: apiPath.v1.admin,
     method: 'delete'
   })
 }

@@ -6,8 +6,9 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-17 19:25:14
+ * @LastEditTime: 2019-04-13 20:16:12
  */
+import warn from '@/utils/warn'
 
 import router, { baseRouter } from '@/router/index.js'
 import { buildRouter } from '@/utils/router.js'  // 构建动态路由方法
@@ -17,7 +18,7 @@ import NProgress from 'nprogress' // 加载条插件
 import 'nprogress/nprogress.css'
 // import router from '@/router/index'
 
-import { Message } from 'element-ui'
+// import { Message } from 'element-ui'
 
 import * as types from '@/store/mutation-types'
 
@@ -29,35 +30,40 @@ router.beforeEach(async (to, from, next) => {
   if (store.getters.token) {
 
     // 判断是否已经获取到了角色资源信息
-    if (store.getters.resource === null) {
+    if (store.state.admin.resource === null) {
 
       //没有就去获取角色资源信息（刷新浏览器也重新获取，来重新生成动态路由）
       try {
-        await store.dispatch('getResourceById')
+        await store.dispatch('GetAdminOpMenu')
+        
+        // 根据角色资源生产动态路由，并连接基础路由
+        const dynamicRoutes = buildRouter(store.state.admin.resource)
+
+        router.addRoutes(dynamicRoutes.concat(baseRouter)) // 加载动态路由
+        
+        store.commit(types.SET_DYNAMIC_MENUS, dynamicRoutes) // 存储动态路由(用来生成侧边栏菜单)
+
+        next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+        
       } catch (err) {
-        Message.error(err)
-        // NProgress.done()
+
+        warn(`初始化动态菜单失败，错误：${err}`)
+
         next(false)
+      } finally {
+        NProgress.done()
       }
-      // 根据角色资源生产动态路由，并连接基础路由
-      const dynamicRoutes = buildRouter(store.getters.resource)
 
-      router.addRoutes(dynamicRoutes.concat(baseRouter)) // 加载动态路由
-      
-      store.commit(types.SET_DYNAMIC_MENUS, dynamicRoutes) // 存储动态路由(用来生成侧边栏菜单)
-
-      next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
     } else {
       next() // 已登录，已获取角色资源
     }
-  } else if (to.path !== '/login') {
-    console.log(to.path)
-    // 没登录，且去往的页面也不是登录页，跳转登录页
-    Message('登录超时，请重新登录!')
-    next('login')
+  } else if (to.path === '/login') {
+    next()
   } else {
-    next() // 没登录，跳转的是登录页
+    // 没登录，跳转登录页
+    next('login')
   }
+
   NProgress.done() //加载条结束
 })
 

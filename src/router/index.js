@@ -6,21 +6,21 @@
  * @Version: 1.0
  * @Date: 2018-12-10 09:18:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-01 13:45:00
+ * @LastEditTime: 2019-04-11 22:43:20
  */
 
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import layout from '@/views/layout'
+import layout from '@/pages/layout'
 
 /**
  * @msg: 路由懒加载
- * @param {string} view 路由页面地址
+ * @param {string} page 路由页面地址
  * @return: Function 懒加载匿名函数
  */
-function loadView(view) {
-  return () => import(`@/views/${view}`)
+function loadPage(page) {
+  return () => import(`@/pages/${page}`)
 }
 
 Vue.use(Router)
@@ -30,11 +30,11 @@ export const constantRouterMap = [
   {
     // 登录
     path: '/login',
-    component: loadView('login')
+    component: loadPage('login')
   },
   {
     path: '/404',
-    component: loadView('errorPage/404'),
+    component: loadPage('errorPage/404'),
     hidden: true
   },
   {
@@ -44,7 +44,7 @@ export const constantRouterMap = [
     children: [
       {
         path: 'dashboard',
-        component: loadView('dashboard'),
+        component: loadPage('dashboard'),
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard' }
       }

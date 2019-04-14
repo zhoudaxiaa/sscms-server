@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-17 19:25:49
+ * @LastEditTime: 2019-04-13 20:27:50
  */
 
 import axios from 'axios'
@@ -34,60 +34,67 @@ const server = axios.create({
 // 请求拦截器
 server.interceptors.request.use(
   config => {
-    if (localStorage.time && localStorage.time < new Date().getTime()) {
-      Message.error('登录超时！请重新登录！')
-
-      router.replace('/login') // 超时重新登录登录
-    }
+    let token = null
 
     // 给发送的数据序列化
     if (config.method === 'post' || config.method === 'put' || config.method === 'delete') {
       config.data = qs.stringify(config.data)
     }
 
+    token = store.getters.token
     // 每次请求携带token
-    if (store.getters.token) config.headers.Authorization = store.getters.getToken
+    if (token) config.headers.Authorization = token
 
     return config
   },
   error => {
     Message.error('请求超时！')
-    Promise.reject(error)
+    return Promise.reject(error)
   }
 )
 
 // 响应拦截器
 server.interceptors.response.use(
   response => {
-    response = response.data //取到响应的数据
-
-    // 判断token 是否过期 或 无效
-    if (response.code === 10010 || response.code === 10011) {
-      store.commit('DELETE_TOKEN') // 清除store 和本地的token
-
-      router.replace('/login') // 重新登录
-    }
+    const res = response.data //取到响应的数据
 
     // 判断响应数据里有没有token 字段，表示是否更新和 登录成功token
-    if (response.token) {
+    if (res.token) {
       // 登录成功
-      store.commit(types.SET_TOKEN, response.token) // 更新store 和 本地的token
+      store.commit(types.SET_TOKEN, res.token) // 更新store 和 本地的token
 
-      localStorage.time = new Date().getTime() + 86400000 //设置本地数据过期时间(1 天)
     }
 
-    return response
+    return res
   },
   err => {
-    if (err.response.status === 504 || err.response.status === 404) {
-      Message.error({ message: '网络错误！' })
-      router.push('404')
-    } else if (err.response.status == 403) {
-      Message.error({ message: '权限不足,请联系管理员!' })
-    } else {
-      Message.error({ message: '未知错误!' })
+    let message = '未知错误！'
+
+    switch (err.response.status) {
+      case 400: 
+        switch (err.response.data.code) {
+          case 2002: 
+            message = '用户名或密码错误！'
+            break
+          case 6005:
+            message = '登录超时，请重新登录！'
+            localStorage.clear()
+            setTimeout(() => {
+              router.replace('/login')
+            })
+            break
+          default: message = '请求错误！'
+        }
+        break;
+      case 404:
+      case 504: message = '网络错误！'; break
+      case 403: message = '权限不足,请联系管理员!'; break
+      default: message = '未知错误!'
     }
-    return Promise.resolve(err)
+
+    Message.error({ message })
+
+    return Promise.reject(err.response)
   }
 )
 

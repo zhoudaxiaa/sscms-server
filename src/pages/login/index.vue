@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-17 17:05:56
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-17 19:05:13
+ * @LastEditTime: 2019-04-14 21:32:19
  -->
 
 <template>
@@ -19,9 +19,9 @@
           <svg-icon icon-class="user"></svg-icon>
         </span>
         <input type="text"
-               class="input-text"
-               v-model="loginForm.adminName"
-               placeholder="请输入用户名">/>
+          class="input-text"
+          v-model="loginForm.adminName"
+          placeholder="请输入用户名">/>
       </div>
 
       <div class="form-item">
@@ -29,27 +29,28 @@
           <svg-icon icon-class="password"></svg-icon>
         </span>
         <input type="password"
-               class="input-text"
-               v-model="loginForm.passWord"
-               placeholder="请输入密码">/>
+          class="input-text"
+          v-model="loginForm.passWord"
+          placeholder="请输入密码">/>
       </div>
 
       <!-- 滑动验证 -->
       <drag-verify :width="width"
-                   :height="height"
-                   :text="text"
-                   :success-text="successText"
-                   :background="background"
-                   :progress-bar-bg="progressBarBg"
-                   :completed-bg="completedBg"
-                   :handler-bg="handlerBg"
-                   :handler-icon="handlerIcon"
-                   :text-size="textSize"
-                   :success-icon="successIcon"
-                   ref="Verify"></drag-verify>
+        :height="height"
+        :text="text"
+        :success-text="successText"
+        :background="background"
+        :progress-bar-bg="progressBarBg"
+        :completed-bg="completedBg"
+        :handler-bg="handlerBg"
+        :handler-icon="handlerIcon"
+        :text-size="textSize"
+        :success-icon="successIcon"
+        ref="Verify">
+      </drag-verify>
 
       <button class="submit"
-              @click.prevent="login">登录</button>
+              @click.prevent="handleLogin">登录</button>
     </form>
   </div>
 </template>
@@ -57,7 +58,7 @@
 <script>
 import dragVerify from 'vue-drag-verify' // 滑动验证插件
 
-import { loginByAccount } from '@/api/adminUser'
+import { login } from '@/api/admin'
 
 import * as types from '@/store/mutation-types'
 
@@ -118,7 +119,7 @@ export default {
      * @msg: 登录
      * @return: 无
      */
-    async login() {
+    async handleLogin() {
       if (this.validateAdminName() && this.validatePassword()) {
         // 滑动验证
         if (!this.$refs.Verify.isPassing) {
@@ -135,27 +136,21 @@ export default {
         })
 
         // 发送登录请求
-        try {
-          const data = await loginByAccount(this.loginForm)
-          if (data.code === 0) {
+        const data = await login(this.loginForm)
 
-            // 登录成功，进入存储帐号信息并跳转页面
-            this.$store.commit(types.SET_ADMIN_ID, data.data.id)
-            this.$store.commit(types.SET_ADMIN_NAME, data.data.name)
-            this.$store.commit(types.SET_ADMIN_AVATAR, data.data.avatar)
+        // 登录成功，进入存储帐号信息并跳转页面
+        if (data) {
+          this.$store.commit(types.SET_ADMIN_ID, data.id)
+          this.$store.commit(types.SET_ADMIN_NAME, data.name)
+          this.$store.commit(types.SET_ADMIN_AVATAR, data.avatar)
 
-            this.$router.replace({ path: '/' })
-          }
-
-          if (data.code === 20002) {
-            this.$message.error('用户名不存在或密码错误！')
-          }
-        } catch (err) {
-          this.$message.error(err)
-        } finally {
-          loading.close()
+          this.$router.replace({ path: '/' })
         }
+
+
+        loading.close()
       }
+
     }
   }
 }

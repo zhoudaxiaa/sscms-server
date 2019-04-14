@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-03-18 15:42:08
+ * @LastEditTime: 2019-04-14 22:44:47
  -->
 
 <template>
@@ -32,7 +32,7 @@
           <el-upload
             class="avatar-wrap"
             :show-file-list="false"
-            :action="apiPath.avatar"
+            :action="apiPath.v1.avatar"
             :on-success="uploadAvatarSuccess"
             :before-upload="beforeAvatarUpload">
 
@@ -95,7 +95,7 @@
             placeholder="请选择角色组">
             
             <el-option
-              v-for="data in roles"
+              v-for="data in roleList"
               :key="data.id"
               :label="data.name"
               :value="data.id">
@@ -122,7 +122,7 @@
 
           <el-button
             @click="updateSubmit"
-            v-if="isEdit"
+            v-if="formOp === 'edit'"
             type="primary">
             更新
           </el-button>
@@ -143,18 +143,22 @@
 </template>
 
 <script>
+
+import { addAdminUser, updateAdminUser } from '@/api/admin'
+
+import formMixins from '@/pages/common/formMixins'
+
 import apiPath from '@/api/apiPath'
-import { mapGetters } from 'vuex'
-
-import { addAdminUser, updateAdminUser } from '@/api/adminUser'
-
-import * as types from '@/store/mutation-types'
 
 export default {
   name: 'UserForm',
+
+  mixins: [formMixins],
+
   data() {
     return {
-      apiPath,  // api路径表
+      apiPath,  // 上传头像要用到的url地址
+
       rules: {  // 表单验证规则
         name: [
           {
@@ -260,76 +264,24 @@ export default {
     },
 
     /**
-     * @description: 表单更新数据操作
-     * @param {type} 
-     * @return: 
+     * @description: 表单数据更新操作
+     * @param {Object} 表单数据对象 
+     * @return: Promise axios返回的promise对象
      */
-    async updateSubmit () {
-      try {
-        const data = await updateAdminUser (this.formData)
-
-        if (data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '更新成功！'
-          })
-        }
-
-        this.closeForm();
-        
-      } catch (e) {
-        this.message({
-          type: 'error',
-          message: e
-        })
-      }
-
+    updateOp (formData) {
+      return updateAdminUser(formData)
     },
 
     /**
-     * @description: 表单新增数据操作
-     * @param {type} 
-     * @return: 
+     * @description: 表单数据增加操作
+     * @param {Object} 表单数据对象 
+     * @return: Promise axios返回的promise对象
      */
-    async addSubmit () {
-      try {
-        const data = await addAdminUser (this.formData)
+    addOp (formData) {
+      return addAdminUser(formData)
+    }
 
-        if (data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '添加成功！'
-          })
-        }
-
-        this.closeForm();
-
-      } catch (e) {
-        this.message({
-          type: 'error',
-          message: e
-        })
-      }
-    },
-
-    /**
-     * @description: 关闭表单框之前把表单的显示状态切换下
-     * @param {type} 
-     * @return: 
-     */  
-    closeForm () {
-      this.$store.commit(types.TOGGLE_DIALOG_FORM_VISIBLE)
-    },
-  },
-
-  computed: {
-    ...mapGetters({
-      formData: 'adminUserForm',
-      roles: 'rolesList',  // 从store里获取角色组列表
-      formVisible: 'dialogFormVisible',  // 从store里读取表单框显示状态
-      isEdit: 'isFormEditOp',  // 从store里读取是不是表单修改操作
-    })
-  },
+  }
 }
 </script>
 

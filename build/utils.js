@@ -1,7 +1,8 @@
 'use strict'
 const path = require('path')
 const config = require('../config')
-const MiniCssExtractTextPlugin = require('mini-css-extract-plugin')
+// const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const packageConfig = require('../package.json')
 
 exports.assetsPath = function (_path) {
@@ -35,18 +36,18 @@ exports.cssLoaders = function (options) {
 
     if (loader) {
       loaders.push({
-        loader: loader + "-loader",
+        loader: loader + '-loader',
         options: Object.assign({}, loaderOptions, {
           sourceMap: options.sourceMap
         })
-      });
-    
+      })
+
       // sass-resources-loader 配置
       if (loader === 'sass') {
         loaders.push({
           loader: 'sass-resources-loader',
           options: {
-            resources: [path.resolve(__dirname, '../src/scss/vars.scss'), path.resolve(__dirname, '../src/scss/mixins.scss')],
+            resources: [path.resolve(__dirname, '../src/assets/scss/vars.scss'), path.resolve(__dirname, '../src/assets/scss/mixins.scss')],
           },
         });
       }
@@ -63,6 +64,7 @@ exports.cssLoaders = function (options) {
     //   return ['vue-style-loader'].concat(loaders)
     // }
 
+    // 升级 webpack4， 由 ExtractTextPlugin 改用 MiniCssExtractPlugin
     return [
       options.extract ? MiniCssExtractPlugin.loader : 'vue-style-loader',
     ].concat(loaders)

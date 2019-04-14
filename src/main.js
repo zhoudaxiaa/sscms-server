@@ -5,16 +5,16 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import './icons' // svg注册
+import './assets/icons' // svg注册
 import 'normalize.css/normalize.css' // 重置样式
-import './scss/global.scss' // 全局样式
+import './assets/scss/global.scss' // 全局样式
 import './permission' // 权限控制
 
 // ui 组件
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-process.env.MOCK && require('./mock/index.js') // 当开发环境时（../config/dev.env.js 里的MOCK 为true），使用mock数据
+process.env.NODE_ENV === 'development' && require('./mock/index.js') // 当开发环境时，使用mock数据
 
 Vue.use(ElementUI)
 

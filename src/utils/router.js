@@ -1,10 +1,10 @@
 /**
  * @description: 根据路径创建一个import 函数（懒加载路由）
- * @param {String} view 组件路径地址
+ * @param {String} page 组件路径地址
  * @return: Function 懒加载路由函数
  */
-function loadView(view) {
-  return () => import(`@/views/${view}`)
+function loadPage(page) {
+  return () => import(`@/pages/${page}`)
 }
 
 
@@ -13,13 +13,14 @@ function loadView(view) {
  * @param {array} 一维资源菜单
  * @return: 二维资源菜单数组
  */
-function buildRouter(list) {
+function buildRouter(list = []) {
   let temp = {},
     Router = []
 
-  if (!(list instanceof Array)) throw new Error('list 必须是数组')
+  if (!(list instanceof Array) || list.length === 0) return []
 
   // 过滤掉不显示的路由
+ try {
   list
     .filter(v => v.isActive)
     .forEach(v => {
@@ -40,8 +41,12 @@ function buildRouter(list) {
       Router.push(renderRouter(current, true))
     }
   }
+ } catch (err) {
+   console.log(`动态菜单构建失败，错误：${err}`)
+ }
+ 
+ return Router
 
-  return Router
 }
 
 /**
@@ -55,11 +60,11 @@ function renderRouter(source, parent = false) {
 
   if (parent) {
     router.path = '/'
-    router.component = loadView('layout') //父组件
+    router.component = loadPage('layout') //父组件
     router.children = source.children
   } else {
     router.path = source.routePath
-    router.component = loadView(source.componentPath) // 导入菜单组件
+    router.component = loadPage(source.componentPath) // 导入菜单组件
   }
 
   router.name = source.name

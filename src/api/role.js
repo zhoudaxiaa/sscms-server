@@ -6,21 +6,32 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 13:55:26
- * @LastEditTime: 2019-03-18 15:08:53
+ * @LastEditTime: 2019-04-13 21:01:00
  */
 
 import http from '@/utils/http.js'
 import apiPath from './apiPath.js'
 
 /**
- * @description: 获取角色组列表
- * @param {number} offset 第几页
- * @param {number} limit 一页多少条数据
+ * @description: 获取全部角色组列表
  * @return: 
  */
-export function getRoles (offset = 1, limit = 10) {
+export function getAllRole () {
   return http({
-    url: `${apiPath.roles}?offset=${offset}&limit=${limit}`,
+    url: `${apiPath.v1.role}/all`,
+    method: 'get'
+  })
+}
+
+/**
+ * @description: 部分获取角色组列表
+ * @param {number} start 从第几条开始
+ * @param {number} count 一次多少条数据
+ * @return: 
+ */
+export function getRole (start = 0, count = 10) {
+  return http({
+    url: `${apiPath.v1.role}?start=${start}&count=${count}`,
     method: 'get'
   })
 }
@@ -33,7 +44,7 @@ export function getRoles (offset = 1, limit = 10) {
 
 export function addRole (form) {
   return http({
-    url: apiPath.roles,
+    url: apiPath.role,
     method: 'post'
   })
 }
@@ -46,7 +57,7 @@ export function addRole (form) {
 
 export function updateRole (form) {
   return http({
-    url: apiPath.roles,
+    url: apiPath.role,
     method: 'put'
   })
 }
@@ -56,9 +67,9 @@ export function updateRole (form) {
  * @param {type} 
  * @return: 
  */
-export function deleteRoles (ids) {
+export function deleteRole (ids) {
   return http({
-    url: apiPath.roles,
+    url: apiPath.role,
     method: 'delete'
   })
 }

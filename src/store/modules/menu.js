@@ -6,10 +6,10 @@
  * @Version: 1.0
  * @Date: 2019-01-09 14:42:53
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-04 09:35:49
+ * @LastEditTime: 2019-04-13 17:51:00
  */
 
-import { getter, setMutation } from '@/utils/store' // 简化getters，mutations 的方法
+import { getter, setMutation } from '@/utils/localStore' // 简化getters，mutations 的方法
 import * as types from '@/store/mutation-types'
 
 export default {

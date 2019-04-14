@@ -7,14 +7,15 @@ const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractTextPlugin = require('mini-css-extract-plugin')
+// const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
-  mode: 'production',
+  mode: 'production', // 新加的
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -28,6 +29,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
+  // webpack4 配置
   optimization: {
     splitChunks: {
       cacheGroups: {
@@ -43,9 +45,9 @@ const webpackConfig = merge(baseWebpackConfig, {
           name: 'async-vendors'
         }
       }
-    }
+    },
+    runtimeChunk: { name: 'runtime' }
   },
-  runtimeChunk: {name: 'runtime'}
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
@@ -60,7 +62,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     //   sourceMap: config.build.productionSourceMap,
     //   parallel: true
     // }),
-    // // extract css into its own file
+    // extract css into its own file
     // new ExtractTextPlugin({
     //   filename: utils.assetsPath('css/[name].[contenthash].css'),
     //   // Setting the following option to `false` will not extract CSS from codesplit chunks.
@@ -69,33 +71,38 @@ const webpackConfig = merge(baseWebpackConfig, {
     //   // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
     //   allChunks: true,
     // }),
-    // // Compress extracted CSS. We are using this plugin so that possible
-    // // duplicated CSS from different components can be deduped.
-    // new OptimizeCSSPlugin({
-    //   cssProcessorOptions: config.build.productionSourceMap
-    //     ? { safe: true, map: { inline: false } }
-    //     : { safe: true }
-    // }),
-    // // generate dist index.html with correct asset hash for caching.
-    // // you can customize output by editing /index.html
-    // // see https://github.com/ampedandwired/html-webpack-plugin
-    // new HtmlWebpackPlugin({
-    //   filename: config.build.index,
-    //   template: 'index.html',
-    //   inject: true,
-    //   minify: {
-    //     removeComments: true,
-    //     collapseWhitespace: true,
-    //     removeAttributeQuotes: true
-    //     // more options:
-    //     // https://github.com/kangax/html-minifier#options-quick-reference
-    //   },
-    //   // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-    //   chunksSortMode: 'dependency'
-    // }),
-    // // keep module.id stable when vendor modules does not change
-    // new webpack.HashedModuleIdsPlugin(),
-    // // enable scope hoisting
+    // 升级 webpack4， 由 ExtractTextPlugin 改用 MiniCssExtractPlugin
+    new MiniCssExtractPlugin({
+      filename: utils.assetsPath('css/[name].[contenthash].css'),
+      allChunks: true,
+    }),
+    // Compress extracted CSS. We are using this plugin so that possible
+    // duplicated CSS from different components can be deduped.
+    new OptimizeCSSPlugin({
+      cssProcessorOptions: config.build.productionSourceMap
+        ? { safe: true, map: { inline: false } }
+        : { safe: true }
+    }),
+    // generate dist index.html with correct asset hash for caching.
+    // you can customize output by editing /index.html
+    // see https://github.com/ampedandwired/html-webpack-plugin
+    new HtmlWebpackPlugin({
+      filename: config.build.index,
+      template: 'index.html',
+      inject: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      },
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    }),
+    // keep module.id stable when vendor modules does not change
+    new webpack.HashedModuleIdsPlugin(),
+    // enable scope hoisting
     // new webpack.optimize.ModuleConcatenationPlugin(),
     // // split vendor js into its own file
     // new webpack.optimize.CommonsChunkPlugin({
@@ -126,12 +133,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     //   children: true,
     //   minChunks: 3
     // }),
-
-    // 升级 webpack4， 由 ExtractTextPlugin 改用 MiniCssExtractPlugin
-    new MiniCssExtractPlugin({
-      filename: utils.assetsPath('css/[name].[contenthash].css'),
-      allChunks: true,
-    }),
 
     // copy custom static assets
     new CopyWebpackPlugin([
