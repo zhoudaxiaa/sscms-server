@@ -6,10 +6,10 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-04-14 17:45:17
+ * @LastEditTime: 2019-04-15 13:43:56
  */
 
-import { getter, setMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
+import { getter, setMutation, deleteMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
 import * as types from '@/store/mutation-types'
 
 import { getAllRole } from '@/api/role'
@@ -69,6 +69,11 @@ export default {
     // 存储并本地缓存token
     [types.SET_TOKEN] (state, token) {
       setMutation(state, token, 'token',)
+    },
+
+    // 删除state和本地缓存token
+    [types.DELETE_TOKEN] (state) {
+      deleteMutation(state, 'token',)
     },
     
     // 切换并存储和本地缓存侧边栏展开状态

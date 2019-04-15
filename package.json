@@ -47,7 +47,7 @@
     "eslint-plugin-vue": "4.5.0",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
-    "html-webpack-plugin": "^4.0.0-beta.5",
+    "html-webpack-plugin": "4.0.0-beta.5",
     "mini-css-extract-plugin": "^0.5.0",
     "mockjs": "^1.0.1-beta3",
     "node-notifier": "^5.1.2",

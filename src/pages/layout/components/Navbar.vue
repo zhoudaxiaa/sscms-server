@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:45:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-14 20:32:27
+ * @LastEditTime: 2019-04-15 13:43:57
  -->
 
 <template>
@@ -95,7 +95,7 @@ export default {
 
     // 系统登出
     logout () {
-      localStorage.clear();
+      this.$store.commit(types.DELETE_TOKEN)
 
       this.$message({
         message: '登出成功！',
