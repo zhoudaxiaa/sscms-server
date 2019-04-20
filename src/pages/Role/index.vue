@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 11:07:59
- * @LastEditTime: 2019-04-14 22:37:53
+ * @LastEditTime: 2019-04-15 22:27:59
  -->
 
 <template>
@@ -20,6 +20,13 @@
       :formOp="formOp"
       :formVisible="formVisible">
     </role-form>
+
+    <!-- 资源表单 -->
+    <resource-form
+      @changeFormVisible="toggleResourceFormVisible"
+      :resourceFormData="resourceFormData"
+      :resourceVisible="resourceVisible">
+    </resource-form>
 
     <div class="table-wrap">
 
@@ -66,6 +73,7 @@ import DeleteDataBtn from '@/pages/common/DeleteDataBtn'
 import mainMixins from '@/pages/common/mainMixins.js'
 
 import RoleForm from './RoleForm'
+import ResourceForm from './ResourceForm'
 import RoleTable from './RoleTable'
 
 import { getRole, deleteRole } from '@/api/role'
@@ -79,12 +87,17 @@ export default {
     DeleteDataBtn,
     RoleForm,
     RoleTable,
+    ResourceForm
   },
 
   mixins: [mainMixins],
 
   data () {
     return {
+
+      resourceFormData: [],  // 树形资源表单数据
+
+      resourceVisible: false,  // 树形资源表单显示状态
 
       initFormData: {  // 添加管理员信息初始表格
         name: '',
@@ -116,6 +129,14 @@ export default {
     },
 
     /**
+     * @description: // 切换资源表单显示状态
+     * @return: 
+     */
+    toggleResourceFormVisible () {
+      this.resourceVisible = !this.resourceVisible
+    },
+
+    /**
      * @description: 表单修改操作
      * @param {Number} 当前操作的表格列的索引（第几个表格数据）
      * @return: 
@@ -123,6 +144,51 @@ export default {
     editData (i) {
       this.toggleFormVisible()
       this.formData = {...this.tableData[i],check_pass:'',password: ''}
+    },
+
+    /**
+     * @description: 资源表单修改操作
+     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
+     * @return: 
+     */    
+    editResource (i) {
+      this.toggleResourceFormVisible()
+      console.log(i)
+      this.resourceFormData = [{
+          id: 1,
+          label: '一级 1',
+          children: [{
+            id: 4,
+            label: '二级 1-1',
+            children: [{
+              id: 9,
+              label: '三级 1-1-1'
+            }, {
+              id: 10,
+              label: '三级 1-1-2'
+            }]
+          }]
+        }, {
+          id: 2,
+          label: '一级 2',
+          children: [{
+            id: 5,
+            label: '二级 2-1'
+          }, {
+            id: 6,
+            label: '二级 2-2'
+          }]
+        }, {
+          id: 3,
+          label: '一级 3',
+          children: [{
+            id: 7,
+            label: '二级 3-1'
+          }, {
+            id: 8,
+            label: '二级 3-2'
+          }]
+        }]
     },
 
     /**

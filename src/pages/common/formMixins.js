@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 22:14:36
- * @LastEditTime: 2019-04-14 22:35:01
+ * @LastEditTime: 2019-04-15 22:36:49
  */
 import { mapGetters } from 'vuex'
 
@@ -38,7 +38,7 @@ export default {
      * @param {type} 
      * @return: 
      */
-    async updateSubmit () {
+    async handleUpdateSubmit () {
       const data = await this.updateOp (this.formData)
 
       if (data) {
@@ -57,26 +57,17 @@ export default {
      * @param {type} 
      * @return: 
      */
-    async addSubmit () {
+    async handleAddSubmit () {
+      const data = await this.addOp (this.formData)
 
-      try {
-        const data = await this.addOp (this.formData)
-
-        if (data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '添加成功！'
-          })
-        }
-
-        this.closeForm();
-
-      } catch (e) {
-        this.message({
-          type: 'error',
-          message: e
+      if (data) {
+        this.$message({
+          type: 'success',
+          message: '添加成功！'
         })
       }
+
+      this.closeForm();
     },
 
     /**

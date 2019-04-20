@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-09 15:12:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-13 20:14:01
+ * @LastEditTime: 2019-04-20 16:58:35
  */
 
 /**
@@ -24,7 +24,7 @@ export function getter(state, name, value) {
   data = localStorage[name]
 
   // 判断本地有没有值
-  if (data) {
+  if (data !== undefined) {
     // 有值就反序列化后存储
     result = JSON.parse(data)
 

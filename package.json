@@ -17,6 +17,7 @@
     "nprogress": "^0.2.0",
     "qs": "^6.6.0",
     "screenfull": "^4.0.1",
+    "shvl": "^2.0.0",
     "vue": "^2.5.2",
     "vue-drag-verify": "^1.0.6",
     "vue-router": "^3.0.1",

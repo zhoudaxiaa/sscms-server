@@ -6,12 +6,15 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-18 16:52:41
- * @LastEditTime: 2019-04-14 22:36:40
+ * @LastEditTime: 2019-04-15 21:50:59
  */
 
 export default {
   data () {
     return {
+
+      deleteId: '',  //要删除的id
+
       deleteIdList:'',  // 要删除的id 字符串组合
       
       formData: {},  // 表单数据
@@ -36,12 +39,17 @@ export default {
 
     /**
      * @description: 监听表格多选，子组件触发
-     * @param {String} 子组件选中的id字符串组合
+     * @param {String} 子组件选中的id 或者id组合字符串(逗号隔开)
      * @return: 
      */
     selectionOperation (ids) {
 
-      this.deleteIdList= ids
+      if (ids.indexOf(',') >= 0) {  // 多项删除
+        this.deleteIdList= ids
+      } else {
+        this.deleteId = ids
+      }
+
     },
     
     /**
@@ -55,9 +63,11 @@ export default {
       this.formOp = op  // 表单操作名称
 
       switch (op) {
-        case 'edit': this.editData(i); break // 表单修改操作
-        case 'add': this.addData(); break  // 表单新增操作
-        case 'delete': this.deleteData(this.deleteIdList); break  // 表单删除操作
+        case 'editData': this.editData(i); break // 表单修改操作
+        case 'editResource': this.editResource(i); break // 资源表单修改操作
+        case 'addData': this.addData(); break  // 表单新增操作
+        case 'deleteData': this.deleteData(this.deleteId); break  // 表单删除操作
+        case 'deleteMultData': this.deleteData(this.deleteIdList); break  // 表单多选删除操作
       }
     },
 

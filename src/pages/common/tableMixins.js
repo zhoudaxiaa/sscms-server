@@ -35,7 +35,7 @@ export default {
      */
     handleEditData (i) {
 
-      this.$emit('formOperation', 'edit', i)
+      this.$emit('formOperation', 'editData', i)
 
     },
 
@@ -46,7 +46,7 @@ export default {
      */
     handleDeleteData (id) {
       this.$emit("selectionOperation", id)
-      this.$emit('formOperation', 'delete')
+      this.$emit('formOperation', 'deleteData')
     },
   },
 }

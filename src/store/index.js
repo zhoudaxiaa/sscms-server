@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-20 11:42:48
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-14 17:08:07
+ * @LastEditTime: 2019-04-17 21:03:05
  */
 
 import Vue from 'vue'
@@ -19,7 +19,7 @@ import menu from './modules/menu'
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
+export default new Vuex.Store({
   modules: {
     app,
     admin,
@@ -28,4 +28,3 @@ const store = new Vuex.Store({
   }
 })
 
-export default store

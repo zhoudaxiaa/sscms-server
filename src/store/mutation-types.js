@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-10 10:33:10
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-14 20:43:13
+ * @LastEditTime: 2019-04-16 21:40:42
  */
 
 // admin 的mutations
@@ -14,6 +14,7 @@ export const SET_ADMIN_ID = 'set_admin_id' // 存储管理员id
 export const SET_ADMIN_NAME = 'set_admin_name' // 存储管理员名
 export const SET_RESOURCE = 'set_resource' // 存储角色资源
 export const SET_ADMIN_AVATAR = 'set_admin_avatar' // 存储管理员头像
+export const SET_ADMIN_ROLE_ID = 'set_admin_role_id' // 存储管理员头像
 
 // menus 的mutations
 export const SET_DYNAMIC_MENUS = 'set_dynamic_menus' // 存储动态生成的菜单

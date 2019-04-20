@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 13:55:26
- * @LastEditTime: 2019-04-13 21:01:00
+ * @LastEditTime: 2019-04-15 22:39:02
  */
 
 import http from '@/utils/http.js'
@@ -44,7 +44,7 @@ export function getRole (start = 0, count = 10) {
 
 export function addRole (form) {
   return http({
-    url: apiPath.role,
+    url: apiPath.v1.role,
     method: 'post'
   })
 }
@@ -57,7 +57,7 @@ export function addRole (form) {
 
 export function updateRole (form) {
   return http({
-    url: apiPath.role,
+    url: apiPath.v1.role,
     method: 'put'
   })
 }
@@ -69,7 +69,7 @@ export function updateRole (form) {
  */
 export function deleteRole (ids) {
   return http({
-    url: apiPath.role,
+    url: apiPath.v1.role,
     method: 'delete'
   })
 }

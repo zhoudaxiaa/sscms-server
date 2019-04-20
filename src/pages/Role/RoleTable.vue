@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-13 22:51:00
- * @LastEditTime: 2019-04-14 21:25:42
+ * @LastEditTime: 2019-04-15 21:23:49
  -->
 <template>
   <div>
@@ -43,7 +43,7 @@
       </el-table-column>
 
       <el-table-column
-        width="100"
+        width="200"
         label="操作">
         <template slot-scope="op">
           <div>
@@ -54,6 +54,14 @@
               type="primary"
               icon="el-icon-edit"
               circle>
+            </el-button>
+
+            <el-button
+              @click="handleEditReource(op.$index)"
+              size="small"
+              type="success"
+              circle>
+              <svg-icon icon-class="tree"></svg-icon>
             </el-button>
 
             <el-button
@@ -92,6 +100,19 @@ export default {
       red: { color: "#FF4949" },
     }
   },
+
+  methods: {
+    /**
+     * @description: 修改角色资源
+     * @param {Number} 当前操作的表格列的索引
+     * @return: 
+     */
+    handleEditReource (i) {
+
+      this.$emit('formOperation', 'editResource', i)
+
+    },
+  }
 
 }
 </script>

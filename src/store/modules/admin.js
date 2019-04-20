@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-20 13:27:38
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-13 20:30:42
+ * @LastEditTime: 2019-04-16 21:40:44
  */
 // import warn from '@/utils/warn'
 
@@ -19,6 +19,7 @@ import { getter, setMutation } from '@/utils/localStore' // 封装本地存储�
 export default {
   state: {
     id: '', // 管理员id，唯一标识
+    roleId: '',  // 角色id
     resource: null, // 角色资源
     name: '', // 管理员名
     avatar: '' // 头像
@@ -38,7 +39,12 @@ export default {
     // 获取本地缓存管理员头像
     adminAvatar (state) {
       return getter(state, 'avatar')
-    }
+    },
+
+    // 获取本地缓存管理员角色id
+    adminRoleId (state) {
+      return getter(state, 'roleId')
+    },
   },
   mutations: {
 
@@ -60,7 +66,12 @@ export default {
     // 存储并本地缓存管理员头像
     [types.SET_ADMIN_AVATAR] (state, avatar) {
       setMutation(state, avatar, 'avatar')
-    }
+    },
+
+    // 存储并本地缓存管理员角色id
+    [types.SET_ADMIN_ROLE_ID] (state, roleId) {
+      setMutation(state, roleId, 'roleId')
+    },
   },
   actions: {
     // 根据管理员id获取操作菜单资源
