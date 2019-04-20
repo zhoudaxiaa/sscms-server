@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 22:14:36
- * @LastEditTime: 2019-04-20 18:09:47
+ * @LastEditTime: 2019-04-20 18:38:48
  */
 
 export default {
@@ -37,7 +37,7 @@ export default {
      * @param {type} 
      * @return: 
      */
-    async updateSubmit () {
+    async handleUpdateSubmit () {
       const data = await this.updateOp (this.formData)
 
       if (data) {
@@ -56,26 +56,17 @@ export default {
      * @param {type} 
      * @return: 
      */
-    async addSubmit () {
+    async handleAddSubmit () {
+      const data = await this.addOp (this.formData)
 
-      try {
-        const data = await this.addOp (this.formData)
-
-        if (data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '添加成功！'
-          })
-        }
-
-        this.closeForm();
-
-      } catch (e) {
-        this.message({
-          type: 'error',
-          message: e
+      if (data) {
+        this.$message({
+          type: 'success',
+          message: '添加成功！'
         })
       }
+
+      this.closeForm();
     },
 
     /**
@@ -90,7 +81,7 @@ export default {
 
   computed: {
     roleList () {
-      return this.$store.state.app.roleList
+      return this.$store.state.app.roleList  // 从store里获取角色组列表
     }
   },
 

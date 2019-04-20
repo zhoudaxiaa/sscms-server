@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 11:07:59
- * @LastEditTime: 2019-04-14 22:37:53
+ * @LastEditTime: 2019-04-20 21:37:35
  -->
 
 <template>
@@ -20,6 +20,13 @@
       :formOp="formOp"
       :formVisible="formVisible">
     </role-form>
+
+    <!-- 资源表单 -->
+    <resource-form
+      @changeFormVisible="toggleResourceFormVisible"
+      :resourceFormData="resourceFormData"
+      :resourceVisible="resourceVisible">
+    </resource-form>
 
     <div class="table-wrap">
 
@@ -62,13 +69,14 @@
 <script>
 import AddDataBtn from '@/pages/common/AddDataBtn'
 import DeleteDataBtn from '@/pages/common/DeleteDataBtn'
-
 import mainMixins from '@/pages/common/mainMixins.js'
-
 import RoleForm from './RoleForm'
+import ResourceForm from './ResourceForm'
 import RoleTable from './RoleTable'
 
-import { getRole, deleteRole } from '@/api/role'
+import { getRole, getRoleResource, deleteRole } from '@/api/role'
+
+import { buildResourceTree } from '@/utils/utils'
 
 import * as types from '@/store/mutation-types'
 
@@ -79,13 +87,13 @@ export default {
     DeleteDataBtn,
     RoleForm,
     RoleTable,
+    ResourceForm
   },
-
   mixins: [mainMixins],
-
   data () {
     return {
-
+      resourceFormData: [],  // 树形资源表单数据
+      resourceVisible: false,  // 树形资源表单显示状态
       initFormData: {  // 添加管理员信息初始表格
         name: '',
         instroduce: '',
@@ -97,7 +105,6 @@ export default {
   created() {
     this.initData() // 初始化数据
   },
-
   methods: {
     /**
      * @description: 页面初始化时获取数据
@@ -105,16 +112,19 @@ export default {
      * @return: 
      */
     async initData () {
-
       const data = await getRole(0, 10)  // 获取第一页，20条数据
-
       if (data) {
         this.tableData = data.list  // 数据数组
         this.total = data.total  // 数量
       }
-
     },
-
+    /**
+     * @description: // 切换资源表单显示状态
+     * @return: 
+     */
+    toggleResourceFormVisible () {
+      this.resourceVisible = !this.resourceVisible
+    },
     /**
      * @description: 表单修改操作
      * @param {Number} 当前操作的表格列的索引（第几个表格数据）
@@ -124,7 +134,21 @@ export default {
       this.toggleFormVisible()
       this.formData = {...this.tableData[i],check_pass:'',password: ''}
     },
+    /**
+     * @description: 角色资源修改
+     * @param {String} 角色id
+     * @return: 
+     */    
+    async editResource (id) {
+      
+      let data = await getRoleResource(id)
 
+      let tree = buildResourceTree(data)
+
+      this.resourceFormData = tree
+
+      this.toggleResourceFormVisible()
+    },
     /**
      * @description: 删除数据操作
      * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
@@ -133,7 +157,6 @@ export default {
     deleteDataOp (idList) {
       return deleteRole(idList)
     },
-
     /**
      * @description: 获取数据操作
      * @param {Number} start 从第几条开始获取
@@ -143,7 +166,6 @@ export default {
     getDataOp (start, count) {
       return getRole(start, count)
     },
-
         /**
      * @description:   // 存储当前的页码
      * @param {Number} page 当前页码
@@ -152,11 +174,9 @@ export default {
     setPageNum (page) {
       this.$store.commit(types.SET_ROLE_CURRENT_PAGE, page)
     }
-
   },
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

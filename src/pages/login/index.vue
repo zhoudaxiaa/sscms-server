@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-17 17:05:56
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-14 21:32:19
+ * @LastEditTime: 2019-04-20 18:50:16
  -->
 
 <template>
@@ -141,6 +141,7 @@ export default {
         // 登录成功，进入存储帐号信息并跳转页面
         if (data) {
           this.$store.commit(types.SET_ADMIN_ID, data.id)
+          this.$store.commit(types.SET_ADMIN_ROLE_ID, data.role_id)
           this.$store.commit(types.SET_ADMIN_NAME, data.name)
           this.$store.commit(types.SET_ADMIN_AVATAR, data.avatar)
 

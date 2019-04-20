@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-04-14 22:44:47
+ * @LastEditTime: 2019-04-20 19:27:36
  -->
 
 <template>
@@ -121,14 +121,14 @@
         <el-form-item>
 
           <el-button
-            @click="updateSubmit"
+            @click="handleUpdateSubmit"
             v-if="formOp === 'edit'"
             type="primary">
             更新
           </el-button>
 
           <el-button
-            @click="addSubmit"
+            @click="handleAddSubmit"
             v-else
             type="primary">
             添加

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 22:01:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-13 17:49:21
+ * @LastEditTime: 2019-04-20 18:55:02
  */
 
 import http from '@/utils/http.js'
@@ -26,18 +26,6 @@ export function login (loginForm) {
       username: loginForm.adminName,
       password: loginForm.passWord
     }
-  })
-}
-
-/**
- * @description: 根据管理员id获取操作菜单
- * @param {string} id 管理员id
- * @return: 数据
- */
-export function getAdminOpMenu(id) {
-  return http({
-    url: `${apiPath.v1.admin}/${id}/resource?type=0`,
-    method: 'get',
   })
 }
 

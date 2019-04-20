@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 21:12:23
- * @LastEditTime: 2019-04-14 21:14:27
+ * @LastEditTime: 2019-04-20 19:30:48
  */
 
 export default {
@@ -35,7 +35,7 @@ export default {
      */
     handleEditData (i) {
 
-      this.$emit('formOperation', 'edit', i)
+      this.$emit('formOperation', 'editData', i)
 
     },
 
@@ -46,7 +46,7 @@ export default {
      */
     handleDeleteData (id) {
       this.$emit("selectionOperation", id)
-      this.$emit('formOperation', 'delete')
+      this.$emit('formOperation', 'deleteData')
     },
   },
 }

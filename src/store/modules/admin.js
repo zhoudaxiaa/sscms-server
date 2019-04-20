@@ -6,10 +6,10 @@
  * @Version: 1.0
  * @Date: 2018-12-20 13:27:38
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-20 17:52:31
+ * @LastEditTime: 2019-04-20 19:52:58
  */
 
-import { getAdminOpMenu } from '@/api/admin'
+import { getRoleOpResource } from '@/api/role'
 
 import * as types from '@/store/mutation-types'
 
@@ -18,6 +18,7 @@ import { getter, setMutation } from '@/utils/localStore' // 封装本地存储�
 export default {
   state: {
     id: getter('id') || '', // 管理员id，唯一标识
+    roleId: getter('roleId') || '', // 管理员所属角色id，唯一标识
     resource: null, // 角色资源
     name: getter('name') || '', // 管理员名
     avatar: getter('avatar') || '' // 头像
@@ -26,6 +27,10 @@ export default {
 
   },
   mutations: {
+    // 存储并本地缓存管理员角色唯一标识id
+    [types.SET_ADMIN_ROLE_ID] (state, id) {
+      setMutation(state, 'roleId', id )
+    },
 
     // 存储并本地缓存管理唯一标识id
     [types.SET_ADMIN_ID] (state, id) {
@@ -48,10 +53,10 @@ export default {
     }
   },
   actions: {
-    // 根据管理员id获取操作菜单资源
-    async GetAdminOpMenu ({ commit, getters }) {
+    // 根据角色id获取操作菜单资源
+    async GetRoleOpResource ({ commit, state }) {
 
-      const data = await getAdminOpMenu(getters.id)
+      const data = await getRoleOpResource(state.roleId)
 
       if (data) commit(types.SET_RESOURCE, data)
 

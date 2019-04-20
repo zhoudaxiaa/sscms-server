@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 13:55:26
- * @LastEditTime: 2019-04-13 21:01:00
+ * @LastEditTime: 2019-04-20 20:20:34
  */
 
 import http from '@/utils/http.js'
@@ -32,6 +32,31 @@ export function getAllRole () {
 export function getRole (start = 0, count = 10) {
   return http({
     url: `${apiPath.v1.role}?start=${start}&count=${count}`,
+    method: 'get'
+  })
+}
+
+/**
+ * @description: 根据角色id获取操作菜单
+ * @param {string} id 角色id
+ * @return: 数据
+ */
+export function getRoleOpResource(id) {
+  return http({
+    url: `${apiPath.v1.role}/${id}/resource?type=0`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description: 根据角色id获取所有操作资源
+ * @param {string} id 角色id 
+ * @param {type} 
+ * @return: 
+ */
+export function getRoleResource(id) {
+  return http({
+    url: `${apiPath.v1.role}/${id}/resource`,
     method: 'get'
   })
 }

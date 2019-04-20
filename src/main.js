@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-
 import './assets/icons' // svg注册
 import 'normalize.css/normalize.css' // 重置样式
 import './assets/scss/global.scss' // 全局样式

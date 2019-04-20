@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-04-20 18:08:59
+ * @LastEditTime: 2019-04-20 18:40:37
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
@@ -32,7 +32,7 @@ export default {
     ],
 
     // 角色列表
-    roleList: []
+    roleList: getter('roleList') || []
 
   },
 

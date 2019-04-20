@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-13 22:51:00
- * @LastEditTime: 2019-04-14 21:25:42
+ * @LastEditTime: 2019-04-20 19:50:03
  -->
 <template>
   <div>
@@ -34,7 +34,7 @@
       <el-table-column
         prop="name"
         width="200"
-        label="管理员名">
+        label="角色名">
       </el-table-column>
 
       <el-table-column
@@ -43,7 +43,7 @@
       </el-table-column>
 
       <el-table-column
-        width="100"
+        width="200"
         label="操作">
         <template slot-scope="op">
           <div>
@@ -54,6 +54,14 @@
               type="primary"
               icon="el-icon-edit"
               circle>
+            </el-button>
+
+            <el-button
+              @click="handleEditReource(op.row.id)"
+              size="small"
+              type="success"
+              circle>
+              <svg-icon icon-class="tree"></svg-icon>
             </el-button>
 
             <el-button
@@ -74,7 +82,6 @@
 
 <script>
 import tableMixins from '@/pages/common/tableMixins'
-
 export default {
   name: 'RoleTable',
   props: {
@@ -83,16 +90,24 @@ export default {
       default: () => []
     }
   },
-
   mixins: [tableMixins],
-
   data() {
     return {
       green: { color: "#13CE66" },
       red: { color: "#FF4949" },
     }
   },
-
+  methods: {
+    /**
+     * @description: 点击修改角色资源事件
+     * @param {String} id 当前操作的角色id
+     * @return: 
+     */
+    handleEditReource (id) {
+      this.$emit('formOperation', 'editResource', id)
+    },
+    
+  }
 }
 </script>
 

@@ -2,11 +2,11 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: new project
+ * @Description: 角色表单
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-18 11:22:10
- * @LastEditTime: 2019-04-14 22:37:32
+ * @LastEditTime: 2019-04-20 18:34:13
  -->
 
 <template>
@@ -40,14 +40,14 @@
         <el-form-item>
 
           <el-button
-            @click="updateSubmit"
+            @click="handleUpdateSubmit"
             v-if="formOp === 'edit'"
             type="primary">
             更新
           </el-button>
 
           <el-button
-            @click="addSubmit"
+            @click="handleAddSubmit"
             v-else
             type="primary">
             添加
@@ -62,16 +62,11 @@
 </template>
 
 <script>
-
 import { addRole, updateRole } from '@/api/role'
-
 import formMixins from '@/pages/common/formMixins'
-
 export default {
   name: 'RoleForm',
-
   mixins: [formMixins],
-
   data() {
     return {
       rules: {  // 表单验证规则
@@ -91,7 +86,6 @@ export default {
       }
     }
   },
-
   methods: {
     /**
      * @description: 表单数据更新操作
@@ -101,7 +95,6 @@ export default {
     updateOp (formData) {
       return updateRole(formData)
     },
-
     /**
      * @description: 表单数据增加操作
      * @param {Object} 表单数据对象 
