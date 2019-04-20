@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-01 09:18:12
- * @LastEditTime: 2019-03-08 16:40:09
+ * @LastEditTime: 2019-04-20 18:05:59
  -->
 
 <template>
@@ -40,7 +40,7 @@ export default {
 
   computed: {
     tagList () {
-      return this.$store.getters.tagView
+      return this.$store.state.app.tagView
     }
   },
 

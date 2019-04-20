@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-04-14 22:36:42
+ * @LastEditTime: 2019-04-20 18:07:48
  -->
 
 <template>
@@ -104,7 +104,7 @@ export default {
      * @return: 
      */
     async initData () {
-      this.currentPage = this.$store.getters.adminUserCurrentPage  // 从store 从获取当前页码
+      this.currentPage = this.$store.state.form.adminUser.CurrentPage  // 从store 从获取当前页码
 
       const data = await getAdminUser(0,10)  // 从第一条数据开始，10条数据
 

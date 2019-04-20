@@ -43,7 +43,7 @@ export default {
 
     // 侧边栏展开状态
     sidebarCollapse () {
-      return this.$store.getters.sidebarCollapse
+      return this.$store.state.app.sidebar.collapse
     }
   }
 }

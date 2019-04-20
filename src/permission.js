@@ -6,9 +6,9 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-13 20:16:12
+ * @LastEditTime: 2019-04-20 18:03:22
  */
-import warn from '@/utils/warn'
+import { warn } from '@/utils/debug'
 
 import router, { baseRouter } from '@/router/index.js'
 import { buildRouter } from '@/utils/router.js'  // 构建动态路由方法
@@ -16,9 +16,6 @@ import { buildRouter } from '@/utils/router.js'  // 构建动态路由方法
 import store from './store/index.js'
 import NProgress from 'nprogress' // 加载条插件
 import 'nprogress/nprogress.css'
-// import router from '@/router/index'
-
-// import { Message } from 'element-ui'
 
 import * as types from '@/store/mutation-types'
 
@@ -27,7 +24,7 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start() //加载条开始
 
   // 判断是否登录了，没登录就不去获取动态路由
-  if (store.getters.token) {
+  if (store.state.app.token) {
 
     // 判断是否已经获取到了角色资源信息
     if (store.state.admin.resource === null) {
@@ -47,7 +44,7 @@ router.beforeEach(async (to, from, next) => {
         
       } catch (err) {
 
-        warn(`初始化动态菜单失败，错误：${err}`)
+        warn('初始化动态菜单失败', err)
 
         next(false)
       } finally {

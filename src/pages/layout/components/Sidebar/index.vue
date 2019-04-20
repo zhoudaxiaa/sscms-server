@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:56:22
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-08 16:26:36
+ * @LastEditTime: 2019-04-20 18:12:57
  -->
 
 <template>
@@ -43,7 +43,6 @@
 <script>
 import imgLogo from '@/assets/images/logo.png'
 
-import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 
 export default {
@@ -57,10 +56,13 @@ export default {
     SidebarItem
   },
   computed: {
-    ...mapGetters([
-      'dynamicMenus', // 路由菜单
-      'sidebarCollapse'
-    ])
+    dynamicMenus () {  // 路由菜单
+      return this.$store.state.menu.dynamicMenus
+    },
+    
+    sidebarCollapse () {
+      return this.$store.state.app.sidebar.collapse
+    }
   }
 }
 </script>

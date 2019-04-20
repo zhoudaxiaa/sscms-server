@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-15 13:38:47
+ * @LastEditTime: 2019-04-20 18:13:36
  */
 
 import axios from 'axios'
@@ -41,7 +41,7 @@ server.interceptors.request.use(
       config.data = qs.stringify(config.data)
     }
 
-    token = store.getters.token
+    token = store.state.app.token
     // 每次请求携带token
     if (token) config.headers.Authorization = token
 

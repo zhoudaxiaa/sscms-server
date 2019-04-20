@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:45:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-15 13:43:57
+ * @LastEditTime: 2019-04-20 18:10:42
  -->
 
 <template>
@@ -49,7 +49,6 @@ import Hamburger from '@/components/Hamburger'
 import Breadcrumb from '@/components/Breadcrumb'
 import Screenfull from '@/components/Screenfull'
 import AvatarMenu from '@/components/AvatarMenu'
-import { mapGetters } from 'vuex';
 
 import * as types from '@/store/mutation-types'
 
@@ -57,7 +56,7 @@ export default {
   name: 'Navbar',
   data () {
     return {
-      avatar: this.$store.getters.adminAvatar,
+      avatar: this.$store.state.admin.adminAvatar,
       menuList: [
         {
           link: '/systemNotify',
@@ -106,9 +105,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'sidebarCollapse'
-    ])
+    sidebarCollapse () {
+      return this.$store.state.app.sidebar.collapse
+    }
   }
 }
 </script>

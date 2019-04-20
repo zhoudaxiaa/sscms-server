@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-09 14:42:53
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-13 17:51:00
+ * @LastEditTime: 2019-04-20 18:02:19
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 简化getters，mutations 的方法
@@ -14,13 +14,9 @@ import * as types from '@/store/mutation-types'
 
 export default {
   state: {
-    dynamicMenus: null // 动态菜单（用来生成侧边栏导航）
+    dynamicMenus: getter('dynamicMenus') || null // 动态菜单（用来生成侧边栏导航）
   },
   getters: {
-    // 获取动态菜单
-    dynamicMenus(state) {
-      return getter(state, 'dynamicMenus')
-    }
   },
   mutations: {
     // 存储动态菜单
@@ -36,7 +32,7 @@ export default {
 
         return value
       })
-      setMutation(state, dynamicMenus, 'dynamicMenus' )
+      setMutation(state, 'dynamicMenus', dynamicMenus )
     }
   }
 }

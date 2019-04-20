@@ -6,9 +6,8 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 22:14:36
- * @LastEditTime: 2019-04-14 22:35:01
+ * @LastEditTime: 2019-04-20 18:09:47
  */
-import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -90,9 +89,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      roleList: 'roleList',  // 从store里获取角色组列表
-    })
+    roleList () {
+      return this.$store.state.app.roleList
+    }
   },
 
 }
