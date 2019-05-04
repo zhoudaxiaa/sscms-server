@@ -6,10 +6,17 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 21:12:23
- * @LastEditTime: 2019-04-20 19:30:48
+ * @LastEditTime: 2019-04-22 21:49:32
  */
 
 export default {
+  props: {
+    tableData: {
+      type: Array,
+      default: () => []
+    }
+  },
+  
   methods: {
     /**
      * @description: selection-change时触发

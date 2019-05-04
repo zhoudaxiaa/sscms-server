@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 22:01:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-20 18:55:02
+ * @LastEditTime: 2019-05-04 18:44:53
  */
 
 import http from '@/utils/http.js'
@@ -21,7 +21,7 @@ import apiPath from './apiPath.js'
 export function login (loginForm) {
   return http({
     url: `${apiPath.v1.admin}/login`,
-    method: 'post',
+    method: 'POST',
     data: {
       username: loginForm.adminName,
       password: loginForm.passWord
@@ -38,7 +38,7 @@ export function login (loginForm) {
 export function getAdminUser (start = 0, count = 10) {
   return http({
     url: `${apiPath.v1.admin}?start=${start}&count=${count}`,
-    method: 'get'
+    method: 'GET'
   })
 }
 
@@ -51,7 +51,7 @@ export function getAdminUser (start = 0, count = 10) {
 export function addAdminUser (form) {
   return http({
     url: apiPath.v1.admin,
-    method: 'post'
+    method: 'POST'
   })
 }
 
@@ -64,7 +64,7 @@ export function addAdminUser (form) {
 export function updateAdminUser (form) {
   return http({
     url: apiPath.v1.admin,
-    method: 'put'
+    method: 'PUT'
   })
 }
 
@@ -77,6 +77,6 @@ export function updateAdminUser (form) {
 export function deleteAdminUser (idList) {
   return http({
     url: apiPath.v1.admin,
-    method: 'delete'
+    method: 'DELETE'
   })
 }

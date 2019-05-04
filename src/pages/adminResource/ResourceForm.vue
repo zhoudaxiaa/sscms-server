@@ -2,16 +2,15 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: 用户表单提交组件
+ * @Description: 资源表单
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
- * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-04-27 18:27:20
+ * @Date: 2019-04-25 21:41:25
+ * @LastEditTime: 2019-04-27 22:11:35
  -->
-
 <template>
   <el-dialog
-    title="填写用户信息"
+    title="填写资源信息"
     :visible.sync="formVisible"
     :before-close="closeForm">
       <el-form
@@ -32,9 +31,9 @@
           <el-upload
             class="avatar-wrap"
             :show-file-list="false"
-            :action="apiPath.img"
-            :on-success="uploadImgSuccess"
-            :before-upload="beforeImgUpload">
+            :action="apiPath.v1.avatar"
+            :on-success="uploadAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
 
             <img
               class="avatar-img"
@@ -137,7 +136,7 @@
           <el-button @click="closeForm">取消</el-button>
 
         </el-form-item>
-
+         
       </el-form>
   </el-dialog>
 </template>
@@ -149,7 +148,7 @@ import { addAdminUser, updateAdminUser } from '@/api/admin'
 import apiPath from '@/api/apiPath'
 
 export default {
-  name: 'UserForm',
+  name: 'ResourceForm',
 
   props: {
     tableData: {
@@ -162,7 +161,7 @@ export default {
       default: () => {},
     },
 
-    formOp: {  // 当前表单操作（新增还是更新）
+    formOp: {  // 当前表单操作，新增还是修改
       type: String,
       default: '',
     },
@@ -171,6 +170,10 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+
+  created () {
+    if (this.roleList.length === 0) this.$store.dispatch('GetAllRole')  // 没有就分发获取并存储角色组列表
   },
 
   data() {
@@ -250,10 +253,6 @@ export default {
       }
     }
   },
-  
-  created () {
-    if (this.roleList.length === 0) this.$store.dispatch('GetAllRole')  // 没有就分发获取并存储角色组列表
-  },
 
   computed: {
     roleList () {
@@ -267,7 +266,7 @@ export default {
      * @param {object} res 响应数据 
      * @return: 
      */
-    uploadImgSuccess (res) {
+    uploadAvatarSuccess (res) {
       // 把本地上传的图片地址转化为网络地址
       this.formData.avatar = res.data.url
     },
@@ -277,7 +276,7 @@ export default {
      * @param {object} 上传的文件对象（element-ui提供）
      * @return: 
      */
-    beforeImgUpload (file) {
+    beforeAvatarUpload (file) {
       const isPass = 'image/jpeg,image/png'.indexOf(file.type) > -1
       const isOverZise = file.size >= 200 * 1024
 
@@ -292,12 +291,30 @@ export default {
     },
 
     /**
+     * @description: 表单数据更新操作
+     * @param {Object} 表单数据对象 
+     * @return: Promise axios返回的promise对象
+     */
+    updateOp (formData) {
+      return updateAdminUser(formData)
+    },
+
+    /**
+     * @description: 表单数据增加操作
+     * @param {Object} 表单数据对象 
+     * @return: Promise axios返回的promise对象
+     */
+    addOp (formData) {
+      return addAdminUser(formData)
+    },
+
+    /**
      * @description: 表单更新数据操作
      * @param {type} 
      * @return: 
      */
     async handleUpdateSubmit () {
-      const data = await this.updateData (this.formData)
+      const data = await this.updateOp (this.formData)
 
       if (data) {
         this.$message({
@@ -316,7 +333,7 @@ export default {
      * @return: 
      */
     async handleAddSubmit () {
-      const data = await this.addData (this.formData)
+      const data = await this.addOp (this.formData)
 
       if (data) {
         this.$message({
@@ -326,24 +343,6 @@ export default {
       }
 
       this.closeForm();
-    },
-
-    /**
-     * @description: 表单数据更新操作
-     * @param {Object} 表单数据对象 
-     * @return: Promise axios返回的promise对象
-     */
-    updateData (formData) {
-      return updateAdminUser(formData)
-    },
-
-    /**
-     * @description: 表单数据增加操作
-     * @param {Object} 表单数据对象 
-     * @return: Promise axios返回的promise对象
-     */
-    addData (formData) {
-      return addAdminUser(formData)
     },
 
     /**

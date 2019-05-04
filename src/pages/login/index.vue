@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-17 17:05:56
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-20 18:50:16
+ * @LastEditTime: 2019-05-04 21:52:10
  -->
 
 <template>
@@ -140,6 +140,9 @@ export default {
 
         // 登录成功，进入存储帐号信息并跳转页面
         if (data) {
+          // 登录成功
+          this.$store.commit(types.SET_TOKEN, data.token) // 更新store 和 本地的token
+
           this.$store.commit(types.SET_ADMIN_ID, data.id)
           this.$store.commit(types.SET_ADMIN_ROLE_ID, data.role_id)
           this.$store.commit(types.SET_ADMIN_NAME, data.name)

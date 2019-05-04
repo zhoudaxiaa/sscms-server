@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-18 16:52:41
- * @LastEditTime: 2019-04-20 19:50:05
+ * @LastEditTime: 2019-04-24 23:39:31
  */
 
 export default {
@@ -50,25 +50,6 @@ export default {
         this.deleteId = ids
       }
 
-    },
-    
-    /**
-     * @description: 监听表单操作，子组件触发
-     * @param {String} op 触发的表单操作名称
-     * @param {Number|String} i 当前操作的表格列的索引 或者id
-     * @return: 
-     */
-    formOperation (op, i) {
-      
-      this.formOp = op  // 表单操作名称
-
-      switch (op) {
-        case 'editData': this.editData(i); break // 表单修改操作
-        case 'editResource': this.editResource(i); break // 资源表单修改操作
-        case 'addData': this.addData(); break  // 表单新增操作
-        case 'deleteData': this.deleteData(this.deleteId); break  // 表单删除操作
-        case 'deleteMultData': this.deleteData(this.deleteIdList); break  // 表单多选删除操作
-      }
     },
 
     /**

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 20:15:59
- * @LastEditTime: 2019-04-20 19:31:24
+ * @LastEditTime: 2019-04-27 18:06:13
  -->
 
 <template>
@@ -30,7 +30,7 @@ export default {
      */
     handleAddForm () {
       // 触发表单新增操作
-      this.$emit('formOperation', 'addData')
+      this.$emit('formOperation', 'addDataOp')
     },
 
     

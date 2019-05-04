@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 13:55:26
- * @LastEditTime: 2019-04-20 20:20:34
+ * @LastEditTime: 2019-05-04 22:43:56
  */
 
 import http from '@/utils/http.js'
@@ -43,20 +43,20 @@ export function getRole (start = 0, count = 10) {
  */
 export function getRoleOpResource(id) {
   return http({
-    url: `${apiPath.v1.role}/${id}/resource?type=0`,
+    url: `${apiPath.v1.role}/${id}/resource/all?type=type&value=0`,
     method: 'get',
   })
 }
 
 /**
- * @description: 根据角色id获取所有操作资源
+ * @description: 根据角色id获取所有操作资源的id
  * @param {string} id 角色id 
  * @param {type} 
  * @return: 
  */
-export function getRoleResource(id) {
+export function getRoleAllResourceId(id) {
   return http({
-    url: `${apiPath.v1.role}/${id}/resource`,
+    url: `${apiPath.v1.role}/${id}/resource/all/id`,
     method: 'get'
   })
 }

@@ -2,13 +2,12 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: 用户数据表格
+ * @Description: 文章表单
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
- * @Date: 2019-04-13 21:57:55
- * @LastEditTime: 2019-04-27 18:01:05
+ * @Date: 2019-04-21 22:05:59
+ * @LastEditTime: 2019-04-25 22:11:15
  -->
-
 <template>
   <div>
     <el-table
@@ -33,30 +32,17 @@
       </el-table-column>
 
       <el-table-column
-        prop="name"
-
-        label="昵称">
+        prop="title"
+        label="广告名">
       </el-table-column>
 
       <el-table-column
-        prop="username"
-
-        label="账号名">
+        prop="author.name"
+        label="广告类型">
       </el-table-column>
 
       <el-table-column
-        prop="role_name"
-
-        label="角色组">
-      </el-table-column>
-
-      <el-table-column
-        prop="email"
-        label="邮箱">
-      </el-table-column>
-
-      <el-table-column
-        label="是否启用">
+        label="是否显示">
         <template slot-scope="scope">
           <i
             :class="scope.row.is_active ? 'el-icon-success' : 'el-icon-error'"
@@ -66,18 +52,28 @@
       </el-table-column>
 
       <el-table-column
+        label="广告描述">
+      </el-table-column>
+
+      <el-table-column
+        prop="publish_time"
+        label="创建时间">
+      </el-table-column>
+
+      <el-table-column
         width="100"
         label="操作">
         <template slot-scope="op">
           <div>
             
-            <el-button
-              @click="handleEditData(op.$index)"
-              size="small"
-              type="primary"
-              icon="el-icon-edit"
-              circle>
-            </el-button>
+            <router-link to="">
+              <el-button
+                size="small"
+                type="primary"
+                icon="el-icon-edit"
+                circle>
+              </el-button>
+            </router-link>
 
             <el-button
               @click='handleDeleteData(op.row.id)'
@@ -96,8 +92,9 @@
 </template>
 
 <script>
-
 export default {
+  name: 'AdsTable',
+
   props: {
     tableData: {
       type: Array,
@@ -113,7 +110,7 @@ export default {
   },
 
   methods: {
-        /**
+    /**
      * @description: selection-change时触发
      * @param {object} 表格数据对象 
      * @return: string id组成的字符串
@@ -137,7 +134,7 @@ export default {
      */
     handleEditData (i) {
 
-      this.$emit('formOperation', 'editDataOp', i)
+      this.$emit('formOperation', 'editData', i)
 
     },
 
@@ -148,16 +145,13 @@ export default {
      */
     handleDeleteData (id) {
       this.$emit("selectionOperation", id)
-      this.$emit('formOperation', 'deleteDataOp')
+      this.$emit('formOperation', 'deleteData')
     },
-  }
-
+  },
+  
 }
 </script>
 
-<style scoped>
-.table-container {
-  width: 100%;
-  margin-bottom: 20px;
-}
+<style lang="scss" scoped>
+
 </style>

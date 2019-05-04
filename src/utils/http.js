@@ -6,16 +6,13 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-20 20:17:41
+ * @LastEditTime: 2019-05-04 22:00:03
  */
 
 import axios from 'axios'
 import store from '@/store'
 import qs from 'qs' // 序列化序列化模块
 import { Message } from 'element-ui'
-import router from '@/router/index'
-
-import * as types from '@/store/mutation-types'
 
 // 配置文件
 import config from '@/config/'
@@ -56,36 +53,26 @@ server.interceptors.request.use(
 // 响应拦截器
 server.interceptors.response.use(
   response => {
+    let message
+
     const res = response.data //取到响应的数据
 
-    // 判断响应数据里有没有token 字段，表示是否更新和 登录成功token
-    if (res.token) {
-      // 登录成功
-      store.commit(types.SET_TOKEN, res.token) // 更新store 和 本地的token
+    // 如果返回的数据中code 字段，就数据该响应非正常响应，做相应处理
+    if (res.code) {
+      switch (res.code) {
+        case 2002: message = '用户名或密码'; break
+      }
 
+      Message.error({ message })
+    } else {
+      return res
     }
 
-    return res
   },
   err => {
-    let message = '未知错误！'
+    let message
 
     switch (err.response.status) {
-      case 400: 
-        switch (err.response.data.code) {
-          case 2002: 
-            message = '用户名或密码错误！'
-            break
-          case 6005:
-            message = '登录超时，请重新登录！'
-            localStorage.clear()
-            setTimeout(() => {
-              router.replace('/login')
-            })
-            break
-          default: message = '请求错误！'
-        }
-        break;
       case 404:
       case 504: message = '网络错误！'; break
       case 403: message = '权限不足,请联系管理员!'; break
@@ -94,7 +81,7 @@ server.interceptors.response.use(
 
     Message.error({ message })
 
-    return Promise.reject(err.response)
+    Promise.reject(err.response)
   }
 )
 

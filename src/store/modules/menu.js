@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-09 14:42:53
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-20 18:02:19
+ * @LastEditTime: 2019-04-24 19:44:41
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 简化getters，mutations 的方法
@@ -21,6 +21,8 @@ export default {
   mutations: {
     // 存储动态菜单
     [types.SET_DYNAMIC_MENUS](state, routes) {
+
+      if (routes.length === 0) return
 
       // 过滤掉动态路由的component 对象 再进行存储
       let dynamicMenus = routes.map( (value) => {

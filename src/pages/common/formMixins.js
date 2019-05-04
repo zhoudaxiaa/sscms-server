@@ -6,17 +6,22 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 22:14:36
- * @LastEditTime: 2019-04-20 18:38:48
+ * @LastEditTime: 2019-04-25 22:16:07
  */
 
 export default {
   props: {
+    tableData: {
+      type: Array,
+      default: () => []
+    },
+
     formData: {  // 表单数据
       type: Object,
       default: () => {},
     },
 
-    formOp: {  // 当前表单操作名
+    formOp: {  // 当前表单操作，新增还是修改
       type: String,
       default: '',
     },

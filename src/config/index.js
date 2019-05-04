@@ -6,13 +6,13 @@
  * @Version: 1.0
  * @Date: 2018-12-20 10:28:40
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-11 19:21:50
+ * @LastEditTime: 2019-05-04 18:41:46
  */
 // import imgBaseUrl from '@/assets'
 
 const setting = {
   dev: {
-    baseURL: '', //域名地址
+    baseURL: 'http://127.0.0.1:3000/', //域名地址
     timeout: '2500' // axios请求响应超时时间
   },
   pro: {

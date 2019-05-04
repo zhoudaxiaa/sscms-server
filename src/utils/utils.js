@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-13 21:36:25
- * @LastEditTime: 2019-04-20 21:37:12
+ * @LastEditTime: 2019-05-04 17:17:27
  */
 
 /**
@@ -38,9 +38,9 @@ export function buildResourceTree (resource) {
 
     for (let key in v) {
       switch (key) {
-        case '_id': newResource['id'] = v[key]; break
+        case 'id': newResource['id'] = v[key]; break
         case 'comments': newResource['label'] = v[key]; break
-        case 'parentId': newResource['parentId'] = v[key]; break
+        case 'parentId': newResource['parent_id'] = v[key]; break
       }
     }
 

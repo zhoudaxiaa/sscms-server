@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-21 10:09:01
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-20 18:56:47
+ * @LastEditTime: 2019-04-21 22:01:05
  */
 import qs from 'qs'
 
@@ -33,10 +33,10 @@ Mock.mock(`${apiPath.v1.admin}/login`, 'post', req => {
 
 // 获取管理员列表
 Mock.mock(RegExp(`${apiPath.v1.admin}\\?start=(.*?)&count=(.*?)`), 'get', {
-  start: 0,
-  count: 10,
-  total: 3,
-  list: [
+  'start': 0,
+  'count': 10,
+  'total': 3,
+  'list': [
     {
       'id': 'tttttt',
       'name': '@cname()',

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-17 20:46:58
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-07 13:10:52
+ * @LastEditTime: 2019-04-24 20:04:38
  -->
 
 <template>
@@ -19,7 +19,7 @@
       </template>
 
       <!-- 二级菜单 -->
-      <template v-for="child in item.children">
+      <template v-for="child in childrenOp(item.children)">
         <router-link :to="child.path" :key="child.name">
           <el-menu-item
             :index="getPath(child.path)">
@@ -37,6 +37,9 @@ import Item from './Item'
 
 export default {
   name: 'SidebarItem',
+  components: {
+    Item
+  },
   props: {
     item: {
       type: Object,
@@ -47,12 +50,25 @@ export default {
       default: ''
     }
   },
-  components: {
-    Item
-  },
   methods: {
+    /**
+     * @description: 
+     * @param {type} 
+     * @return: 
+     */
     getPath (routePath) {
       return this.basePath + routePath
+    },
+
+    /**
+     * @description: 过滤掉不显示的菜单
+     * @param {Array} 菜单数组
+     * @return: 
+     */
+    childrenOp (source) {
+      return source.filter( (v) => {
+        return v.isShow
+      })
     }
   }
 

@@ -2,24 +2,15 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: 用户管理页面
+ * @Description: 广告
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
- * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-04-27 18:05:39
+ * @Date: 2019-04-27 15:16:31
+ * @LastEditTime: 2019-04-27 16:55:24
  -->
 
 <template>
   <div>
-
-    <!-- 用户表单 -->
-    <user-form
-      class="form-wrap"
-      @changeFormVisible="toggleFormVisible"
-      :formData="formData"
-      :formOp="formOp"
-      :formVisible="formVisible">
-    </user-form>
 
     <div class="table-wrap">
 
@@ -28,7 +19,7 @@
 
         <!-- 添加数据按钮 -->
         <add-data-btn
-          @formOperation="formOperation">
+          @click.native="handelAddArticle">
         </add-data-btn>
 
         <!-- 删除数据按钮 -->
@@ -38,11 +29,11 @@
         
       </div>
 
-      <user-table
+      <ads-table
         @formOperation="formOperation"
         @selectionOperation="selectionOperation"
         :tableData="tableData">
-      </user-table>
+      </ads-table>
       
       <!-- 分页组件，当数据大于10才显示 -->
       <el-pagination
@@ -62,10 +53,7 @@
 import AddDataBtn from '@/pages/common/AddDataBtn'
 import DeleteDataBtn from '@/pages/common/DeleteDataBtn'
 
-import UserForm from './UserForm'
-import UserTable from './UserTable'
-
-import { getAdminUser, deleteAdminUser } from '@/api/admin'
+import AdsTable from './AdsTable'
 
 import * as types from '@/store/mutation-types'
 
@@ -73,22 +61,11 @@ export default {
   components: {
     AddDataBtn,
     DeleteDataBtn,
-    UserForm,
-    UserTable
+    AdsTable,
   },
+
   data () {
     return {
-      initFormData: {  // 初始表单
-        name: '',
-        avatar: '',
-        username: '',
-        password: '',
-        check_pass: '',  // 非必要字段，只为了表单效验
-        email: '',
-        role_id: '',
-        is_active: true,
-        introduce: '',
-      },
 
       deleteId: '',  //要删除的id
 
@@ -96,47 +73,38 @@ export default {
       
       formData: {},  // 表单数据
 
-      formOp: '',  // 表单操作名（新增还是更新）
+      formOp: '',  // 表单操作名
 
       formVisible: false,  // 表单显示状态
 
       tableData: [],  // 表格数据(对象数组)
 
-      total: 0,  // 数据总数量
-    
+      currentPage: 1, // 当前的页码
+
+      total: 0, // 总计数据的数
     }
   },
 
-  created () {
+  
+  created() {
     this.initData() // 初始化数据
   },
   
   methods: {
-    /**
-     * @description: 获取页数据操作
-     * @param {Number} start 从第几条开始获取
-     * @param {Number} count 一次获取多少条数据
-     * @return: 
-     */
-    getPageData (start, count) {
-      return getAdminUser(start, count)
-    },
-
     /**
      * @description: 页面初始化时获取数据
      * @param {type} 
      * @return: 
      */
     async initData () {
-      this.currentPage = this.$store.state.form.adminUser.CurrentPage  // 从store 从获取当前页码
+      this.currentPage = this.$store.state.form.article.CurrentPage  // 从store 从获取当前页码
 
-      const data = await this.getPageData(0,10)  // 从第一条数据开始，10条数据
 
       // 请求成功
-      if (data) {
-        this.tableData = data.list  // 数据数组
-        this.total = data.total  // 数量
-      }
+      // if (data) {
+      //   this.tableData = data.list  // 数据数组
+      //   this.total = data.total  // 数量
+      // }
 
     },
 
@@ -148,13 +116,12 @@ export default {
      */
     formOperation (op, i) {
       
-      this.formOp = op  // 表单操作名称（新增还是更新）
+      this.formOp = op  // 表单操作名称
 
       switch (op) {
-        case 'addDataOp': this.addDataOp(); break  // 表单新增操作
-        case 'editDataOp': this.editDataOp(i); break // 表单修改操作
-        case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
-        case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
+        case 'editData': this.editData(i); break // 表单修改操作
+        case 'deleteData': this.deleteData(this.deleteId); break  // 表单删除操作
+        case 'deleteMultData': this.deleteData(this.deleteIdList); break  // 表单多选删除操作
       }
     },
 
@@ -185,19 +152,9 @@ export default {
      * @description: 表单新增操作
      * @return: 
      */    
-    addDataOp () {
+    addData () {
       this.toggleFormVisible()
       this.formData = this.initFormData
-    },
-
-    /**
-     * @description: 表单修改操作
-     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
-     * @return: 
-     */    
-    editDataOp (i) {
-      this.toggleFormVisible()
-      this.formData = { ...this.tableData[i], check_pass:'', password: '' }
     },
 
     /**
@@ -205,7 +162,7 @@ export default {
      * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
      * @return: 
      */
-    deleteDataOp (idList) {
+    deleteData (idList) {
 
       // id 不能为空
       if (idList) {
@@ -215,7 +172,7 @@ export default {
           type: 'warning'
         }).then(() => {
 
-          return this.deleteData(idList)
+          return this.deleteDataOp(idList)
 
         }).then((result) => {
           this.$message({
@@ -238,15 +195,6 @@ export default {
     },
 
     /**
-     * @description: 删除数据
-     * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
-     * @return: 
-     */
-    deleteData (idList) {
-      return deleteAdminUser(idList)
-    },
-
-    /**
      * @description: 当前页面改变时调用，获取数据
      * @param {Number} page 当前页码 
      * @return: 
@@ -256,10 +204,29 @@ export default {
 
       this.setPageNum(page)
 
-      const data = await this.getPageData(page*count, count)  // 从第几条开始获取，10条数据
+      const data = await this.getDataOp(page*count, count)  // 从第几条开始获取，10条数据
 
       if (data) this.tableData = data.list  // 数据数组
         
+    },
+
+    /**
+     * @description: 表单修改操作
+     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
+     * @return: 
+     */    
+    editData (i) {
+      this.toggleFormVisible()
+      this.$router.push('/editArticle/' + this.tableData[i].aid)
+    },
+
+    /**
+     * @description: 删除数据操作
+     * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
+     * @return: 
+     */
+    deleteDataOp (idList) {
+      // return deleteAdminUser(idList)
     },
 
     /**
@@ -268,8 +235,17 @@ export default {
      * @return: 
      */
     setPageNum (page) {
-      this.$store.commit(types.SET_ADMIN_USER_CURRENT_PAGE, page)
+      this.$store.commit(types.SET_ARTICLE_CURRENT_PAGE, page)
     },
+
+    /**
+     * @description: 
+     * @param {type} 
+     * @return: 
+     */    
+    handelAddArticle () {
+      this.$router.push('/addArticle')
+    }
 
   },
 }

@@ -1,3 +1,15 @@
+/*
+ * @Author: zhoudaxiaa
+ * @Github: https://
+ * @Website: https://
+ * @Description: 构建动态路由
+ * @Version: 1.0
+ * @LastEditors: zhoudaxiaa
+ * @Date: 2019-03-17 23:31:51
+ * @LastEditTime: 2019-05-04 23:27:13
+ */
+import { error } from '@/utils/error'
+
 /**
  * @description: 根据路径创建一个import 函数（懒加载路由）
  * @param {String} page 组件路径地址
@@ -15,35 +27,32 @@ function loadPage(page) {
  */
 function buildRouter(list = []) {
   let temp = {},
-    Router = []
+      Router = []
 
   if (!(list instanceof Array) || list.length === 0) return []
 
-  // 过滤掉不显示的路由
- try {
-  list
-    .filter(v => v.isActive)
-    .forEach(v => {
+  try {
+    list.forEach(v => {
       // 转成对象数组循环
-      temp[v._id] = v // 建立以_id 为属性的对象
+      temp[v.id] = v // 建立以id 为属性的对象
     })
 
-  for (let v in temp) {
-    let current = temp[v] // 当前资源
-    if (current.parentId && current.parentId != '0') {
-      // 是否是子菜单
-      let parent = temp[current.parentId] // 子菜单的父菜单
-      let childrenRouter = renderRouter(current)
-      if (!parent.children) parent.children = [] // 父菜单没有children属性就建一个
-      parent.children.push(childrenRouter)
-    } else {
-      // 父菜单
-      Router.push(renderRouter(current, true))
+    for (let v in temp) {
+      let current = temp[v] // 当前资源
+      if (current.pid && current.pid != '0') {
+        // 是否是子菜单
+        let parent = temp[current.pid] // 子菜单的父菜单
+        let childrenRouter = renderRouter(current)
+        if (!parent.children) parent.children = [] // 父菜单没有children属性就建一个
+        parent.children.push(childrenRouter)
+      } else {
+        // 父菜单
+        Router.push(renderRouter(current, true))
+      }
     }
+  } catch (err) {
+    error('动态菜单构建失败', err)
   }
- } catch (err) {
-   console.log(`动态菜单构建失败，错误：${err}`)
- }
  
  return Router
 
@@ -59,17 +68,21 @@ function renderRouter(source, parent = false) {
   let router = {}
 
   if (parent) {
+    console.log(JSON.parse(JSON.stringify(source)))
+    console.log(source.icon)
+    console.log(source.children)
     router.path = '/'
     router.component = loadPage('layout') //父组件
     router.children = source.children
   } else {
-    router.path = source.routePath
-    router.component = loadPage(source.componentPath) // 导入菜单组件
+    router.path = source.route_path
+    router.component = loadPage(source.component_path) // 导入菜单组件
   }
 
+  router.isShow = source.is_active
   router.name = source.name
   router.meta = {
-    title: source.comments,
+    title: source.name,
     icon: source.icon
   }
   return router

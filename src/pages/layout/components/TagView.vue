@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-01 09:18:12
- * @LastEditTime: 2019-04-20 18:05:59
+ * @LastEditTime: 2019-04-24 23:35:02
  -->
 
 <template>
@@ -51,7 +51,6 @@ export default {
       this.$store.commit(types.ADD_TAG_VIEW, {
         name: route.meta.title,
         path: route.path,
-        active: true
       })
     },
 

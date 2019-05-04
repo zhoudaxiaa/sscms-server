@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-04-20 18:40:37
+ * @LastEditTime: 2019-04-24 23:34:43
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
@@ -46,9 +46,9 @@ export default {
       setMutation(state, 'token', token )
     },
 
-    // 删除state的token
+    // 删除state 和缓存的token
     [types.DELETE_TOKEN] (state) {
-      state.token = null
+      setMutation(state, 'token', '' )
     },
     
     // 切换并存储和本地缓存侧边栏展开状态
@@ -64,7 +64,7 @@ export default {
 
     // 添加并本地缓存页面标签
     [types.ADD_TAG_VIEW] (state, tag) {
-      let tagView = state.tagView
+      let tagView = [ ...state.tagView ]
       tagView.push(tag)
       
       this.commit(types.SET_TAG_VIEW, tagView)

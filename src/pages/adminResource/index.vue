@@ -2,31 +2,23 @@
  * @Author: zhoudaxiaa
  * @Github: https://
  * @Website: https://
- * @Description: 管理员角色页面
+ * @Description: 资源管理
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
- * @Date: 2019-03-07 11:07:59
- * @LastEditTime: 2019-04-27 21:55:07
+ * @Date: 2019-04-25 21:23:11
+ * @LastEditTime: 2019-05-04 17:17:17
  -->
 
 <template>
   <div>
 
-    <!-- 角色表单 -->
-    <role-form
+    <!-- 资源表单 -->
+    <resource-form
       class="form-wrap"
       @changeFormVisible="toggleFormVisible"
       :formData="formData"
       :formOp="formOp"
       :formVisible="formVisible">
-    </role-form>
-
-    <!-- 资源表单 -->
-    <resource-form
-      @changeFormVisible="toggleResourceFormVisible"
-      :selectedResource = "selectedResource"
-      :resourceTreeData="resourceTreeData"
-      :resourceVisible="resourceVisible">
     </resource-form>
 
     <div class="table-wrap">
@@ -36,32 +28,21 @@
 
         <!-- 添加数据按钮 -->
         <add-data-btn
-          @formOperation="formOperation">
+          @click.native="handelAddArticle">
         </add-data-btn>
 
         <!-- 删除数据按钮 -->
         <delete-data-btn
           @formOperation="formOperation">
         </delete-data-btn>
-
+        
       </div>
-      
-      <!-- 数据table展示组件 -->
-      <role-table
+
+      <resource-tree
         @formOperation="formOperation"
         @selectionOperation="selectionOperation"
-        :tableData="tableData">
-      </role-table>
-      
-      <!-- 分页组件，当数据大于10才显示 -->
-      <el-pagination
-        v-if="total > 10"
-        class="pagination-wrap"
-        layout="total, prev, pager, next"
-        :total="total"
-        :current-page.sync="currentPage"
-        @current-change="pageChange">
-      </el-pagination>
+        :tableData="resourceTreeData">
+      </resource-tree>
       
     </div>
   </div>
@@ -70,11 +51,10 @@
 <script>
 import AddDataBtn from '@/pages/common/AddDataBtn'
 import DeleteDataBtn from '@/pages/common/DeleteDataBtn'
-import RoleForm from './RoleForm'
-import ResourceForm from './ResourceForm'
-import RoleTable from './RoleTable'
 
-import { getRole, getRoleAllResourceId, deleteRole } from '@/api/role'
+import ResourceTree from './ResourceTree'
+import ResourceForm from './ResourceForm'
+
 import { getAllResource } from '@/api/resource'
 
 import { buildResourceTree } from '@/utils/utils'
@@ -82,25 +62,17 @@ import { buildResourceTree } from '@/utils/utils'
 import * as types from '@/store/mutation-types'
 
 export default {
+  name: 'adminResource',
+  
   components: {
     AddDataBtn,
     DeleteDataBtn,
-    RoleForm,
-    RoleTable,
-    ResourceForm
+    ResourceTree,
+    ResourceForm,
   },
+
   data () {
     return {
-      selectedResource: [],  // 当前角色拥有的资源的id数组
-
-      resourceTreeData: [],  // 树形资源表单数据
-      
-      resourceVisible: false,  // 树形资源表单显示状态
-
-      initFormData: {  // 添加管理员信息初始表格
-        name: '',
-        instroduce: '',
-      }, 
 
       deleteId: '',  //要删除的id
 
@@ -108,62 +80,36 @@ export default {
       
       formData: {},  // 表单数据
 
-      formOp: '',  // 表单操作名（新增还是更新）
+      formOp: '',  // 表单操作名
 
       formVisible: false,  // 表单显示状态
 
-      tableData: [],  // 表格数据(对象数组)
+      resourceTreeData: [],  // 资源树
 
-      currentPage: 1, // 当前的页码
-
-      total: 0, // 总计数据的数
-    
     }
   },
-
+  
   created() {
     this.initData() // 初始化数据
   },
 
   methods: {
     /**
-     * @description: 获取页数据操作
-     * @param {Number} start 从第几条开始获取
-     * @param {Number} count 一次获取多少条数据
-     * @return: 
-     */
-    getPageData (start, count) {
-      return getRole(start, count)
-    },
-
-    /**
      * @description: 页面初始化时获取数据
      * @param {type} 
      * @return: 
      */
     async initData () {
-      let roleData,
-          resourceData
 
-      // 并行执行请求数据
-      roleData = this.getPageData(0, 10)  // 获取第一页，20条数据
-      resourceData = getAllResource()  // 获取所有资源
+      const resourceData = await getAllResource()  // 获取所有资源
 
-      roleData = await roleData
-
-      if (roleData) {
-        this.tableData = roleData.list  // 数据数组
-        this.total = roleData.total  // 数量
-      }
-
-      resourceData = await resourceData
-
+      // 请求成功
       if (resourceData) {
         this.resourceTreeData  = buildResourceTree(resourceData)
       }
 
     },
-    
+
     /**
      * @description: 监听表单操作，子组件触发
      * @param {String} op 触发的表单操作名称
@@ -175,9 +121,8 @@ export default {
       this.formOp = op  // 表单操作名称
 
       switch (op) {
+        case 'addDataOp': this.addDataOp(); break // 表单修改操作
         case 'editDataOp': this.editDataOp(i); break // 表单修改操作
-        case 'editResourceOp': this.editResourceOp(i); break // 资源表单修改操作
-        case 'addDataOp': this.addDataOp(); break  // 表单新增操作
         case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
         case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
       }
@@ -199,14 +144,6 @@ export default {
     },
 
     /**
-     * @description: // 切换资源表单显示状态
-     * @return: 
-     */
-    toggleResourceFormVisible () {
-      this.resourceVisible = !this.resourceVisible
-    },
-
-    /**
      * @description: // 切换表单显示状态
      * @return: 
      */
@@ -216,11 +153,11 @@ export default {
 
     /**
      * @description: 表单新增操作
+     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
      * @return: 
      */    
     addDataOp () {
       this.toggleFormVisible()
-      this.formData = this.initFormData
     },
 
     /**
@@ -230,7 +167,6 @@ export default {
      */    
     editDataOp (i) {
       this.toggleFormVisible()
-      this.formData = { ...this.tableData[i], check_pass:'', password: '' }
     },
 
     /**
@@ -271,31 +207,12 @@ export default {
     },
 
     /**
-     * @description: 角色资源修改
-     * @param {String} 角色id
-     * @return: 
-     */    
-    async editResourceOp (id) {
-      let resourceData
-
-      // 获取当前资源拥护的所有资源的id
-      resourceData = await getRoleAllResourceId(id)
-
-      if (resourceData) {
-
-        this.selectedResource = resourceData
-
-      }
-      this.toggleResourceFormVisible()
-    },
-
-    /**
      * @description: 删除数据操作
      * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
      * @return: 
      */
     deleteData (idList) {
-      return deleteRole(idList)
+      // return deleteAdminUser(idList)
     },
 
     /**
@@ -308,7 +225,7 @@ export default {
 
       this.setPageNum(page)
 
-      const data = await this.getPageData(page*count, count)  // 从第几条开始获取，10条数据
+      const data = await this.getDataOp(page*count, count)  // 从第几条开始获取，10条数据
 
       if (data) this.tableData = data.list  // 数据数组
         
@@ -320,11 +237,22 @@ export default {
      * @return: 
      */
     setPageNum (page) {
-      this.$store.commit(types.SET_ROLE_CURRENT_PAGE, page)
+      this.$store.commit(types.SET_ARTICLE_CURRENT_PAGE, page)
+    },
+
+    /**
+     * @description: 
+     * @param {type} 
+     * @return: 
+     */    
+    handelAddArticle () {
+      console.log('click')
     }
-  },
+
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+
 </style>

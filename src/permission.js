@@ -6,9 +6,9 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-20 20:03:57
+ * @LastEditTime: 2019-05-04 22:21:51
  */
-import { warn } from '@/utils/debug'
+import { error } from '@/utils/error'
 
 import router, { baseRouter } from '@/router/index.js'
 import { buildRouter } from '@/utils/router.js'  // 构建动态路由方法
@@ -21,6 +21,7 @@ import * as types from '@/store/mutation-types'
 
 // 路由守卫
 router.beforeEach(async (to, from, next) => {
+
   NProgress.start() //加载条开始
   
   // 判断是否登录了，没登录就不去获取动态路由
@@ -30,20 +31,20 @@ router.beforeEach(async (to, from, next) => {
 
       //没有就去获取角色资源信息（刷新浏览器也重新获取，来重新生成动态路由）
       try {
-        store.dispatch('GetRoleOpResource').then(() => {
+        await store.dispatch('GetRoleOpResource')
           // 根据角色资源生产动态路由，并连接基础路由
-          const dynamicRoutes = buildRouter(store.state.admin.resource)
+        const dynamicRoutes = buildRouter(store.state.admin.resource)
+console.log(dynamicRoutes)
+        router.addRoutes(dynamicRoutes.concat(baseRouter)) // 加载动态路由
 
-          router.addRoutes(dynamicRoutes.concat(baseRouter)) // 加载动态路由
+        store.commit(types.SET_DYNAMIC_MENUS, dynamicRoutes) // 存储动态路由(用来生成侧边栏菜单)
 
-          store.commit(types.SET_DYNAMIC_MENUS, dynamicRoutes) // 存储动态路由(用来生成侧边栏菜单)
+        next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
 
-          next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
-        })
         
       } catch (err) {
 
-        warn('初始化动态菜单失败', err)
+        error('初始化动态菜单失败', err)
 
         next(false)
       } finally {

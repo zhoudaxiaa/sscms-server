@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 21:44:44
- * @LastEditTime: 2019-04-20 18:32:06
+ * @LastEditTime: 2019-04-21 21:29:20
  -->
 <template>
   <el-dialog
@@ -16,13 +16,16 @@
     
     <el-tree
       class="resource-tree"
-      :data="resourceFormData"
+      ref="tree"
+      :data="resourceTreeData"
+      :default-expanded-keys="selectedResource"
+      :default-checked-keys="selectedResource"
       show-checkbox
       node-key="id">
     </el-tree>
 
     <el-button
-      @click="handleAddSubmit"
+      @click="handleUpdateSubmit"
       type="primary">
       更新
     </el-button>
@@ -33,47 +36,61 @@
 </template>
 
 <script>
-import formMixins from '@/pages/common/formMixins'
 
 export default {
   name: 'ResourceForm',
-
-  mixins: [formMixins],
   
   props: {
-    resourceFormData: {
+    selectedResource: {  // 当前角色拥有的资源
       type: Array,
       default: () => []
     },
-    resourceVisible: {
+
+    resourceTreeData: {  // 资源树
+      type: Array,
+      default: () => []
+    },
+
+    resourceVisible: {  // 资源表单显示状态
       type: Boolean,
       default: false
     }
   },
 
+  
+
   methods: {
+
     /**
-     * @description: 表单更新数据操作
+     * @description: 角色资源更新操作
      * @param {type} 
      * @return: 
      */
-    async handleAddSubmit () {
-      const data = await this.updateOp (this.resourceFormData)
+    async handleUpdateSubmit () {
+      // const data = await this.updateOp (this.formData)
 
-      if (data) {
-        this.$message({
-          type: 'success',
-          message: '更新成功！'
-        })
-      }
+      // if (data) {
+      //   this.$message({
+      //     type: 'success',
+      //     message: '更新成功！'
+      //   })
+      // }
+
+      console.log(this.$refs.tree.getCheckedKeys())
 
       this.closeForm();
 
     },
 
-    updateOp (formData) {
-      console.log(formData)
-    }
+    /**
+     * @description: 关闭表单框之前把表单的显示状态切换下
+     * @param {type} 
+     * @return: 
+     */  
+    closeForm () {
+      this.$emit('changeFormVisible')
+    },
+
   }
 
 }

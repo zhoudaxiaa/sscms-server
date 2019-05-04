@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-13 22:51:00
- * @LastEditTime: 2019-04-20 19:50:03
+ * @LastEditTime: 2019-04-27 18:24:17
  -->
 <template>
   <div>
@@ -81,16 +81,16 @@
 </template>
 
 <script>
-import tableMixins from '@/pages/common/tableMixins'
 export default {
   name: 'RoleTable',
+  
   props: {
     tableData: {
       type: Array,
       default: () => []
     }
   },
-  mixins: [tableMixins],
+
   data() {
     return {
       green: { color: "#13CE66" },
@@ -104,7 +104,45 @@ export default {
      * @return: 
      */
     handleEditReource (id) {
-      this.$emit('formOperation', 'editResource', id)
+      this.$emit('formOperation', 'editResourceOp', id)
+    },
+
+    /**
+     * @description: selection-change时触发
+     * @param {object} 表格数据对象 
+     * @return: string id组成的字符串
+     */
+    handleSelectionChange (val) {
+      let ids = []
+
+      if (val && val.length > 0) {
+        ids = val.map((item, index) => {
+          return item.id;
+        });
+      }
+      
+      this.$emit("selectionOperation", ids.join(','));
+    },
+
+    /**
+     * @description: 修改数据
+     * @param {number} i 操作的表格索引 
+     * @return: 
+     */
+    handleEditData (i) {
+
+      this.$emit('formOperation', 'editDataOp', i)
+
+    },
+
+    /**
+     * @description: 删除数据
+     * @param {number} id 要删除的数据id 
+     * @return: 
+     */
+    handleDeleteData (id) {
+      this.$emit("selectionOperation", id)
+      this.$emit('formOperation', 'deleteDataOp')
     },
     
   }

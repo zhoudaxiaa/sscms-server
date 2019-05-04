@@ -13,7 +13,7 @@ import './permission' // 权限控制
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-process.env.NODE_ENV === 'development' && require('./mock/index.js') // 当开发环境时，使用mock数据
+// process.env.NODE_ENV === 'development' && require('./mock/index.js') // 当开发环境时，使用mock数据
 
 Vue.use(ElementUI)
 

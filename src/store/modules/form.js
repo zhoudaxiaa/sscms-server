@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 17:04:28
- * @LastEditTime: 2019-04-20 18:01:13
+ * @LastEditTime: 2019-04-21 21:51:28
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
@@ -22,6 +22,10 @@ export default {
     role: {  // 角色
       currentPage: getter('role.currentPage') || 1, // 当前页码
     },
+
+    article: {  // 文章
+      currentPage: getter('article.currentPage') || 1, // 当前页码
+    }
   },
   
   getters: {
@@ -37,6 +41,11 @@ export default {
     // 存储角色页面的当前页码
     [types.SET_ROLE_CURRENT_PAGE] (state, page) {
       setMutation(state, 'role.currentPage', page)
+    },
+
+    // 存储角色页面的当前页码
+    [types.SET_ARTICLE_CURRENT_PAGE] (state, page) {
+      setMutation(state, 'article.currentPage', page)
     },
 
   },
