@@ -6,12 +6,11 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-04 22:00:03
+ * @LastEditTime: 2019-05-05 22:35:09
  */
 
 import axios from 'axios'
 import store from '@/store'
-import qs from 'qs' // 序列化序列化模块
 import { Message } from 'element-ui'
 
 // 配置文件
@@ -23,20 +22,12 @@ import config from '@/config/'
 const server = axios.create({
   baseURL: config.baseURL, // api 的 base_url
   timeout: config.timeout, // api 的响应过期时间
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-  }
 })
 
 // 请求拦截器
 server.interceptors.request.use(
   config => {
     let token = null
-
-    // 给发送的数据序列化
-    if (config.method === 'post' || config.method === 'put' || config.method === 'delete') {
-      config.data = qs.stringify(config.data)
-    }
 
     token = store.state.app.token
     // 每次请求携带token
@@ -61,6 +52,7 @@ server.interceptors.response.use(
     if (res.code) {
       switch (res.code) {
         case 2002: message = '用户名或密码'; break
+        case 403: message = '您的权限不足！'; break
       }
 
       Message.error({ message })
@@ -85,4 +77,44 @@ server.interceptors.response.use(
   }
 )
 
-export default server
+const http = {
+  post (url, data) {
+    return server({
+      url,
+      method: 'POST',
+      data,
+    })
+  },
+
+  delete (url) {
+    return server({
+      url,
+      method: 'DELETE',
+    })
+  },
+
+  put (url, data) {
+    return server({
+      url,
+      method: 'PUT',
+      data,
+    })
+  },
+
+  patch (url, data) {
+    return server({
+      url,
+      method: 'PATCH',
+      data,
+    })
+  },
+
+  get (url) {
+    return server({
+      url,
+      method: 'GET',
+    })
+  },
+}
+
+export default http

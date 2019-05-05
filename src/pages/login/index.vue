@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-17 17:05:56
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-04 21:52:10
+ * @LastEditTime: 2019-05-05 20:50:23
  -->
 
 <template>
@@ -20,7 +20,7 @@
         </span>
         <input type="text"
           class="input-text"
-          v-model="loginForm.adminName"
+          v-model="loginForm.username"
           placeholder="请输入用户名">/>
       </div>
 
@@ -30,7 +30,7 @@
         </span>
         <input type="password"
           class="input-text"
-          v-model="loginForm.passWord"
+          v-model="loginForm.password"
           placeholder="请输入密码">/>
       </div>
 
@@ -82,8 +82,8 @@ export default {
       textSize: '18px',
       isCircle: 'true',
       loginForm: {
-        adminName: '', // 用户名
-        passWord: '' // 密码
+        username: '', // 用户名
+        password: '' // 密码
       }
     }
   },
@@ -95,7 +95,7 @@ export default {
      * @return: 验证通过返回true，否则false
      */
     validateAdminName() {
-      if (/[a-zA-Z0-9]{5,20}/.test(this.loginForm.adminName)) return true
+      if (/[a-zA-Z0-9]{5,20}/.test(this.loginForm.username)) return true
       this.$message('用户名需大于5位小于20位且字母或数字')
       return false
     },
@@ -105,11 +105,11 @@ export default {
      * @return: 验证通过返回ture，否则false
      */
     validatePassword() {
-      if (/[<>&]/.test(this.loginForm.passWord)) {
+      if (/[<>&]/.test(this.loginForm.password)) {
         this.$message.warning('警告！非法字符串！！！')
         return false
       }
-      if (this.loginForm.passWord.length < 5) {
+      if (this.loginForm.password.length < 5) {
         this.$message.warning('密码需大于5位')
         return false
       }

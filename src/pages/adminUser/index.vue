@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-04-27 18:05:39
+ * @LastEditTime: 2019-05-05 22:41:03
  -->
 
 <template>
@@ -16,7 +16,9 @@
     <user-form
       class="form-wrap"
       @changeFormVisible="toggleFormVisible"
+      @formOperation="formOperation"
       :formData="formData"
+      :opId="opId"
       :formOp="formOp"
       :formVisible="formVisible">
     </user-form>
@@ -92,6 +94,8 @@ export default {
 
       deleteId: '',  //要删除的id
 
+      opId: '',  // 当前操作数据id
+
       deleteIdList:'',  // 要删除的id 字符串组合
       
       formData: {},  // 表单数据
@@ -143,16 +147,18 @@ export default {
     /**
      * @description: 监听表单操作，子组件触发
      * @param {String} op 触发的表单操作名称
-     * @param {Number|String} i 当前操作的表格列的索引 或者id
+     * @param {Number} i 当前操作的表格列的索引
+     * @param {String} id 当前操作的id
      * @return: 
      */
-    formOperation (op, i) {
+    formOperation (op, i, id) {
       
       this.formOp = op  // 表单操作名称（新增还是更新）
 
       switch (op) {
+        case 'initData': this.initData(); break
         case 'addDataOp': this.addDataOp(); break  // 表单新增操作
-        case 'editDataOp': this.editDataOp(i); break // 表单修改操作
+        case 'editDataOp': this.editDataOp(i, id); break // 表单修改操作
         case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
         case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
       }
@@ -187,6 +193,8 @@ export default {
      */    
     addDataOp () {
       this.toggleFormVisible()
+      this.formOp = 'add'
+      
       this.formData = this.initFormData
     },
 
@@ -195,8 +203,11 @@ export default {
      * @param {Number} 当前操作的表格列的索引（第几个表格数据）
      * @return: 
      */    
-    editDataOp (i) {
+    editDataOp (i, id) {
       this.toggleFormVisible()
+      this.formOp = 'edit'
+      this.opId = id
+      
       this.formData = { ...this.tableData[i], check_pass:'', password: '' }
     },
 
@@ -218,10 +229,19 @@ export default {
           return this.deleteData(idList)
 
         }).then((result) => {
-          this.$message({
-            type: 'success',
-            message: '删除成功！'
-          })
+          if (!result.code) {
+            this.initData()  // 删除成功，刷新数据
+
+            this.$message({
+              type: 'success',
+              message: '删除成功！'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除失败！'
+            })
+          }
         }).catch ((err) => {
           this.$message({
             type: 'error',

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-13 21:57:55
- * @LastEditTime: 2019-04-27 18:01:05
+ * @LastEditTime: 2019-05-05 22:22:15
  -->
 
 <template>
@@ -45,8 +45,7 @@
       </el-table-column>
 
       <el-table-column
-        prop="role_name"
-
+        prop="role.name"
         label="角色组">
       </el-table-column>
 
@@ -72,7 +71,7 @@
           <div>
             
             <el-button
-              @click="handleEditData(op.$index)"
+              @click="handleEditData(op.$index, op.row.id)"
               size="small"
               type="primary"
               icon="el-icon-edit"
@@ -133,17 +132,18 @@ export default {
     /**
      * @description: 修改数据
      * @param {number} i 操作的表格索引 
+     * @param {String} id 操作数据的id
      * @return: 
      */
-    handleEditData (i) {
+    handleEditData (i, id) {
 
-      this.$emit('formOperation', 'editDataOp', i)
+      this.$emit('formOperation', 'editDataOp', i, id)
 
     },
 
     /**
      * @description: 删除数据
-     * @param {number} id 要删除的数据id 
+     * @param {String} id 要删除的数据id 
      * @return: 
      */
     handleDeleteData (id) {

@@ -19,8 +19,5 @@ import apiPath from './apiPath.js'
  * @return: 
  */
 export function getArticle (start = 0, count = 10) {
-  return http({
-    url: `${apiPath.v1.article}?start=${start}&count=${count}`,
-    method: 'get'
-  })
+  return http.get(`${apiPath.v1.article}?start=${start}&count=${count}`)
 }

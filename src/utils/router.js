@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-17 23:31:51
- * @LastEditTime: 2019-05-05 15:06:57
+ * @LastEditTime: 2019-05-05 21:54:59
  */
 import { error } from '@/utils/error'
 import layout from '@/pages/layout'
@@ -42,7 +42,6 @@ function buildRouter (resource) {
             if (v[key]) {
               newResource['component'] = loadPage(v[key])
             } else {
-              console.log(v)
               newResource['component'] = layout
             }
             break

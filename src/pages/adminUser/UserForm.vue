@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-05-05 17:05:09
+ * @LastEditTime: 2019-05-05 23:11:15
  -->
 
 <template>
@@ -15,6 +15,7 @@
     :visible.sync="formVisible"
     :before-close="closeForm">
       <el-form
+        ref="form"
         :model="formData"
         :rules="rules"
         label-width="80px">
@@ -32,7 +33,7 @@
           <el-upload
             class="avatar-wrap"
             :show-file-list="false"
-            :action="apiPath.img"
+            :action="apiPath.uploadFile"
             :on-success="uploadImgSuccess"
             :before-upload="beforeImgUpload">
 
@@ -162,6 +163,11 @@ export default {
       default: () => {},
     },
 
+    opId: {  // 当前操作的id
+      type: String,
+      default: '',
+    },
+
     formOp: {  // 当前表单操作（新增还是更新）
       type: String,
       default: '',
@@ -204,10 +210,10 @@ export default {
             validator: (rule, value, callback) => {
 
               // 如果是新增数据，必须输入密码
-              if (!this.isEdit) callback(new Error('请输入密码'))
+              if (this.formOp === 'add' && !value) callback(new Error('请输入密码'))
 
               // 如果是修改密码，输入了就必须符合规范
-              if (value && /^(\d|[a-z]|[A-Z]|_){6,}$/.test(value)) {
+              if (value && !/^(\d|[a-zA-Z]|_){6,}$/.test(value)) {
                 callback(new Error('6 到 12 位,只能包含字母、数字和下划线!'))
               }
               
@@ -222,7 +228,7 @@ export default {
             validator: (rule, value, callback) => {
 
               // 如果输入了密码，这个确认密码也得输入
-              if (this.formData.password) callback(new Error('请再次输入密码'))
+              if (this.formData.password && !value) callback(new Error('请再次输入密码'))
 
               // 一致就通过
               if (value !== this.formData.password) callback(new Error('两次输入的密码不一致！'))
@@ -243,16 +249,12 @@ export default {
           {
             required: true,
             message: '请选择一个角色组',
-            trigger: 'blur'
+            trigger: 'change'
           }
         ],
 
       }
     }
-  },
-  
-  created () {
-    if (this.roleList.length === 0) this.$store.dispatch('GetAllRole')  // 没有就分发获取并存储角色组列表
   },
 
   computed: {
@@ -262,6 +264,15 @@ export default {
   },
 
   methods: {
+    /**
+     * @description: 触发父级初始化数据（更新）
+     * @param {type} 
+     * @return: 
+     */
+    initData () {
+      this.$emit('formOperation', 'initData')
+    },
+    
     /**
      * @description: 头像上传成功后的回调函数
      * @param {object} res 响应数据 
@@ -298,16 +309,26 @@ export default {
      * @return: 
      */
     async handleUpdateSubmit () {
-      const data = await this.updateData (this.formData)
 
-      if (data) {
-        this.$message({
+      this.$refs.form.validate(async (valid) => {
+
+        if (valid) {
+
+          await this.updateData (this.formData, this.opId)
+
+          this.initData()  // 更新表格
+
+          this.$message({
           type: 'success',
-          message: '更新成功！'
-        })
-      }
+          message: '添加成功！'
+          })
 
-      this.closeForm();
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
 
     },
 
@@ -317,25 +338,36 @@ export default {
      * @return: 
      */
     async handleAddSubmit () {
-      const data = await this.addData (this.formData)
 
-      if (data) {
-        this.$message({
-          type: 'success',
-          message: '添加成功！'
-        })
-      }
+      this.$refs.form.validate(async (valid) => {
 
-      this.closeForm();
+        if (valid) {
+          await this.addData (this.formData)
+
+          this.initData()  // 更新表格
+
+          this.$message({
+            type: 'success',
+            message: '添加成功！'
+          })
+
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
+      
     },
 
     /**
      * @description: 表单数据更新操作
      * @param {Object} 表单数据对象 
+     * @param {String} 操作数据id
      * @return: Promise axios返回的promise对象
      */
-    updateData (formData) {
-      return updateAdminUser(formData)
+    updateData (formData, id) {
+      return updateAdminUser(formData, id)
     },
 
     /**

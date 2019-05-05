@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 13:55:26
- * @LastEditTime: 2019-05-04 22:43:56
+ * @LastEditTime: 2019-05-05 19:22:33
  */
 
 import http from '@/utils/http.js'
@@ -17,10 +17,7 @@ import apiPath from './apiPath.js'
  * @return: 
  */
 export function getAllRole () {
-  return http({
-    url: `${apiPath.v1.role}/all`,
-    method: 'get'
-  })
+  return http.get(`${apiPath.v1.role}/all`)
 }
 
 /**
@@ -30,10 +27,7 @@ export function getAllRole () {
  * @return: 
  */
 export function getRole (start = 0, count = 10) {
-  return http({
-    url: `${apiPath.v1.role}?start=${start}&count=${count}`,
-    method: 'get'
-  })
+  return http.get(`${apiPath.v1.role}?start=${start}&count=${count}`)
 }
 
 /**
@@ -42,10 +36,7 @@ export function getRole (start = 0, count = 10) {
  * @return: 数据
  */
 export function getRoleOpResource(id) {
-  return http({
-    url: `${apiPath.v1.role}/${id}/resource/all?type=type&value=0`,
-    method: 'get',
-  })
+  return http.get(`${apiPath.v1.role}/${id}/resource/all?type=type&value=0`)
 }
 
 /**
@@ -55,10 +46,7 @@ export function getRoleOpResource(id) {
  * @return: 
  */
 export function getRoleAllResourceId(id) {
-  return http({
-    url: `${apiPath.v1.role}/${id}/resource/all/id`,
-    method: 'get'
-  })
+  return http.get(`${apiPath.v1.role}/${id}/resource/all/id`)
 }
 
 /**
@@ -66,12 +54,8 @@ export function getRoleAllResourceId(id) {
  * @param {object} form 角色信息表 
  * @return: 
  */
-
 export function addRole (form) {
-  return http({
-    url: apiPath.role,
-    method: 'post'
-  })
+  return http.post(apiPath.role)
 }
 
 /**
@@ -81,10 +65,7 @@ export function addRole (form) {
  */
 
 export function updateRole (form) {
-  return http({
-    url: apiPath.role,
-    method: 'put'
-  })
+  return http.patch(apiPath.role)
 }
 
 /**
@@ -93,8 +74,5 @@ export function updateRole (form) {
  * @return: 
  */
 export function deleteRole (ids) {
-  return http({
-    url: apiPath.role,
-    method: 'delete'
-  })
+  return http.delete(apiPath.role)
 }

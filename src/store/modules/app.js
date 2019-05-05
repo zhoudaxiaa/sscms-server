@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-04-24 23:34:43
+ * @LastEditTime: 2019-05-05 18:30:20
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
@@ -100,7 +100,7 @@ export default {
 
       const data = await getAllRole() // 获取所有角色列表
       
-      if (data) commit(types.SET_ROLE_LIST, data.list)
+      if (data) commit(types.SET_ROLE_LIST, data)
     }
   },
 
