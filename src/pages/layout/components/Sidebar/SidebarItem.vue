@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-17 20:46:58
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-24 20:04:38
+ * @LastEditTime: 2019-05-05 13:16:50
  -->
 
 <template>
@@ -67,7 +67,7 @@ export default {
      */
     childrenOp (source) {
       return source.filter( (v) => {
-        return v.isShow
+        return v.is_show
       })
     }
   }

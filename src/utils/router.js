@@ -6,9 +6,10 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-17 23:31:51
- * @LastEditTime: 2019-05-04 23:27:13
+ * @LastEditTime: 2019-05-05 13:42:55
  */
 import { error } from '@/utils/error'
+// import adminUser from '@/pages/adminUser'
 
 /**
  * @description: 根据路径创建一个import 函数（懒加载路由）
@@ -19,73 +20,70 @@ function loadPage(page) {
   return () => import(`@/pages/${page}`)
 }
 
-
 /**
  * @description: 根据后台传来的一维资源菜单，转成二维资源菜单
  * @param {array} 一维资源菜单
  * @return: 二维资源菜单数组
  */
-function buildRouter(list = []) {
-  let temp = {},
-      Router = []
-
-  if (!(list instanceof Array) || list.length === 0) return []
+function buildRouter (resource) {
 
   try {
-    list.forEach(v => {
-      // 转成对象数组循环
-      temp[v.id] = v // 建立以id 为属性的对象
+    resource = resource.map((v) => {
+      let newResource = {}
+
+      for (let key in v) {
+        switch (key) {
+          case 'id': newResource['id'] = v[key]; break
+          case 'name': newResource['name'] = v[key]; break
+          case 'pid': newResource['pid'] = v[key]; break
+          case 'icon': newResource['meta'] = { title: v.name, icon: v.icon }; break
+          case 'route_path': newResource['path'] = v[key] || '/'; break
+          case 'component_path': newResource['component'] = loadPage(v[key]); break
+          case 'is_active': newResource['is_show'] = v[key]; break
+        }
+      }
+
+      return newResource
     })
 
-    for (let v in temp) {
-      let current = temp[v] // 当前资源
-      if (current.pid && current.pid != '0') {
-        // 是否是子菜单
-        let parent = temp[current.pid] // 子菜单的父菜单
-        let childrenRouter = renderRouter(current)
-        if (!parent.children) parent.children = [] // 父菜单没有children属性就建一个
-        parent.children.push(childrenRouter)
-      } else {
-        // 父菜单
-        Router.push(renderRouter(current, true))
-      }
-    }
+    //没有父节点的数据
+    let parents = resource.filter(value => !value.pid)
+                
+    //有父节点的数据
+    let children = resource.filter(value => value.pid)
+    
+    //调用转换方法
+    translator(parents, children)
+    
+    //返回最终的结果
+    return parents
   } catch (err) {
-    error('动态菜单构建失败', err)
+    error('操作菜单构建失败：', err)
   }
- 
- return Router
-
 }
 
-/**
- * @description: 渲染路由菜单
- * @param {object} source 资源菜单对象
- * @param {boolean} parent 是否是根菜单
- * @return: 路由菜单对象
- */
-function renderRouter(source, parent = false) {
-  let router = {}
+//定义转换方法的具体实现
+function translator (parents, children) {
+  //遍历父节点数据
+  parents.forEach((parent) => {
 
-  if (parent) {
-    console.log(JSON.parse(JSON.stringify(source)))
-    console.log(source.icon)
-    console.log(source.children)
-    router.path = '/'
-    router.component = loadPage('layout') //父组件
-    router.children = source.children
-  } else {
-    router.path = source.route_path
-    router.component = loadPage(source.component_path) // 导入菜单组件
+    //遍历子节点数据
+    children.forEach((current, index) => {
+      //此时找到父节点对应的一个子节点
+      if (current.pid === parent.id) {
+        //对子节点数据进行深复制，这里只支持部分类型的数据深复制，对深复制不了解的童靴可以先去了解下深复制
+        let temp = JSON.parse(JSON.stringify(children))
+        //让当前子节点从temp中移除，temp作为新的子节点数据，这里是为了让递归时，子节点的遍历次数更少，如果父子关系的层级越多，越有利
+        temp.splice(index, 1)
+        //让当前子节点作为唯一的父节点，去递归查找其对应的子节点
+        translator([current], temp)
+        //把找到子节点放入父节点的children属性中
+        typeof parent.children !== 'undefined' ? parent.children.push(current) : parent.children = [current]
+      }
+    }
+    )
   }
-
-  router.isShow = source.is_active
-  router.name = source.name
-  router.meta = {
-    title: source.name,
-    icon: source.icon
-  }
-  return router
+  )
 }
 
 export { buildRouter }
