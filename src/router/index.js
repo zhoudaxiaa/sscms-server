@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-10 09:18:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-11 22:43:20
+ * @LastEditTime: 2019-05-05 14:43:07
  */
 
 import Vue from 'vue'
@@ -38,6 +38,7 @@ export const constantRouterMap = [
     hidden: true
   },
   {
+    // 根路径时，重定向到dashboard路由
     path: '/',
     component: layout,
     redirect: 'dashboard',

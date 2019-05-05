@@ -6,10 +6,10 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-17 23:31:51
- * @LastEditTime: 2019-05-05 13:42:55
+ * @LastEditTime: 2019-05-05 15:06:57
  */
 import { error } from '@/utils/error'
-// import adminUser from '@/pages/adminUser'
+import layout from '@/pages/layout'
 
 /**
  * @description: 根据路径创建一个import 函数（懒加载路由）
@@ -38,7 +38,14 @@ function buildRouter (resource) {
           case 'pid': newResource['pid'] = v[key]; break
           case 'icon': newResource['meta'] = { title: v.name, icon: v.icon }; break
           case 'route_path': newResource['path'] = v[key] || '/'; break
-          case 'component_path': newResource['component'] = loadPage(v[key]); break
+          case 'component_path': 
+            if (v[key]) {
+              newResource['component'] = loadPage(v[key])
+            } else {
+              console.log(v)
+              newResource['component'] = layout
+            }
+            break
           case 'is_active': newResource['is_show'] = v[key]; break
         }
       }

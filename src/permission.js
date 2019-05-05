@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-04 22:21:51
+ * @LastEditTime: 2019-05-05 15:02:02
  */
 import { error } from '@/utils/error'
 
@@ -34,7 +34,7 @@ router.beforeEach(async (to, from, next) => {
         await store.dispatch('GetRoleOpResource')
           // 根据角色资源生产动态路由，并连接基础路由
         const dynamicRoutes = buildRouter(store.state.admin.resource)
-console.log(dynamicRoutes)
+
         router.addRoutes(dynamicRoutes.concat(baseRouter)) // 加载动态路由
 
         store.commit(types.SET_DYNAMIC_MENUS, dynamicRoutes) // 存储动态路由(用来生成侧边栏菜单)
