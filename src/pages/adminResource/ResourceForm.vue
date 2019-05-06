@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:41:25
- * @LastEditTime: 2019-05-06 09:14:11
+ * @LastEditTime: 2019-05-06 21:58:43
  -->
 <template>
   <el-dialog
@@ -24,83 +24,6 @@
 
           <el-input v-model="formData.name"></el-input>
 
-        </el-form-item>
-
-        <el-form-item label="头像">
-          
-          <el-upload
-            class="avatar-wrap"
-            :show-file-list="false"
-            :action="apiPath.v1.avatar"
-            :on-success="uploadAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-
-            <img
-              class="avatar-img"
-              v-if="formData.avatar"
-              :src="formData.avatar">
-
-            <i
-              v-else
-              class="el-icon-plus">
-            </i>
-
-          </el-upload>
-        </el-form-item>
-
-        <el-form-item
-          label="登录名"
-          prop="username">
-
-          <el-input v-model="formData.username"></el-input>
-
-        </el-form-item>
-
-        <el-form-item
-          label="密码"
-          prop="password">
-          
-          <el-input
-            type="password"
-            v-model="formData.password">
-          </el-input>
-
-        </el-form-item>
-
-        <el-form-item
-          label="确认密码"
-          prop="check_pass">
-
-          <el-input
-            type="password"
-            v-model="formData.check_pass">
-          </el-input>
-
-        </el-form-item>
-
-        <el-form-item
-          label="邮箱"
-          prop="email">
-
-          <el-input v-model="formData.email"></el-input>
-
-        </el-form-item>
-
-        <el-form-item
-          label="角色组"
-          prop="role_id">
-          <el-select
-            v-model="formData.role_id"
-            placeholder="请选择角色组">
-            
-            <el-option
-              v-for="data in roleList"
-              :key="data.id"
-              :label="data.name"
-              :value="data.id">
-            </el-option>
-
-          </el-select>
         </el-form-item>
 
         <el-form-item label="是否开启">
@@ -143,7 +66,7 @@
 
 <script>
 
-import { addRole, updateRole } from '@/api/admin'
+// import { addRole, updateRole } from '@/api/admin'
 
 export default {
   name: 'ResourceForm',
@@ -212,7 +135,7 @@ export default {
      * @return: Promise axios返回的promise对象
      */
     updateOp (formData, id) {
-      return updateRole(formData, id)
+      // return updateRole(formData, id)
     },
 
     /**
@@ -221,7 +144,7 @@ export default {
      * @return: Promise axios返回的promise对象
      */
     addOp (formData) {
-      return addRole(formData)
+      // return addRole(formData)
     },
 
     /**

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-13 22:51:00
- * @LastEditTime: 2019-05-06 13:21:04
+ * @LastEditTime: 2019-05-06 21:24:55
  -->
 <template>
   <div>
@@ -98,14 +98,6 @@ export default {
     }
   },
   methods: {
-    /**
-     * @description: 点击修改角色资源事件
-     * @param {String} id 当前操作的角色id
-     * @return: 
-     */
-    handleEditReource (id) {
-      this.$emit('formOperation', 'editResourceOp', id)
-    },
 
     /**
      * @description: selection-change时触发
@@ -122,6 +114,15 @@ export default {
       }
       
       this.$emit("selectionOperation", ids.join(','));
+    },
+
+    /**
+     * @description: 点击修改角色资源事件
+     * @param {String} id 当前操作的角色id
+     * @return: 
+     */
+    handleEditReource (id) {
+      this.$emit('formOperation', 'editResourceOp', 0, id)
     },
 
     /**

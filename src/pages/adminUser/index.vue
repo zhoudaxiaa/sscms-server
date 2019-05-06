@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-05-06 13:36:29
+ * @LastEditTime: 2019-05-06 21:47:11
  -->
 
 <template>
@@ -171,10 +171,13 @@ export default {
      */
     selectionOperation (ids) {
 
-      if (ids.indexOf(',') >= 0) {  // 多项删除
-        this.deleteIdList= ids
+      let idList = ids.split(',')
+
+      if (idList.length > 2) {  // 多项删除
+        this.deleteIdList = ids
       } else {
         this.deleteId = ids
+        this.deleteIdList = ids
       }
 
     },

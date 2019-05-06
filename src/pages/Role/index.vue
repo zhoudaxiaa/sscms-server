@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 11:07:59
- * @LastEditTime: 2019-05-06 15:06:09
+ * @LastEditTime: 2019-05-06 21:46:47
  -->
 
 <template>
@@ -27,6 +27,7 @@
     <resource-form
       @changeFormVisible="toggleResourceFormVisible"
       :selectedResource = "selectedResource"
+      :opId="opId"
       :resourceTreeData="resourceTreeData"
       :resourceVisible="resourceVisible">
     </resource-form>
@@ -183,7 +184,7 @@ export default {
       switch (op) {
         case 'initData': this.initData(); break        
         case 'editDataOp': this.editDataOp(i, id); break // 表单修改操作
-        case 'editResourceOp': this.editResourceOp(i); break // 资源表单修改操作
+        case 'editResourceOp': this.editResourceOp(id); break // 资源表单修改操作
         case 'addDataOp': this.addDataOp(); break  // 表单新增操作
         case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
         case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
@@ -196,11 +197,13 @@ export default {
      * @return: 
      */
     selectionOperation (ids) {
+      let idList = ids.split(',')
 
-      if (ids.indexOf(',') >= 0) {  // 多项删除
-        this.deleteIdList= ids
+      if (idList.length > 2) {  // 多项删除
+        this.deleteIdList = ids
       } else {
         this.deleteId = ids
+        this.deleteIdList = ids
       }
 
     },
@@ -260,10 +263,12 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-
+          
           return this.deleteData(idList)
 
         }).then((result) => {
+          this.initData()  // 删除成功，刷新数据
+
           this.$message({
             type: 'success',
             message: '删除成功！'
@@ -293,7 +298,9 @@ export default {
 
       resourceData = await getRoleAllResource(id)
 
-      // 获取当前资源拥护的所有资源的id
+      this.opId = id
+
+      // 获取当前角色拥有的所有资源的id
       this.selectedResource = resourceData.map((v) => {
         return v.id
       })

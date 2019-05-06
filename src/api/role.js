@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 13:55:26
- * @LastEditTime: 2019-05-06 14:34:30
+ * @LastEditTime: 2019-05-06 21:31:05
  */
 
 import http from '@/utils/http.js'
@@ -27,7 +27,7 @@ export function addRole (form) {
  * @return: 
  */
 export function deleteRole (ids) {
-  return http.delete(`${apiPath.v1.role}/ids`)
+  return http.delete(`${apiPath.v1.role}/${ids}`)
 }
 
 /**

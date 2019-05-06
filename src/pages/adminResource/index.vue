@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:23:11
- * @LastEditTime: 2019-05-04 17:17:17
+ * @LastEditTime: 2019-05-06 22:10:53
  -->
 
 <template>
@@ -16,7 +16,9 @@
     <resource-form
       class="form-wrap"
       @changeFormVisible="toggleFormVisible"
+      @formOperation="formOperation"
       :formData="formData"
+      :opId="opId"
       :formOp="formOp"
       :formVisible="formVisible">
     </resource-form>
@@ -55,7 +57,7 @@ import DeleteDataBtn from '@/pages/common/DeleteDataBtn'
 import ResourceTree from './ResourceTree'
 import ResourceForm from './ResourceForm'
 
-import { getAllResource } from '@/api/resource'
+import { getAllResource, deleteResource } from '@/api/resource'
 
 import { buildResourceTree } from '@/utils/utils'
 
@@ -73,6 +75,10 @@ export default {
 
   data () {
     return {
+
+      initFormData: {  // 初始表单
+
+      },
 
       deleteId: '',  //要删除的id
 
@@ -113,17 +119,18 @@ export default {
     /**
      * @description: 监听表单操作，子组件触发
      * @param {String} op 触发的表单操作名称
-     * @param {Number|String} i 当前操作的表格列的索引 或者id
+     * @param {Number} i 当前操作的表格列的索引
+     * @param {String} id 当前操作的id
      * @return: 
      */
-    formOperation (op, i) {
+    formOperation (op, i, id) {
       
-      this.formOp = op  // 表单操作名称
+      this.formOp = op  // 表单操作名称（新增还是更新）
 
       switch (op) {
         case 'initData': this.initData(); break
-        case 'addDataOp': this.addDataOp(); break // 表单修改操作
-        case 'editDataOp': this.editDataOp(i); break // 表单修改操作
+        case 'addDataOp': this.addDataOp(); break  // 表单新增操作
+        case 'editDataOp': this.editDataOp(i, id); break // 表单修改操作
         case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
         case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
       }
@@ -136,10 +143,13 @@ export default {
      */
     selectionOperation (ids) {
 
-      if (ids.indexOf(',') >= 0) {  // 多项删除
-        this.deleteIdList= ids
+      let idList = ids.split(',')
+
+      if (idList.length > 2) {  // 多项删除
+        this.deleteIdList = ids
       } else {
         this.deleteId = ids
+        this.deleteIdList = ids
       }
 
     },
@@ -159,15 +169,23 @@ export default {
      */    
     addDataOp () {
       this.toggleFormVisible()
+      this.formOp = 'add'
+      
+      this.formData = this.initFormData
     },
 
     /**
      * @description: 表单修改操作
      * @param {Number} 当前操作的表格列的索引（第几个表格数据）
+     * @param {String} 操作的id 
      * @return: 
      */    
-    editDataOp (i) {
+    editData (i, id) {
       this.toggleFormVisible()
+      this.formOp = 'edit'
+      this.opId = id
+
+      this.formData = this.tableData[i]
     },
 
     /**
@@ -188,6 +206,8 @@ export default {
           return this.deleteData(idList)
 
         }).then((result) => {
+          this.initData()  // 删除成功，刷新数据
+
           this.$message({
             type: 'success',
             message: '删除成功！'
@@ -213,7 +233,7 @@ export default {
      * @return: 
      */
     deleteData (idList) {
-      // return deleteAdminUser(idList)
+      return deleteResource(idList)
     },
 
     /**
