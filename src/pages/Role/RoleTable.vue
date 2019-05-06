@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-13 22:51:00
- * @LastEditTime: 2019-04-27 18:24:17
+ * @LastEditTime: 2019-05-06 13:21:04
  -->
 <template>
   <div>
@@ -49,7 +49,7 @@
           <div>
             
             <el-button
-              @click="handleEditData(op.$index)"
+              @click="handleEditData(op.$index, op.row.id)"
               size="small"
               type="primary"
               icon="el-icon-edit"
@@ -127,11 +127,12 @@ export default {
     /**
      * @description: 修改数据
      * @param {number} i 操作的表格索引 
+     * @param {String} id 操作数据的id 
      * @return: 
      */
-    handleEditData (i) {
+    handleEditData (i, id) {
 
-      this.$emit('formOperation', 'editDataOp', i)
+      this.$emit('formOperation', 'editDataOp', i, id)
 
     },
 

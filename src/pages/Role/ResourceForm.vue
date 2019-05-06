@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 21:44:44
- * @LastEditTime: 2019-04-21 21:29:20
+ * @LastEditTime: 2019-05-06 17:20:03
  -->
 <template>
   <el-dialog
@@ -14,15 +14,16 @@
     :visible.sync="resourceVisible"
     :before-close="closeForm">
     
-    <el-tree
-      class="resource-tree"
-      ref="tree"
-      :data="resourceTreeData"
-      :default-expanded-keys="selectedResource"
-      :default-checked-keys="selectedResource"
-      show-checkbox
-      node-key="id">
-    </el-tree>
+    <template v-if="isShow">
+      <el-tree
+        class="resource-tree"
+        ref="tree"
+        :default-expanded-keys="selectedResource"
+        :data="resourceTreeData"
+        show-checkbox
+        node-key="id">
+      </el-tree>
+    </template>
 
     <el-button
       @click="handleUpdateSubmit"
@@ -57,7 +58,25 @@ export default {
     }
   },
 
-  
+  data () {
+    return {
+      isShow: true
+    }
+  },
+
+  watch:{
+    selectedResource () {
+      this.isShow = true
+      this.$nextTick(() => {
+        if (this.$refs.tree) {
+        
+          let selectedResource = this.selectedResource
+
+          this.$refs.tree.setCheckedKeys(selectedResource)
+        }
+      })
+    }
+  },
 
   methods: {
 
@@ -89,6 +108,7 @@ export default {
      */  
     closeForm () {
       this.$emit('changeFormVisible')
+      this.isShow = false
     },
 
   }

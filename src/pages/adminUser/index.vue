@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-05-05 22:41:03
+ * @LastEditTime: 2019-05-06 13:36:29
  -->
 
 <template>
@@ -201,6 +201,7 @@ export default {
     /**
      * @description: 表单修改操作
      * @param {Number} 当前操作的表格列的索引（第几个表格数据）
+     * @param {String} 操作的id
      * @return: 
      */    
     editDataOp (i, id) {

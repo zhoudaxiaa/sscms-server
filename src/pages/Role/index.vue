@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 11:07:59
- * @LastEditTime: 2019-04-27 21:55:07
+ * @LastEditTime: 2019-05-06 15:06:09
  -->
 
 <template>
@@ -16,7 +16,9 @@
     <role-form
       class="form-wrap"
       @changeFormVisible="toggleFormVisible"
+      @formOperation="formOperation"
       :formData="formData"
+      :opId="opId"
       :formOp="formOp"
       :formVisible="formVisible">
     </role-form>
@@ -74,7 +76,7 @@ import RoleForm from './RoleForm'
 import ResourceForm from './ResourceForm'
 import RoleTable from './RoleTable'
 
-import { getRole, getRoleAllResourceId, deleteRole } from '@/api/role'
+import { getRole, deleteRole, getRoleAllResource } from '@/api/role'
 import { getAllResource } from '@/api/resource'
 
 import { buildResourceTree } from '@/utils/utils'
@@ -99,10 +101,12 @@ export default {
 
       initFormData: {  // 添加管理员信息初始表格
         name: '',
-        instroduce: '',
+        introduce: '',
       }, 
 
       deleteId: '',  //要删除的id
+
+      opId: '',  // 当前操作数据id
 
       deleteIdList:'',  // 要删除的id 字符串组合
       
@@ -159,6 +163,7 @@ export default {
       resourceData = await resourceData
 
       if (resourceData) {
+
         this.resourceTreeData  = buildResourceTree(resourceData)
       }
 
@@ -167,15 +172,17 @@ export default {
     /**
      * @description: 监听表单操作，子组件触发
      * @param {String} op 触发的表单操作名称
-     * @param {Number|String} i 当前操作的表格列的索引 或者id
+     * @param {Number} i 当前操作的表格列的索引 
+     * @param {String} id 当前操作的id
      * @return: 
      */
-    formOperation (op, i) {
-      
+    formOperation (op, i, id) {
+
       this.formOp = op  // 表单操作名称
 
       switch (op) {
-        case 'editDataOp': this.editDataOp(i); break // 表单修改操作
+        case 'initData': this.initData(); break        
+        case 'editDataOp': this.editDataOp(i, id); break // 表单修改操作
         case 'editResourceOp': this.editResourceOp(i); break // 资源表单修改操作
         case 'addDataOp': this.addDataOp(); break  // 表单新增操作
         case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
@@ -220,16 +227,22 @@ export default {
      */    
     addDataOp () {
       this.toggleFormVisible()
+      this.formOp = 'add'
+
       this.formData = this.initFormData
     },
 
     /**
      * @description: 表单修改操作
      * @param {Number} 当前操作的表格列的索引（第几个表格数据）
+     * @param {String} 操作的id 
      * @return: 
      */    
-    editDataOp (i) {
+    editDataOp (i, id) {
       this.toggleFormVisible()
+      this.formOp = 'edit'
+      this.opId = id
+
       this.formData = { ...this.tableData[i], check_pass:'', password: '' }
     },
 
@@ -278,14 +291,13 @@ export default {
     async editResourceOp (id) {
       let resourceData
 
+      resourceData = await getRoleAllResource(id)
+
       // 获取当前资源拥护的所有资源的id
-      resourceData = await getRoleAllResourceId(id)
+      this.selectedResource = resourceData.map((v) => {
+        return v.id
+      })
 
-      if (resourceData) {
-
-        this.selectedResource = resourceData
-
-      }
       this.toggleResourceFormVisible()
     },
 

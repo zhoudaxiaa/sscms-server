@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-05-05 23:11:15
+ * @LastEditTime: 2019-05-06 13:56:15
  -->
 
 <template>
@@ -146,6 +146,7 @@
 <script>
 
 import { addAdminUser, updateAdminUser } from '@/api/admin'
+import { getAllRole } from '@/api/role'
 
 import apiPath from '@/api/apiPath'
 
@@ -182,6 +183,8 @@ export default {
   data() {
     return {
       apiPath,  // 上传头像要用到的url地址
+
+      roleList: [],  // 角色列表
 
       rules: {  // 表单验证规则
         name: [
@@ -257,10 +260,14 @@ export default {
     }
   },
 
-  computed: {
-    roleList () {
-      return this.$store.state.app.roleList  // 从store里获取角色组列表
-    }
+  created () {
+    // 请求所有角色组列表数据并commit
+    (async () => {
+
+      const data = await getAllRole() // 获取所有角色列表
+      
+      if (data) this.roleList = data
+    })()
   },
 
   methods: {
@@ -279,7 +286,6 @@ export default {
      * @return: 
      */
     uploadImgSuccess (res) {
-      console.log(res)
       // 把本地上传的图片地址转化为网络地址
       this.formData.avatar = res
     },
@@ -304,6 +310,25 @@ export default {
     },
 
     /**
+     * @description: 表单数据更新操作
+     * @param {Object} 表单数据对象 
+     * @param {String} 操作数据id
+     * @return: Promise axios返回的promise对象
+     */
+    updateData (formData, id) {
+      return updateAdminUser(formData, id)
+    },
+
+    /**
+     * @description: 表单数据增加操作
+     * @param {Object} 表单数据对象 
+     * @return: Promise axios返回的promise对象
+     */
+    addData (formData) {
+      return addAdminUser(formData)
+    },
+
+    /**
      * @description: 表单更新数据操作
      * @param {type} 
      * @return: 
@@ -320,7 +345,7 @@ export default {
 
           this.$message({
           type: 'success',
-          message: '添加成功！'
+          message: '更新成功！'
           })
 
           this.closeForm()
@@ -358,25 +383,6 @@ export default {
         }
       })
       
-    },
-
-    /**
-     * @description: 表单数据更新操作
-     * @param {Object} 表单数据对象 
-     * @param {String} 操作数据id
-     * @return: Promise axios返回的promise对象
-     */
-    updateData (formData, id) {
-      return updateAdminUser(formData, id)
-    },
-
-    /**
-     * @description: 表单数据增加操作
-     * @param {Object} 表单数据对象 
-     * @return: Promise axios返回的promise对象
-     */
-    addData (formData) {
-      return addAdminUser(formData)
     },
 
     /**

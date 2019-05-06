@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:41:25
- * @LastEditTime: 2019-04-27 22:11:35
+ * @LastEditTime: 2019-05-06 09:14:11
  -->
 <template>
   <el-dialog
@@ -136,16 +136,14 @@
           <el-button @click="closeForm">取消</el-button>
 
         </el-form-item>
-         
+
       </el-form>
   </el-dialog>
 </template>
 
 <script>
 
-import { addAdminUser, updateAdminUser } from '@/api/admin'
-
-import apiPath from '@/api/apiPath'
+import { addRole, updateRole } from '@/api/admin'
 
 export default {
   name: 'ResourceForm',
@@ -161,6 +159,11 @@ export default {
       default: () => {},
     },
 
+    opId: {  // 当前操作的id
+      type: String,
+      default: '',
+    },
+
     formOp: {  // 当前表单操作，新增还是修改
       type: String,
       default: '',
@@ -172,13 +175,8 @@ export default {
     }
   },
 
-  created () {
-    if (this.roleList.length === 0) this.$store.dispatch('GetAllRole')  // 没有就分发获取并存储角色组列表
-  },
-
   data() {
     return {
-      apiPath,  // 上传头像要用到的url地址
 
       rules: {  // 表单验证规则
         name: [
@@ -194,61 +192,6 @@ export default {
             trigger: 'change'
           }
         ],
-        username: [
-          {
-            required: true,
-            message: '请输入登录账号',
-            trigger: 'blur'
-          }
-        ],
-        password: [
-          {
-            // 使用箭头函数绑定this
-            validator: (rule, value, callback) => {
-
-              // 如果是新增数据，必须输入密码
-              if (!this.isEdit) callback(new Error('请输入密码'))
-
-              // 如果是修改密码，输入了就必须符合规范
-              if (value && /^(\d|[a-z]|[A-Z]|_){6,}$/.test(value)) {
-                callback(new Error('6 到 12 位,只能包含字母、数字和下划线!'))
-              }
-              
-              callback()
-            },
-            trigger: 'blur'
-          }
-        ],
-        check_pass: [
-          {
-            // 使用箭头函数绑定this
-            validator: (rule, value, callback) => {
-
-              // 如果输入了密码，这个确认密码也得输入
-              if (this.formData.password) callback(new Error('请再次输入密码'))
-
-              // 一致就通过
-              if (value !== this.formData.password) callback(new Error('两次输入的密码不一致！'))
-
-              callback()
-            },
-            trigger: 'blur'
-          }
-        ],
-        email: [
-          {
-            type: 'email',
-            message: '请输入正确的邮箱地址',
-            trigger: 'change'
-          }
-        ],
-        role_id: [
-          {
-            required: true,
-            message: '请选择一个角色组',
-            trigger: 'blur'
-          }
-        ],
 
       }
     }
@@ -261,42 +204,15 @@ export default {
   },
 
   methods: {
-    /**
-     * @description: 头像上传成功后的回调函数
-     * @param {object} res 响应数据 
-     * @return: 
-     */
-    uploadAvatarSuccess (res) {
-      // 把本地上传的图片地址转化为网络地址
-      this.formData.avatar = res.data.url
-    },
-    
-    /**
-     * @description: 上传之前的回调函数
-     * @param {object} 上传的文件对象（element-ui提供）
-     * @return: 
-     */
-    beforeAvatarUpload (file) {
-      const isPass = 'image/jpeg,image/png'.indexOf(file.type) > -1
-      const isOverZise = file.size >= 200 * 1024
-
-        if (!isPass) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-          return false
-        }
-        if (isOverZise) {
-          this.$message.error('上传头像图片大小不能超过 300KB!');
-          return false
-        }
-    },
 
     /**
      * @description: 表单数据更新操作
      * @param {Object} 表单数据对象 
+     * @param {String} 操作数据id
      * @return: Promise axios返回的promise对象
      */
-    updateOp (formData) {
-      return updateAdminUser(formData)
+    updateOp (formData, id) {
+      return updateRole(formData, id)
     },
 
     /**
@@ -305,7 +221,7 @@ export default {
      * @return: Promise axios返回的promise对象
      */
     addOp (formData) {
-      return addAdminUser(formData)
+      return addRole(formData)
     },
 
     /**
@@ -314,16 +230,26 @@ export default {
      * @return: 
      */
     async handleUpdateSubmit () {
-      const data = await this.updateOp (this.formData)
 
-      if (data) {
-        this.$message({
+      this.$refs.form.validate(async (valid) => {
+
+        if (valid) {
+
+          await this.updateData (this.formData, this.opId)
+
+          this.initData()  // 更新表格
+
+          this.$message({
           type: 'success',
           message: '更新成功！'
-        })
-      }
+          })
 
-      this.closeForm();
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
 
     },
 
@@ -333,16 +259,25 @@ export default {
      * @return: 
      */
     async handleAddSubmit () {
-      const data = await this.addOp (this.formData)
 
-      if (data) {
-        this.$message({
-          type: 'success',
-          message: '添加成功！'
-        })
-      }
+      this.$refs.form.validate(async (valid) => {
 
-      this.closeForm();
+        if (valid) {
+          await this.addData (this.formData)
+
+          this.initData()  // 更新表格
+
+          this.$message({
+            type: 'success',
+            message: '添加成功！'
+          })
+
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
     },
 
     /**
@@ -359,30 +294,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.avatar-wrap {
-  width: 82px;
-  height: 82px;
-  border-radius: 50%;
-  overflow: hidden;
-  text-align: center;
-  cursor: pointer;
-
-  .avatar-img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .el-icon-plus {
-    width: 80px;
-    height: 80px;
-    font-size: 36px;
-    border: 1px dashed #d9d9d9;
-    border-radius: 50%;
-    line-height: 80px;
-
-    &:hover {
-      border-color: #409EFF;
-    }
-  }
-}
 </style>

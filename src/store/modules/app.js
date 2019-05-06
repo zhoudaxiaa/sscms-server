@@ -6,13 +6,11 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-05-05 18:30:20
+ * @LastEditTime: 2019-05-06 13:56:16
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
 import * as types from '@/store/mutation-types'
-
-import { getAllRole } from '@/api/role'
 
 export default {
   state: {
@@ -30,9 +28,6 @@ export default {
         path: '/dashboard',  // String 标签指向的页面
       },
     ],
-
-    // 角色列表
-    roleList: getter('roleList') || []
 
   },
 
@@ -93,16 +88,5 @@ export default {
     },
 
   },
-  
-  actions: {
-    // 请求所有角色组列表数据并commit
-    async GetAllRole ({ commit }) {
 
-      const data = await getAllRole() // 获取所有角色列表
-      
-      if (data) commit(types.SET_ROLE_LIST, data)
-    }
-  },
-
-  
 }

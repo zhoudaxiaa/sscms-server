@@ -121,6 +121,7 @@ export default {
       this.formOp = op  // 表单操作名称
 
       switch (op) {
+        case 'initData': this.initData(); break
         case 'addDataOp': this.addDataOp(); break // 表单修改操作
         case 'editDataOp': this.editDataOp(i); break // 表单修改操作
         case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作

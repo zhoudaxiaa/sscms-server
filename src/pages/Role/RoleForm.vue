@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-18 11:22:10
- * @LastEditTime: 2019-04-27 18:27:17
+ * @LastEditTime: 2019-05-06 14:02:26
  -->
 
 <template>
@@ -15,12 +15,13 @@
     :visible.sync="formVisible"
     :before-close="closeForm">
       <el-form
+        ref="form"
         :model="formData"
         :rules="rules"
         label-width="80px">
 
         <el-form-item
-          label="帐号昵称"
+          label="角色名"
           prop="name">
 
           <el-input v-model="formData.name"></el-input>
@@ -78,6 +79,11 @@ export default {
       default: () => {},
     },
 
+    opId: {  // 当前操作的id
+      type: String,
+      default: '',
+    },
+
     formOp: {  // 当前表单操作，新增还是修改
       type: String,
       default: '',
@@ -109,33 +115,59 @@ export default {
     }
   },
 
-  created () {
-    if (this.roleList.length === 0) this.$store.dispatch('GetAllRole')  // 没有就分发获取并存储角色组列表
-  },
-
-  computed: {
-    roleList () {
-      return this.$store.state.app.roleList  // 从store里获取角色组列表
-    }
-  },
-
   methods: {
+    /**
+     * @description: 触发父级初始化数据（更新）
+     * @param {type} 
+     * @return: 
+     */
+    initData () {
+      this.$emit('formOperation', 'initData')
+    },
+
+    /**
+     * @description: 表单数据更新操作
+     * @param {Object} 表单数据对象 
+     * @return: Promise axios返回的promise对象
+     */
+    updateData (formData, id) {
+      return updateRole(formData, id)
+    },
+
+    /**
+     * @description: 表单数据增加操作
+     * @param {Object} 表单数据对象 
+     * @return: Promise axios返回的promise对象
+     */
+    addData (formData) {
+      return addRole(formData)
+    },
+
     /**
      * @description: 表单更新数据操作
      * @param {type} 
      * @return: 
      */
     async handleUpdateSubmit () {
-      const data = await this.updateData (this.formData)
+      this.$refs.form.validate(async (valid) => {
 
-      if (data) {
-        this.$message({
+        if (valid) {
+
+          await this.updateData (this.formData, this.opId)
+
+          this.initData()  // 更新表格
+
+          this.$message({
           type: 'success',
           message: '更新成功！'
-        })
-      }
+          })
 
-      this.closeForm();
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
 
     },
 
@@ -145,33 +177,25 @@ export default {
      * @return: 
      */
     async handleAddSubmit () {
-      const data = await this.addData (this.formData)
 
-      if (data) {
-        this.$message({
-          type: 'success',
-          message: '添加成功！'
-        })
-      }
+      this.$refs.form.validate(async (valid) => {
 
-      this.closeForm();
-    },
+        if (valid) {
+          await this.addData (this.formData)
 
-    /**
-     * @description: 表单数据更新操作
-     * @param {Object} 表单数据对象 
-     * @return: Promise axios返回的promise对象
-     */
-    updateData (formData) {
-      return updateRole(formData)
-    },
-    /**
-     * @description: 表单数据增加操作
-     * @param {Object} 表单数据对象 
-     * @return: Promise axios返回的promise对象
-     */
-    addData (formData) {
-      return addRole(formData)
+          this.initData()  // 更新表格
+
+          this.$message({
+            type: 'success',
+            message: '添加成功！'
+          })
+
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
     },
 
     /**

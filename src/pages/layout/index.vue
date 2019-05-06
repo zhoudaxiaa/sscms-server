@@ -39,14 +39,7 @@ export default {
     Sidebar,
     AppMain
   },
-  created () {
-    if (this.roleList.length === 0) this.$store.dispatch('GetAllRole')  // 没有就分发获取并存储角色组列表
-  },
   computed: {
-
-    roleList () {
-      return this.$store.state.app.roleList  // 从store里获取角色组列表
-    },
 
     // 侧边栏展开状态
     sidebarCollapse () {
