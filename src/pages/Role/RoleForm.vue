@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-18 11:22:10
- * @LastEditTime: 2019-05-06 14:02:26
+ * @LastEditTime: 2019-05-07 14:13:25
  -->
 
 <template>
@@ -69,10 +69,6 @@ export default {
   name: 'RoleForm',
 
   props: {
-    tableData: {
-      type: Array,
-      default: () => []
-    },
 
     formData: {  // 表单数据
       type: Object,

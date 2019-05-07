@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-05-06 13:56:15
+ * @LastEditTime: 2019-05-07 14:13:08
  -->
 
 <template>
@@ -154,10 +154,6 @@ export default {
   name: 'UserForm',
 
   props: {
-    tableData: {
-      type: Array,
-      default: () => []
-    },
 
     formData: {  // 表单数据
       type: Object,

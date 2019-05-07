@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:23:11
- * @LastEditTime: 2019-05-06 22:10:53
+ * @LastEditTime: 2019-05-07 17:05:13
  -->
 
 <template>
@@ -77,10 +77,22 @@ export default {
     return {
 
       initFormData: {  // 初始表单
-
+        pid: '',
+        name: '',
+        type: '',
+        icon: '',
+        route_path: '',
+        component_path: '',
+        is_active: true,
+        introduce: '',
+        sort: 0
       },
 
+      resourceData: {},
+
       deleteId: '',  //要删除的id
+
+      opId: '',  // 当前操作数据id
 
       deleteIdList:'',  // 要删除的id 字符串组合
       
@@ -111,6 +123,13 @@ export default {
 
       // 请求成功
       if (resourceData) {
+        let temp =  {}
+        resourceData.forEach( (v) => {
+          temp[v.id] = v
+        })
+
+        this.resourceData = temp
+
         this.resourceTreeData  = buildResourceTree(resourceData)
       }
 
@@ -129,8 +148,8 @@ export default {
 
       switch (op) {
         case 'initData': this.initData(); break
-        case 'addDataOp': this.addDataOp(); break  // 表单新增操作
-        case 'editDataOp': this.editDataOp(i, id); break // 表单修改操作
+        case 'addDataOp': this.addDataOp(id); break  // 表单新增操作
+        case 'editDataOp': this.editDataOp(id); break // 表单修改操作
         case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
         case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
       }
@@ -164,28 +183,31 @@ export default {
 
     /**
      * @description: 表单新增操作
+     * @param: {String} pid 父级id
      * @param {Number} 当前操作的表格列的索引（第几个表格数据）
      * @return: 
      */    
-    addDataOp () {
+    addDataOp (pid) {
       this.toggleFormVisible()
       this.formOp = 'add'
       
       this.formData = this.initFormData
+      this.formData.pid = pid
     },
 
     /**
      * @description: 表单修改操作
-     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
      * @param {String} 操作的id 
      * @return: 
      */    
-    editData (i, id) {
-      this.toggleFormVisible()
+    async editDataOp (id) {
+
       this.formOp = 'edit'
       this.opId = id
 
-      this.formData = this.tableData[i]
+      this.formData = this.resourceData[id]
+      
+      this.toggleFormVisible()
     },
 
     /**

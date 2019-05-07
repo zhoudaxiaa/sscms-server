@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 21:44:44
- * @LastEditTime: 2019-05-06 21:21:00
+ * @LastEditTime: 2019-05-07 17:22:07
  -->
 <template>
   <el-dialog
@@ -105,7 +105,7 @@ export default {
     checkChange () {
       this.formData = {
         resource_id: this.$refs.tree.getCheckedKeys()
-        }
+      }
     },
 
     /**

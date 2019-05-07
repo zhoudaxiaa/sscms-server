@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-25 13:40:02
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-06 22:10:05
+ * @LastEditTime: 2019-05-07 16:55:11
  */
 
 import http from '@/utils/http.js'
@@ -27,17 +27,17 @@ export function addResource(form) {
  * @return: 数据
  */
 export function deleteResource(ids) {
-  return http.get(`${apiPath.v1.resource}/${ids}`)
+  return http.delete(`${apiPath.v1.resource}/${ids}`)
 }
 
 /**
  * @description: 更新资源
- * @param {String} id 数据id
  * @param: {Object} from 表单数据
+ * @param: {String} id 数据id
  * @return: 数据
  */
-export function updateResource(id, form) {
-  return http.get(`${apiPath.v1.resource}/${id}`, form)
+export function updateResource(form, id) {
+  return http.patch(`${apiPath.v1.resource}/${id}`, form)
 }
 
 /**

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:41:25
- * @LastEditTime: 2019-05-06 21:58:43
+ * @LastEditTime: 2019-05-07 16:54:30
  -->
 <template>
   <el-dialog
@@ -14,12 +14,13 @@
     :visible.sync="formVisible"
     :before-close="closeForm">
       <el-form
+        ref="form"
         :model="formData"
         :rules="rules"
-        label-width="80px">
+        label-width="100px">
 
         <el-form-item
-          label="帐号昵称"
+          label="资源名称"
           prop="name">
 
           <el-input v-model="formData.name"></el-input>
@@ -30,6 +31,42 @@
           <el-switch v-model="formData.is_active"></el-switch>
         </el-form-item>
 
+        <el-form-item label="资源类型">
+          <el-select
+            :disabled="formOp === 'edit'"
+            v-model="formData.type">
+            <el-option
+              label="基础菜单"
+              :value="0">
+            </el-option>
+            <el-option
+              label="功能操作"
+              :value="1">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <template v-if="formData.type === 0">
+          <el-form-item label="菜单Icon">
+            <el-input v-model="formData.icon"></el-input>
+          </el-form-item>
+
+          <template v-if="formData.pid">
+            <el-form-item label="前端路由地址">
+              <el-input v-model="formData.route_path"></el-input>
+            </el-form-item>
+
+            <el-form-item label="模板地址">
+              <el-input v-model="formData.component_path"></el-input>
+            </el-form-item>
+          </template>
+
+        </template>
+
+        <el-form-item v-else label="api地址">
+          <el-input v-model="formData.api"></el-input>
+        </el-form-item>
+
         <el-form-item
           label="描述">
 
@@ -38,6 +75,10 @@
             v-model="formData.introduce">
           </el-input>
 
+        </el-form-item>
+
+        <el-form-item>
+          <el-input-number v-model="formData.sort"></el-input-number>
         </el-form-item>
 
         <el-form-item>
@@ -66,16 +107,12 @@
 
 <script>
 
-// import { addRole, updateRole } from '@/api/admin'
+import { addResource, updateResource } from '@/api/resource'
 
 export default {
   name: 'ResourceForm',
 
   props: {
-    tableData: {
-      type: Array,
-      default: () => []
-    },
 
     formData: {  // 表单数据
       type: Object,
@@ -105,7 +142,7 @@ export default {
         name: [
           {
             required: true,
-            message: '请输入用户昵称',
+            message: '请输入资源名',
             trigger: 'blur'
           },
           {
@@ -123,10 +160,18 @@ export default {
   computed: {
     roleList () {
       return this.$store.state.app.roleList  // 从store里获取角色组列表
-    }
+    },
   },
 
   methods: {
+    /**
+     * @description: 触发父级初始化数据（更新）
+     * @param {type} 
+     * @return: 
+     */
+    initData () {
+      this.$emit('formOperation', 'initData')
+    },
 
     /**
      * @description: 表单数据更新操作
@@ -134,8 +179,8 @@ export default {
      * @param {String} 操作数据id
      * @return: Promise axios返回的promise对象
      */
-    updateOp (formData, id) {
-      // return updateRole(formData, id)
+    updateData (formData, id) {
+      return updateResource(formData, id)
     },
 
     /**
@@ -143,8 +188,8 @@ export default {
      * @param {Object} 表单数据对象 
      * @return: Promise axios返回的promise对象
      */
-    addOp (formData) {
-      // return addRole(formData)
+    addData (formData) {
+      return addResource(formData)
     },
 
     /**

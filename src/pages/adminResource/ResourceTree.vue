@@ -6,11 +6,13 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:41:08
- * @LastEditTime: 2019-04-27 22:00:50
+ * @LastEditTime: 2019-05-07 17:21:29
  -->
 <template>
   <el-tree
     class="resource-tree"
+    @check-change="handleSelectionChange"
+    ref="tree"
     show-checkbox
     default-expand-all
     :expand-on-click-node="false"
@@ -34,31 +36,30 @@ export default {
 
     /**
      * @description: 新增分类事件
-     * @param {type} 
+     * @param {Object} data 操作数据对象，element-ui 提供 
      * @return: 
      */    
-    handleAddData () {
-      this.$emit('formOperation', 'addDataOp')
+    handleAddData (data) {
+      this.$emit('formOperation', 'addDataOp', 0, data.parent_id)
     },
 
     /**
      * @description: 修改数据
-     * @param {number} i 操作的表格索引 
+     * @param {Object} data 操作数据对象，element-ui 提供 
      * @return: 
      */
-    handleEditData (i) {
-
-      this.$emit('formOperation', 'editDataOp', i)
+    handleEditData (data) {
+      this.$emit('formOperation', 'editDataOp', 0, data.id)
 
     },
 
     /**
      * @description: 删除数据
-     * @param {number} id 要删除的数据id 
+     * @param {Object} data 操作数据对象，element-ui 提供 
      * @return: 
      */
-    handleDeleteData (id) {
-      this.$emit("selectionOperation", id)
+    handleDeleteData (data) {
+      this.$emit("selectionOperation", data.id)
       this.$emit('formOperation', 'deleteDataOp')
     },
 
@@ -67,15 +68,11 @@ export default {
      * @param {object} 表格数据对象 
      * @return: string id组成的字符串
      */
-    handleSelectionChange (val) {
-      let ids = []
+    handleSelectionChange () {
+      console.log(this.$refs.tree.getCheckedKeys())
+      let ids = this.$refs.tree.getCheckedKeys()
+      console.log(ids)
 
-      if (val && val.length > 0) {
-        ids = val.map((item, index) => {
-          return item.id;
-        });
-      }
-      
       this.$emit("selectionOperation", ids.join(','));
     },
 

@@ -6,12 +6,12 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-05 22:35:09
+ * @LastEditTime: 2019-05-07 10:54:48
  */
 
 import axios from 'axios'
 import store from '@/store'
-import { Message } from 'element-ui'
+import { Message, Loading } from 'element-ui'
 
 // 配置文件
 import config from '@/config/'
@@ -24,9 +24,18 @@ const server = axios.create({
   timeout: config.timeout, // api 的响应过期时间
 })
 
+let loading
+
 // 请求拦截器
 server.interceptors.request.use(
   config => {
+    loading = Loading.service({
+      lock: true,
+      text: 'Loading',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
+
     let token = null
 
     token = store.state.app.token
@@ -37,6 +46,7 @@ server.interceptors.request.use(
   },
   error => {
     Message.error('请求超时！')
+    loading && loading.close();
     return Promise.reject(error)
   }
 )
@@ -47,6 +57,8 @@ server.interceptors.response.use(
     let message
 
     const res = response.data //取到响应的数据
+
+    loading && loading.close();
 
     // 如果返回的数据中code 字段，就数据该响应非正常响应，做相应处理
     if (res.code) {
@@ -62,7 +74,11 @@ server.interceptors.response.use(
 
   },
   err => {
+    loading && loading.close();
+    
     let message
+
+    console.log(err)
 
     switch (err.response.status) {
       case 404:

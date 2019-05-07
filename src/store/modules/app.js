@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 16:59:39
- * @LastEditTime: 2019-05-06 13:56:16
+ * @LastEditTime: 2019-05-07 09:04:40
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
@@ -84,7 +84,8 @@ export default {
 
     // 存储角色组列表
     [types.SET_ROLE_LIST] (state, role) {
-      setMutation(state, 'roleList', role)
+      state.roleList = role
+      // setMutation(state, 'roleList', role)
     },
 
   },
