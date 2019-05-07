@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-05-07 14:13:08
+ * @LastEditTime: 2019-05-07 22:33:14
  -->
 
 <template>
@@ -282,7 +282,7 @@ export default {
      * @return: 
      */
     uploadImgSuccess (res) {
-      // 把本地上传的图片地址转化为网络地址
+      // 上传成功，返回图片地址，存到表单
       this.formData.avatar = res
     },
     

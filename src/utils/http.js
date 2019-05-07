@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-07 10:54:48
+ * @LastEditTime: 2019-05-07 21:19:41
  */
 
 import axios from 'axios'
@@ -76,15 +76,15 @@ server.interceptors.response.use(
   err => {
     loading && loading.close();
     
-    let message
+    let message = '未知错误!'
 
-    console.log(err)
-
-    switch (err.response.status) {
-      case 404:
-      case 504: message = '网络错误！'; break
-      case 403: message = '权限不足,请联系管理员!'; break
-      default: message = '未知错误!'
+    if (err.response.status) {
+      switch (err.response.status) {
+        case 404:
+        case 504: message = '网络错误！'; break
+        case 403: message = '权限不足,请联系管理员!'; break
+        default: message = '未知错误!'
+      }
     }
 
     Message.error({ message })

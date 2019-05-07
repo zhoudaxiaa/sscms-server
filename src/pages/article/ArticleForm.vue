@@ -6,29 +6,52 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-24 20:27:29
- * @LastEditTime: 2019-04-25 21:11:29
+ * @LastEditTime: 2019-05-07 23:03:16
  -->
 <template>
   <div class="article-wrap">
     <el-form
+      ref="form"
+      :model="formData"
       label-width="120px">
+
       <el-form-item
         label="文档类别">
-        <el-select>
-          <el-option label="前端开发"></el-option>
+        <el-select
+          multiple
+          v-model="formData.category_id"
+          placeholder="请选择文章分类">
+
+          <el-option
+            v-for="data in category"
+            :key="data.id"
+            :label="data.name"
+            :value="data.id">
+          </el-option>
+
         </el-select>
       </el-form-item>
 
       <el-form-item
         label="所属专栏">
-        <el-select>
-          <el-option label="前端开发"></el-option>
+        <el-select
+          multiple
+          v-model="formData.column_id"
+          placeholder="请选择专栏">
+
+          <el-option
+            v-for="data in column"
+            :key="data.id"
+            :label="data.name"
+            :value="data.id">
+          </el-option>
+
         </el-select>
       </el-form-item>
 
       <el-form-item
         label="标题">
-        <el-input></el-input>
+        <el-input v-model="formData.title"></el-input>
       </el-form-item>
 
       <el-form-item
@@ -44,7 +67,7 @@
 
       <el-form-item
         label="显示">
-        <el-switch></el-switch>
+        <el-switch v-model="formData.is_show"></el-switch>
       </el-form-item>
 
       <el-form-item
@@ -54,23 +77,32 @@
           filterable
           allow-create
           default-first-option
+          v-model="formData.tag_id"
           placeholder="请选择文章标签">
-          <el-option label="test"></el-option>
+
+          <el-option
+            v-for="data in tag"
+            :key="data.id"
+            :label="data.name"
+            :value="data.id">
+          </el-option>
+
         </el-select>
       </el-form-item>
 
-      <el-form-item label="头像">
+      <el-form-item label="封面">
             
         <el-upload
-          class="avatar-wrap"
+          class="cover-wrap"
           :show-file-list="false"
-          :on-success="uploadAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
+          :action="apiPath.uploadFile"
+          :on-success="uploadImgSuccess"
+          :before-upload="beforeImgUpload">
 
           <img
-            class="avatar-img"
-            v-if="formData.avatar"
-            :src="formData.avatar">
+            class="cover-img"
+            v-if="formData.cover_img"
+            :src="formData.cover_img">
 
           <i
             v-else
@@ -83,9 +115,24 @@
       <el-form-item label="内容摘要">
         <el-input></el-input>
       </el-form-item>
+
     </el-form>
 
     <mavon-editor class="mkd-wrap"></mavon-editor>
+
+    <el-button
+      @click="handleUpdateSubmit"
+      v-if="$route.params.id"
+      type="primary">
+      更新
+    </el-button>
+
+    <el-button
+      @click="handleAddSubmit"
+      v-else
+      type="primary">
+      添加
+    </el-button>
 
   </div>
 
@@ -93,8 +140,15 @@
 
 <script>
 import { mavonEditor } from 'mavon-editor'
-
 import 'mavon-editor/dist/css/index.css'
+
+import { getOneArticle, addArticle, updateArticle } from '@/api/article'
+import { getAllCategory } from '@/api/category'
+import { getAllColumn } from '@/api/column'
+import { getAllTag } from '@/api/tag'
+
+import apiPath from '@/api/apiPath'
+
 
 export default {
   name: 'ArticleForm',
@@ -105,21 +159,69 @@ export default {
 
   data () {
     return {
-      formData: {
-        avatar: ''
-      },
+      apiPath,  // 上传图片要用到的地址
+
+      id: this.$route.params.id,
+
+      initFormData: {},
+
+      formData: {},
+
+      category: [],
+
+      column: [],
+
+      tag: [],
     }
   },
 
+  created () {
+    this.initData()
+  },
+
   methods: {
-        /**
+    /**
+     * @description: 初始化数据
+     * @param {type} 
+     * @return: 
+     */    
+    async initData () {
+      let articleData
+      let categoryData
+      let columnData
+      let tagData
+
+      categoryData = getAllCategory()
+      columnData = getAllColumn()
+      tagData = getAllTag()
+
+      categoryData = await categoryData
+      columnData = await columnData
+      tagData = await tagData
+
+      this.category = categoryData
+      this.column = columnData
+      this.tag = tagData
+
+      if (this.id) {
+        articleData = await getOneArticle(this.id)
+
+        articleData && (this.formData = articleData)
+      } else {
+        this.formData = this.initFormData
+      }
+
+
+    },
+
+    /**
      * @description: 头像上传成功后的回调函数
      * @param {object} res 响应数据 
      * @return: 
      */
-    uploadAvatarSuccess (res) {
-      // 把本地上传的图片地址转化为网络地址
-      // this.formData.avatar = res.data.url
+    uploadImgSuccess (res) {
+      // 上传成功，返回图片地址，存到表单
+      this.formData.cover_img = res
     },
     
     /**
@@ -127,7 +229,7 @@ export default {
      * @param {object} 上传的文件对象（element-ui提供）
      * @return: 
      */
-    beforeAvatarUpload (file) {
+    beforeImgUpload (file) {
       const isPass = 'image/jpeg,image/png'.indexOf(file.type) > -1
       const isOverZise = file.size >= 200 * 1024
 
@@ -140,16 +242,90 @@ export default {
           return false
         }
     },
+
+        /**
+     * @description: 表单数据更新操作
+     * @param {Object} 表单数据对象 
+     * @param {String} 操作数据id
+     * @return: Promise axios返回的promise对象
+     */
+    updateData (formData, id) {
+      return updateArticle(formData, id)
+    },
+
+    /**
+     * @description: 表单数据增加操作
+     * @param {Object} 表单数据对象 
+     * @return: Promise axios返回的promise对象
+     */
+    addData (formData) {
+      return addArticle(formData)
+    },
+
+    /**
+     * @description: 表单更新数据操作
+     * @param {type} 
+     * @return: 
+     */
+    async handleUpdateSubmit () {
+
+      this.$refs.form.validate(async (valid) => {
+
+        if (valid) {
+
+          await this.updateData (this.formData, this.opId)
+
+          this.initData()  // 更新表格
+
+          this.$message({
+          type: 'success',
+          message: '更新成功！'
+          })
+
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
+
+    },
+
+    /**
+     * @description: 表单新增数据操作
+     * @param {type} 
+     * @return: 
+     */
+    async handleAddSubmit () {
+
+      this.$refs.form.validate(async (valid) => {
+
+        if (valid) {
+          await this.addData (this.formData)
+
+          this.initData()  // 更新表格
+
+          this.$message({
+            type: 'success',
+            message: '添加成功！'
+          })
+
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
+      
+    },
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.article-wrap {
-  padding: 0 20px;
-}
 
-.avatar-wrap {
+.cover-wrap {
   width: 82px;
   height: 82px;
   border-radius: 50%;
@@ -157,7 +333,7 @@ export default {
   text-align: center;
   cursor: pointer;
 
-  .avatar-img {
+  .cover-img {
     width: 100%;
     height: 100%;
   }

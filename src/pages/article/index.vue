@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-17 23:31:51
- * @LastEditTime: 2019-04-25 21:58:08
+ * @LastEditTime: 2019-05-07 22:01:36
  -->
 
 <template>
@@ -123,15 +123,16 @@ export default {
     /**
      * @description: 监听表单操作，子组件触发
      * @param {String} op 触发的表单操作名称
-     * @param {Number|String} i 当前操作的表格列的索引 或者id
+     * @param {Number} i 当前操作的表格列的索引 
+     * @param {String} id 当前操作数据的id
      * @return: 
      */
-    formOperation (op, i) {
+    formOperation (op, i, id) {
       
       this.formOp = op  // 表单操作名称
 
       switch (op) {
-        case 'editData': this.editData(i); break // 表单修改操作
+        case 'editData': this.editData(id); break // 表单修改操作
         case 'deleteData': this.deleteData(this.deleteId); break  // 表单删除操作
         case 'deleteMultData': this.deleteData(this.deleteIdList); break  // 表单多选删除操作
       }
@@ -207,6 +208,35 @@ export default {
     },
 
     /**
+     * @description: 表单修改操作
+     * @param {String} 当前操作数据的id
+     * @return: 
+     */    
+    editData (id) {
+      console.log(id)
+      this.$router.push(`/editArticle/${id}`)
+      this.toggleFormVisible()
+    },
+
+    /**
+     * @description: 删除数据操作
+     * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
+     * @return: 
+     */
+    deleteDataOp (idList) {
+      // return deleteAdminUser(idList)
+    },
+    
+    /**
+     * @description: 
+     * @param {type} 
+     * @return: 
+     */    
+    handelAddArticle () {
+      this.$router.push('/addArticle')
+    },
+
+    /**
      * @description: 当前页面改变时调用，获取数据
      * @param {Number} page 当前页码 
      * @return: 
@@ -223,25 +253,6 @@ export default {
     },
 
     /**
-     * @description: 表单修改操作
-     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
-     * @return: 
-     */    
-    editData (i) {
-      this.toggleFormVisible()
-      this.$router.push('/editArticle/' + this.tableData[i].aid)
-    },
-
-    /**
-     * @description: 删除数据操作
-     * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
-     * @return: 
-     */
-    deleteDataOp (idList) {
-      // return deleteAdminUser(idList)
-    },
-
-    /**
      * @description:   // 存储当前的页码
      * @param {Number} page 当前页码
      * @return: 
@@ -249,15 +260,6 @@ export default {
     setPageNum (page) {
       this.$store.commit(types.SET_ARTICLE_CURRENT_PAGE, page)
     },
-
-    /**
-     * @description: 
-     * @param {type} 
-     * @return: 
-     */    
-    handelAddArticle () {
-      this.$router.push('/addArticle')
-    }
 
   },
 }

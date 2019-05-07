@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:41:08
- * @LastEditTime: 2019-05-07 17:21:29
+ * @LastEditTime: 2019-05-07 21:36:29
  -->
 <template>
   <el-tree
@@ -15,6 +15,8 @@
     ref="tree"
     show-checkbox
     default-expand-all
+    node-key="id"
+    :check-strictly="true"
     :expand-on-click-node="false"
     :data="tableData"
     :render-content="renderContent">
@@ -40,7 +42,7 @@ export default {
      * @return: 
      */    
     handleAddData (data) {
-      this.$emit('formOperation', 'addDataOp', 0, data.parent_id)
+      this.$emit('formOperation', 'addDataOp', 0, data.id)
     },
 
     /**
@@ -69,10 +71,8 @@ export default {
      * @return: string id组成的字符串
      */
     handleSelectionChange () {
-      console.log(this.$refs.tree.getCheckedKeys())
       let ids = this.$refs.tree.getCheckedKeys()
-      console.log(ids)
-
+console.log(ids)
       this.$emit("selectionOperation", ids.join(','));
     },
 
@@ -89,14 +89,14 @@ export default {
               circle>
             </el-button>
             <el-button
-              type="danger"
+              type="success"
               size="mini"
               on-click={ () => this.handleEditData(data) }
               icon="el-icon-edit"
               circle>
             </el-button>
             <el-button
-              type="success"
+              type="danger"
               size="mini"
               on-click={ () => this.handleDeleteData(data) }
               icon="el-icon-delete"

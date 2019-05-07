@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-21 22:05:59
- * @LastEditTime: 2019-04-25 22:11:15
+ * @LastEditTime: 2019-05-07 22:03:48
  -->
 <template>
   <div>
@@ -32,7 +32,7 @@
         <template slot-scope="scope">
           <input
             type="hidden"
-            :value="scope.row.aid">
+            :value="scope.row.id">
         </template>
       </el-table-column>
 
@@ -71,7 +71,7 @@
       </el-table-column>
 
       <el-table-column
-        prop="comment_num"
+        prop="comment.length"
         label="评论数">
       </el-table-column>
 
@@ -98,6 +98,7 @@
             
             <router-link to="">
               <el-button
+                @click='handleEditData(op.row.id)'
                 size="small"
                 type="primary"
                 icon="el-icon-edit"
@@ -159,12 +160,12 @@ export default {
 
     /**
      * @description: 修改数据
-     * @param {number} i 操作的表格索引 
+     * @param {String} id 操作的数据id
      * @return: 
      */
-    handleEditData (i) {
+    handleEditData (id) {
 
-      this.$emit('formOperation', 'editData', i)
+      this.$emit('formOperation', 'editData', 0, id)
 
     },
 

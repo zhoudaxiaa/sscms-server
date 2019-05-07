@@ -15,7 +15,7 @@ import apiPath from './apiPath.js'
 /**
  * @description: 增加资源
  * @param: {Object} form 表单数据
- * @return: 数据
+ * @return: 
  */
 export function addResource(form) {
   return http.post(`${apiPath.v1.resource}`, form)
@@ -24,7 +24,7 @@ export function addResource(form) {
 /**
  * @description: 删除资源
  * @param {String} ids 数据id，可以是多个id，逗号隔开
- * @return: 数据
+ * @return: 
  */
 export function deleteResource(ids) {
   return http.delete(`${apiPath.v1.resource}/${ids}`)
@@ -34,7 +34,7 @@ export function deleteResource(ids) {
  * @description: 更新资源
  * @param: {Object} from 表单数据
  * @param: {String} id 数据id
- * @return: 数据
+ * @return: 
  */
 export function updateResource(form, id) {
   return http.patch(`${apiPath.v1.resource}/${id}`, form)
@@ -42,7 +42,7 @@ export function updateResource(form, id) {
 
 /**
  * @description: 获取所有资源
- * @return: 数据
+ * @return: 
  */
 export function getAllResource() {
   return http.get(`${apiPath.v1.resource}/all`)
