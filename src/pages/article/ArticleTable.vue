@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-21 22:05:59
- * @LastEditTime: 2019-05-07 22:03:48
+ * @LastEditTime: 2019-05-08 15:53:03
  -->
 <template>
   <div>
@@ -24,6 +24,13 @@
       <el-table-column
         width="50"
         label="推荐">
+
+        <template slot-scope="scope">
+          <div>
+            {{scope.row.is_top ? '是' : '否'}}
+          </div>
+        </template>
+
       </el-table-column>
 
       <el-table-column
@@ -157,18 +164,7 @@ export default {
       
       this.$emit("selectionOperation", ids.join(','));
     },
-
-    /**
-     * @description: 修改数据
-     * @param {String} id 操作的数据id
-     * @return: 
-     */
-    handleEditData (id) {
-
-      this.$emit('formOperation', 'editData', 0, id)
-
-    },
-
+    
     /**
      * @description: 删除数据
      * @param {number} id 要删除的数据id 
@@ -176,7 +172,7 @@ export default {
      */
     handleDeleteData (id) {
       this.$emit("selectionOperation", id)
-      this.$emit('formOperation', 'deleteData')
+      this.$emit('formOperation', 'deleteDataOp')
     },
   },
   

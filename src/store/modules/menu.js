@@ -6,10 +6,10 @@
  * @Version: 1.0
  * @Date: 2019-01-09 14:42:53
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-24 19:44:41
+ * @LastEditTime: 2019-05-08 11:01:08
  */
 
-import { getter, setMutation } from '@/utils/localStore' // 简化getters，mutations 的方法
+import { getter } from '@/utils/localStore' // 简化getters，mutations 的方法
 import * as types from '@/store/mutation-types'
 
 export default {
@@ -34,7 +34,7 @@ export default {
 
         return value
       })
-      setMutation(state, 'dynamicMenus', dynamicMenus )
+      state.dynamicMenus = dynamicMenus
     }
   }
 }

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-21 21:52:46
- * @LastEditTime: 2019-05-07 22:33:16
+ * @LastEditTime: 2019-05-08 14:59:19
  */
 
 import http from '@/utils/http.js'
@@ -18,7 +18,7 @@ import apiPath from './apiPath.js'
  * @return: 
  */
 export function addArticle (form) {
-  return http.post(`apiPath.v1.article`, form)
+  return http.post(`${apiPath.v1.article}`, form)
 }
 
 /**

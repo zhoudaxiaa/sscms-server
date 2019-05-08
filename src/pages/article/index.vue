@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-17 23:31:51
- * @LastEditTime: 2019-05-07 22:01:36
+ * @LastEditTime: 2019-05-08 16:51:19
  -->
 
 <template>
@@ -64,7 +64,7 @@ import DeleteDataBtn from '@/pages/common/DeleteDataBtn'
 
 import ArticleTable from './ArticleTable'
 
-import { getArticle } from '@/api/article'
+import { getArticle, deleteArticle } from '@/api/article'
 
 import * as types from '@/store/mutation-types'
 
@@ -103,6 +103,15 @@ export default {
   
   methods: {
     /**
+     * @description: 分页获取数据
+     * @param {type} 
+     * @return: 
+     */
+    getData (start, count) {
+      return getArticle(start, count)
+    },
+
+    /**
      * @description: 页面初始化时获取数据
      * @param {type} 
      * @return: 
@@ -110,7 +119,7 @@ export default {
     async initData () {
       this.currentPage = this.$store.state.form.article.CurrentPage  // 从store 从获取当前页码
 
-      const data = await getArticle(0,10)  // 从第一条数据开始，10条数据
+      const data = await this.getData(0,10)  // 从第一条数据开始，10条数据
 
       // 请求成功
       if (data) {
@@ -132,9 +141,9 @@ export default {
       this.formOp = op  // 表单操作名称
 
       switch (op) {
-        case 'editData': this.editData(id); break // 表单修改操作
-        case 'deleteData': this.deleteData(this.deleteId); break  // 表单删除操作
-        case 'deleteMultData': this.deleteData(this.deleteIdList); break  // 表单多选删除操作
+        case 'editDataOp': this.editDataOp(id); break // 表单修改操作
+        case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
+        case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
       }
     },
 
@@ -145,10 +154,13 @@ export default {
      */
     selectionOperation (ids) {
 
-      if (ids.indexOf(',') >= 0) {  // 多项删除
-        this.deleteIdList= ids
+      let idList = ids.split(',')
+
+      if (idList.length > 2) {  // 多项删除
+        this.deleteIdList = ids
       } else {
         this.deleteId = ids
+        this.deleteIdList = ids
       }
 
     },
@@ -165,7 +177,7 @@ export default {
      * @description: 表单新增操作
      * @return: 
      */    
-    addData () {
+    addDataOp () {
       this.toggleFormVisible()
       this.formData = this.initFormData
     },
@@ -175,7 +187,7 @@ export default {
      * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
      * @return: 
      */
-    deleteData (idList) {
+    deleteDataOp (idList) {
 
       // id 不能为空
       if (idList) {
@@ -184,10 +196,12 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-
-          return this.deleteDataOp(idList)
+          
+          return this.deleteData(idList)
 
         }).then((result) => {
+          this.initData()  // 删除成功，刷新数据
+          
           this.$message({
             type: 'success',
             message: '删除成功！'
@@ -212,8 +226,7 @@ export default {
      * @param {String} 当前操作数据的id
      * @return: 
      */    
-    editData (id) {
-      console.log(id)
+    editDataOp (id) {
       this.$router.push(`/editArticle/${id}`)
       this.toggleFormVisible()
     },
@@ -223,8 +236,8 @@ export default {
      * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
      * @return: 
      */
-    deleteDataOp (idList) {
-      // return deleteAdminUser(idList)
+    deleteData (idList) {
+      return deleteArticle(idList)
     },
     
     /**
@@ -244,9 +257,9 @@ export default {
     async pageChange (page) {
       let count = 10
 
-      this.setPageNum(page)
+      // this.setPageNum(page)
 
-      const data = await this.getDataOp(page*count, count)  // 从第几条开始获取，10条数据
+      const data = await this.getData((page-1)*count, count)  // 从第几条开始获取，10条数据
 
       if (data) this.tableData = data.list  // 数据数组
         

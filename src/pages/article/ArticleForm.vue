@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-24 20:27:29
- * @LastEditTime: 2019-05-07 23:03:16
+ * @LastEditTime: 2019-05-08 15:37:16
  -->
 <template>
   <div class="article-wrap">
@@ -55,14 +55,16 @@
       </el-form-item>
 
       <el-form-item
-        label="简短标题">
-        <el-input></el-input>
-      </el-form-item>
-
-      <el-form-item
         label="来源">
-        <el-radio label="原创"></el-radio>
-        <el-radio label="转载"></el-radio>
+
+        <el-radio
+          v-model="formData.from"
+          label="0">原创</el-radio>
+        
+        <el-radio
+          v-model="formData.from"
+          label="1">转载</el-radio>
+        
       </el-form-item>
 
       <el-form-item
@@ -113,12 +115,18 @@
       </el-form-item>
 
       <el-form-item label="内容摘要">
-        <el-input></el-input>
+        <el-input v-model="formData.introduce"></el-input>
       </el-form-item>
 
     </el-form>
 
-    <mavon-editor class="mkd-wrap"></mavon-editor>
+    <mavon-editor
+      class="mkd-wrap"
+      ref="mkd"
+      v-model="formData.content_mkd"
+      @imgAdd="handleImgUpload"
+      @imgDel="handleImgDelete">
+    </mavon-editor>
 
     <el-button
       @click="handleUpdateSubmit"
@@ -142,6 +150,7 @@
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
+import { uploadFile } from '@/api/common'
 import { getOneArticle, addArticle, updateArticle } from '@/api/article'
 import { getAllCategory } from '@/api/category'
 import { getAllColumn } from '@/api/column'
@@ -163,7 +172,17 @@ export default {
 
       id: this.$route.params.id,
 
-      initFormData: {},
+      initFormData: {
+        category_id: [],
+        column_id: [],
+        title: '新文章',
+        from: '0',
+        is_show: true,
+        tag_id: [],
+        cover_img: '',
+        introduce: '',
+        content_mkd: '',
+      },
 
       formData: {},
 
@@ -179,13 +198,20 @@ export default {
     this.initData()
   },
 
+  computed: {
+    author_id () {
+      return this.$store.state.admin.id
+    }
+  },
+
   methods: {
     /**
      * @description: 初始化数据
      * @param {type} 
      * @return: 
      */    
-    async initData () {
+    async initData () {      
+      let id = this.id
       let articleData
       let categoryData
       let columnData
@@ -203,14 +229,15 @@ export default {
       this.column = columnData
       this.tag = tagData
 
-      if (this.id) {
-        articleData = await getOneArticle(this.id)
+      
+      if (id) {
+        this.opId = id
+        articleData = await getOneArticle(id)
 
         articleData && (this.formData = articleData)
       } else {
         this.formData = this.initFormData
       }
-
 
     },
 
@@ -275,14 +302,10 @@ export default {
 
           await this.updateData (this.formData, this.opId)
 
-          this.initData()  // 更新表格
-
           this.$message({
           type: 'success',
           message: '更新成功！'
           })
-
-          this.closeForm()
 
         } else {
           return false
@@ -301,22 +324,45 @@ export default {
       this.$refs.form.validate(async (valid) => {
 
         if (valid) {
-          await this.addData (this.formData)
+          // 从vuex store里取出当前管理员id，存到表单的作者里
+          this.formData.author_id = this.author_id
 
-          this.initData()  // 更新表格
+          await this.addData (this.formData)
 
           this.$message({
             type: 'success',
             message: '添加成功！'
           })
 
-          this.closeForm()
-
         } else {
           return false
         }
       })
       
+    },
+
+    /**
+     * @description: markdown 编辑器图片上传
+     * @param {type} 
+     * @return: 
+     */
+    async handleImgUpload (pos, $file) {
+      console.dir(pos)
+      console.dir($file)
+      let formData = new FormData();
+      formData.append('file', $file);
+console.log(formData)
+      const data = await uploadFile(formData)
+      data && this.$refs.mkd.$img2Url(pos, data)
+    },
+
+    /**
+     * @description: markdown 编辑器图片上传
+     * @param {type} 
+     * @return: 
+     */
+    handleImgDelete (pos) {
+      console.log(pos)
     },
 
   }
