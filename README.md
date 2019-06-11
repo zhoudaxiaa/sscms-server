@@ -1,6 +1,21 @@
-# test
+# sscms 内容管理系统  vue 管理后台
 
-> A Vue.js project
+> 技术栈： vue 全家桶，element-ui，axios，async/await
+
+![Screenshot 2019-06-11 23.17.28.png](https://i.loli.net/2019/06/11/5cffc70b3a81072383.png)
+
+![Screenshot 2019-06-11 23.17.58.png](https://i.loli.net/2019/06/11/5cffc858a7c7432118.png)
+
+![Screenshot 2019-06-11 23.18.23.png](https://i.loli.net/2019/06/11/5cffc8667056131076.png)
+
+![Screenshot 2019-06-11 23.18.40.png](https://i.loli.net/2019/06/11/5cffc8704160274861.png)
+
+![Screenshot 2019-06-11 23.19.26.png](https://i.loli.net/2019/06/11/5cffc8785ba8083363.png)
+
+![Screenshot 2019-06-11 23.19.26.png](https://i.loli.net/2019/06/11/5cffc8785ba8083363.png)
+
+![Screenshot 2019-06-11 23.20.34.png](https://i.loli.net/2019/06/11/5cffc891342e332874.png)
+
 
 ## Build Setup
 
