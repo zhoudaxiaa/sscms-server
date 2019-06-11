@@ -10,106 +10,34 @@
  */
 <template>
   <el-dialog
-    title="填写用户信息"
+    title="填写分类信息"
     :visible.sync="formVisible"
     :before-close="closeForm">
       <el-form
+        ref="form"
         :model="formData"
         :rules="rules"
         label-width="80px">
 
         <el-form-item
-          label="帐号昵称"
+          label="分类名"
           prop="name">
 
           <el-input v-model="formData.name"></el-input>
 
-        </el-form-item>
+        </el-form-item>  
 
-        <el-form-item label="头像">
-          
-          <el-upload
-            class="avatar-wrap"
-            :show-file-list="false"
-            :action="apiPath.v1.avatar"
-            :on-success="uploadAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-
-            <img
-              class="avatar-img"
-              v-if="formData.avatar"
-              :src="formData.avatar">
-
-            <i
-              v-else
-              class="el-icon-plus">
-            </i>
-
-          </el-upload>
+        <el-form-item label="是否显示">
+          <el-switch v-model="formData.is_show"></el-switch>
         </el-form-item>
 
         <el-form-item
-          label="登录名"
-          prop="username">
-
-          <el-input v-model="formData.username"></el-input>
-
-        </el-form-item>
-
-        <el-form-item
-          label="密码"
-          prop="password">
-          
-          <el-input
-            type="password"
-            v-model="formData.password">
-          </el-input>
-
-        </el-form-item>
-
-        <el-form-item
-          label="确认密码"
-          prop="check_pass">
-
-          <el-input
-            type="password"
-            v-model="formData.check_pass">
-          </el-input>
-
-        </el-form-item>
-
-        <el-form-item
-          label="邮箱"
-          prop="email">
-
-          <el-input v-model="formData.email"></el-input>
-
-        </el-form-item>
-
-        <el-form-item
-          label="角色组"
-          prop="role_id">
-          <el-select
-            v-model="formData.role_id"
-            placeholder="请选择角色组">
-            
-            <el-option
-              v-for="data in roleList"
-              :key="data.id"
-              :label="data.name"
-              :value="data.id">
-            </el-option>
-
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="是否开启">
-          <el-switch v-model="formData.is_active"></el-switch>
+          label="排序">
+          <el-input-number v-model="formData.sort"></el-input-number>
         </el-form-item>
 
         <el-form-item
           label="描述">
-
           <el-input
             type="textarea"
             v-model="formData.introduce">
@@ -143,7 +71,7 @@
 
 <script>
 
-import { addAdminUser, updateAdminUser } from '@/api/admin'
+import { addCategory, updateCategory } from '@/api/category'
 
 import apiPath from '@/api/apiPath'
 
@@ -180,69 +108,14 @@ export default {
         name: [
           {
             required: true,
-            message: '请输入用户昵称',
+            message: '请输入分类名',
             trigger: 'blur'
           },
           {
             min: 2,
-            max: 10,
-            message: '长度在2到10个字符',
+            max: 20,
+            message: '长度在2到20个字符',
             trigger: 'change'
-          }
-        ],
-        username: [
-          {
-            required: true,
-            message: '请输入登录账号',
-            trigger: 'blur'
-          }
-        ],
-        password: [
-          {
-            // 使用箭头函数绑定this
-            validator: (rule, value, callback) => {
-
-              // 如果是新增数据，必须输入密码
-              if (!this.isEdit) callback(new Error('请输入密码'))
-
-              // 如果是修改密码，输入了就必须符合规范
-              if (value && /^(\d|[a-z]|[A-Z]|_){6,}$/.test(value)) {
-                callback(new Error('6 到 12 位,只能包含字母、数字和下划线!'))
-              }
-              
-              callback()
-            },
-            trigger: 'blur'
-          }
-        ],
-        check_pass: [
-          {
-            // 使用箭头函数绑定this
-            validator: (rule, value, callback) => {
-
-              // 如果输入了密码，这个确认密码也得输入
-              if (this.formData.password) callback(new Error('请再次输入密码'))
-
-              // 一致就通过
-              if (value !== this.formData.password) callback(new Error('两次输入的密码不一致！'))
-
-              callback()
-            },
-            trigger: 'blur'
-          }
-        ],
-        email: [
-          {
-            type: 'email',
-            message: '请输入正确的邮箱地址',
-            trigger: 'change'
-          }
-        ],
-        role_id: [
-          {
-            required: true,
-            message: '请选择一个角色组',
-            trigger: 'blur'
           }
         ],
 
@@ -250,53 +123,24 @@ export default {
     }
   },
 
-  created () {
-    if (this.roleList.length === 0) this.$store.dispatch('GetAllRole')  // 没有就分发获取并存储角色组列表
-  },
-
-  computed: {
-    roleList () {
-      return this.$store.state.app.roleList  // 从store里获取角色组列表
-    }
-  },
-
   methods: {
-    /**
-     * @description: 头像上传成功后的回调函数
-     * @param {object} res 响应数据 
+/**
+     * @description: 触发父级初始化数据（更新）
+     * @param {type} 
      * @return: 
      */
-    uploadAvatarSuccess (res) {
-      // 把本地上传的图片地址转化为网络地址
-      this.formData.avatar = res.data.url
-    },
-    
-    /**
-     * @description: 上传之前的回调函数
-     * @param {object} 上传的文件对象（element-ui提供）
-     * @return: 
-     */
-    beforeAvatarUpload (file) {
-      const isPass = 'image/jpeg,image/png'.indexOf(file.type) > -1
-      const isOverZise = file.size >= 200 * 1024
-
-        if (!isPass) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-          return false
-        }
-        if (isOverZise) {
-          this.$message.error('上传头像图片大小不能超过 300KB!');
-          return false
-        }
+    initData () {
+      this.$emit('formOperation', 'initData')
     },
 
     /**
      * @description: 表单数据更新操作
      * @param {Object} 表单数据对象 
+     * @param {String} 操作数据id
      * @return: Promise axios返回的promise对象
      */
-    updateOp (formData) {
-      return updateAdminUser(formData)
+    updateData (formData, id) {
+      return updateCategory(formData, id)
     },
 
     /**
@@ -304,8 +148,8 @@ export default {
      * @param {Object} 表单数据对象 
      * @return: Promise axios返回的promise对象
      */
-    addOp (formData) {
-      return addAdminUser(formData)
+    addData (formData) {
+      return addCategory(formData)
     },
 
     /**
@@ -314,16 +158,26 @@ export default {
      * @return: 
      */
     async handleUpdateSubmit () {
-      const data = await this.updateOp (this.formData)
 
-      if (data) {
-        this.$message({
+      this.$refs.form.validate(async (valid) => {
+
+        if (valid) {
+
+          await this.updateData (this.formData, this.opId)
+
+          this.initData()  // 更新表格
+
+          this.$message({
           type: 'success',
           message: '更新成功！'
-        })
-      }
+          })
 
-      this.closeForm();
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
 
     },
 
@@ -333,16 +187,25 @@ export default {
      * @return: 
      */
     async handleAddSubmit () {
-      const data = await this.addOp (this.formData)
 
-      if (data) {
-        this.$message({
-          type: 'success',
-          message: '添加成功！'
-        })
-      }
+      this.$refs.form.validate(async (valid) => {
 
-      this.closeForm();
+        if (valid) {
+          await this.addData (this.formData)
+
+          this.initData()  // 更新表格
+
+          this.$message({
+            type: 'success',
+            message: '添加成功！'
+          })
+
+          this.closeForm()
+
+        } else {
+          return false
+        }
+      })
     },
 
     /**
@@ -353,36 +216,9 @@ export default {
     closeForm () {
       this.$emit('changeFormVisible')
     },
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.avatar-wrap {
-  width: 82px;
-  height: 82px;
-  border-radius: 50%;
-  overflow: hidden;
-  text-align: center;
-  cursor: pointer;
-
-  .avatar-img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .el-icon-plus {
-    width: 80px;
-    height: 80px;
-    font-size: 36px;
-    border: 1px dashed #d9d9d9;
-    border-radius: 50%;
-    line-height: 80px;
-
-    &:hover {
-      border-color: #409EFF;
-    }
-  }
-}
 </style>

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-24 20:27:29
- * @LastEditTime: 2019-05-08 15:37:16
+ * @LastEditTime: 2019-06-11 22:10:33
  -->
 <template>
   <div class="article-wrap">
@@ -16,6 +16,7 @@
       label-width="120px">
 
       <el-form-item
+        required
         label="文档类别">
         <el-select
           multiple
@@ -50,6 +51,7 @@
       </el-form-item>
 
       <el-form-item
+        required
         label="标题">
         <el-input v-model="formData.title"></el-input>
       </el-form-item>
@@ -59,11 +61,11 @@
 
         <el-radio
           v-model="formData.from"
-          label="0">原创</el-radio>
+          :label="1">原创</el-radio>
         
         <el-radio
           v-model="formData.from"
-          label="1">转载</el-radio>
+          :label="0">转载</el-radio>
         
       </el-form-item>
 
@@ -71,6 +73,12 @@
         label="显示">
         <el-switch v-model="formData.is_show"></el-switch>
       </el-form-item>
+
+      <el-form-item
+        label="推荐">
+        <el-switch v-model="formData.is_top"></el-switch>
+      </el-form-item>
+
 
       <el-form-item
         label="文章标签">
@@ -296,6 +304,8 @@ export default {
      */
     async handleUpdateSubmit () {
 
+      this.formData.content_word = this.$refs.mkd.d_render
+
       this.$refs.form.validate(async (valid) => {
 
         if (valid) {
@@ -320,6 +330,8 @@ export default {
      * @return: 
      */
     async handleAddSubmit () {
+
+      this.formData.content_word = this.$refs.mkd.d_render
 
       this.$refs.form.validate(async (valid) => {
 
@@ -347,11 +359,9 @@ export default {
      * @return: 
      */
     async handleImgUpload (pos, $file) {
-      console.dir(pos)
-      console.dir($file)
-      let formData = new FormData();
-      formData.append('file', $file);
-console.log(formData)
+      let formData = new FormData()
+      formData.append('file', $file)
+
       const data = await uploadFile(formData)
       data && this.$refs.mkd.$img2Url(pos, data)
     },
@@ -362,7 +372,7 @@ console.log(formData)
      * @return: 
      */
     handleImgDelete (pos) {
-      console.log(pos)
+      // console.log(pos)
     },
 
   }
@@ -372,9 +382,8 @@ console.log(formData)
 <style lang="scss" scoped>
 
 .cover-wrap {
-  width: 82px;
+  width: 202px;
   height: 82px;
-  border-radius: 50%;
   overflow: hidden;
   text-align: center;
   cursor: pointer;
@@ -385,11 +394,10 @@ console.log(formData)
   }
 
   .el-icon-plus {
-    width: 80px;
+    width: 200px;
     height: 80px;
     font-size: 36px;
     border: 1px dashed #d9d9d9;
-    border-radius: 50%;
     line-height: 80px;
 
     &:hover {
@@ -399,6 +407,6 @@ console.log(formData)
 }
 
 .mkd-wrap {
-  margin-top: 40px;
+  margin: 40px 0;
 }
 </style>

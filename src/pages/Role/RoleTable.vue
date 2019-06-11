@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-13 22:51:00
- * @LastEditTime: 2019-05-06 21:24:55
+ * @LastEditTime: 2019-06-07 13:02:12
  -->
 <template>
   <div>
@@ -122,7 +122,7 @@ export default {
      * @return: 
      */
     handleEditReource (id) {
-      this.$emit('formOperation', 'editResourceOp', 0, id)
+      this.$emit('formOperation', {op: 'editResourceOp', id})
     },
 
     /**
@@ -133,7 +133,7 @@ export default {
      */
     handleEditData (i, id) {
 
-      this.$emit('formOperation', 'editDataOp', i, id)
+      this.$emit('formOperation', {op: 'editDataOp', i, id})
 
     },
 
@@ -144,7 +144,7 @@ export default {
      */
     handleDeleteData (id) {
       this.$emit("selectionOperation", id)
-      this.$emit('formOperation', 'deleteDataOp')
+      this.$emit('formOperation', {op: 'deleteDataOp'})
     },
     
   }

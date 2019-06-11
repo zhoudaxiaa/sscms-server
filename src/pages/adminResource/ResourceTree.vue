@@ -6,11 +6,11 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:41:08
- * @LastEditTime: 2019-05-07 21:36:29
+ * @LastEditTime: 2019-06-08 11:07:13
  -->
 <template>
   <el-tree
-    class="resource-tree"
+    class="tree-wrap"
     @check-change="handleSelectionChange"
     ref="tree"
     show-checkbox
@@ -42,7 +42,7 @@ export default {
      * @return: 
      */    
     handleAddData (data) {
-      this.$emit('formOperation', 'addDataOp', 0, data.id)
+      this.$emit('formOperation', {op: 'addDataOp', id: data.id})
     },
 
     /**
@@ -51,7 +51,7 @@ export default {
      * @return: 
      */
     handleEditData (data) {
-      this.$emit('formOperation', 'editDataOp', 0, data.id)
+      this.$emit('formOperation', {op: 'editDataOp', id: data.id})
 
     },
 
@@ -62,7 +62,7 @@ export default {
      */
     handleDeleteData (data) {
       this.$emit("selectionOperation", data.id)
-      this.$emit('formOperation', 'deleteDataOp')
+      this.$emit('formOperation', {op: 'deleteDataOp'})
     },
 
     /**
@@ -72,7 +72,7 @@ export default {
      */
     handleSelectionChange () {
       let ids = this.$refs.tree.getCheckedKeys()
-console.log(ids)
+
       this.$emit("selectionOperation", ids.join(','));
     },
 
@@ -110,7 +110,8 @@ console.log(ids)
 </script>
 
 <style lang="scss" scoped>
-.resource-tree {
+.tree-wrap {
+  margin-top: 20px;
   padding: 0 20px;
 
   /deep/ {

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-17 17:05:56
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-05 20:50:23
+ * @LastEditTime: 2019-06-08 10:22:49
  -->
 
 <template>
@@ -148,6 +148,12 @@ export default {
           this.$store.commit(types.SET_ADMIN_NAME, data.name)
           this.$store.commit(types.SET_ADMIN_AVATAR, data.avatar)
 
+          // 本地缓存
+          sessionStorage.setItem('ip_address', data.ip_address)
+          sessionStorage.setItem('login_time', data.login_time)
+          sessionStorage.setItem('admin_avatar', data.avatar)
+          sessionStorage.setItem('admin_name', data.name)
+
           this.$router.replace({ path: '/' })
         }
 
@@ -195,7 +201,6 @@ $svgColor: #889aa4; // svg 图标颜色
 .svg-container {
   display: inline-block;
   padding: 6px 5px 11px 15px;
-  width: 22px;
   vertical-align: bottom;
   color: $svgColor;
 }
@@ -205,7 +210,7 @@ $svgColor: #889aa4; // svg 图标颜色
   color: #fff;
   font-size: 14px;
   height: 47px;
-  width: 76%;
+  width: 80%;
   border: none;
   background: 0, 0;
 

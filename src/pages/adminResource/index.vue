@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:23:11
- * @LastEditTime: 2019-05-07 17:05:13
+ * @LastEditTime: 2019-06-08 14:44:53
  -->
 
 <template>
@@ -30,7 +30,7 @@
 
         <!-- 添加数据按钮 -->
         <add-data-btn
-          @click.native="handelAddArticle">
+          @formOperation="formOperation">
         </add-data-btn>
 
         <!-- 删除数据按钮 -->
@@ -77,10 +77,9 @@ export default {
     return {
 
       initFormData: {  // 初始表单
-        pid: '',
         name: '',
         type: '',
-        icon: '',
+        icon: 'component',
         route_path: '',
         component_path: '',
         is_active: true,
@@ -142,7 +141,7 @@ export default {
      * @param {String} id 当前操作的id
      * @return: 
      */
-    formOperation (op, i, id) {
+    formOperation ({op, i, id}) {
       
       this.formOp = op  // 表单操作名称（新增还是更新）
 
@@ -183,16 +182,15 @@ export default {
 
     /**
      * @description: 表单新增操作
-     * @param: {String} pid 父级id
-     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
+     * @param {String} pid 父级id
      * @return: 
      */    
     addDataOp (pid) {
       this.toggleFormVisible()
       this.formOp = 'add'
       
+      this.initFormData.pid = pid
       this.formData = this.initFormData
-      this.formData.pid = pid
     },
 
     /**
@@ -282,15 +280,6 @@ export default {
     setPageNum (page) {
       this.$store.commit(types.SET_ARTICLE_CURRENT_PAGE, page)
     },
-
-    /**
-     * @description: 
-     * @param {type} 
-     * @return: 
-     */    
-    handelAddArticle () {
-      console.log('click')
-    }
 
   }
 }

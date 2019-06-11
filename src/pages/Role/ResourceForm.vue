@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-14 21:44:44
- * @LastEditTime: 2019-05-07 17:22:07
+ * @LastEditTime: 2019-06-07 13:01:08
  -->
 <template>
   <el-dialog
@@ -94,7 +94,7 @@ export default {
      * @return: 
      */
     initData () {
-      this.$emit('formOperation', 'initData')
+      this.$emit('formOperation', {op: 'initData'})
     },
 
     /**

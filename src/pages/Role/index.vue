@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 11:07:59
- * @LastEditTime: 2019-05-06 21:46:47
+ * @LastEditTime: 2019-06-07 13:05:07
  -->
 
 <template>
@@ -177,7 +177,7 @@ export default {
      * @param {String} id 当前操作的id
      * @return: 
      */
-    formOperation (op, i, id) {
+    formOperation ({op, i, id}) {
 
       this.formOp = op  // 表单操作名称
 

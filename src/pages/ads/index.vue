@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-27 15:16:31
- * @LastEditTime: 2019-04-27 16:55:24
+ * @LastEditTime: 2019-06-11 14:47:29
  -->
 
 <template>
@@ -19,7 +19,7 @@
 
         <!-- 添加数据按钮 -->
         <add-data-btn
-          @click.native="handelAddArticle">
+          @click.native="handelAddCategory">
         </add-data-btn>
 
         <!-- 删除数据按钮 -->
@@ -37,7 +37,7 @@
       
       <!-- 分页组件，当数据大于10才显示 -->
       <el-pagination
-        v-if="total > 10"
+        :hide-on-single-page="true"
         class="pagination-wrap"
         layout="total, prev, pager, next"
         :total="total"
@@ -52,8 +52,9 @@
 <script>
 import AddDataBtn from '@/pages/common/AddDataBtn'
 import DeleteDataBtn from '@/pages/common/DeleteDataBtn'
-
 import AdsTable from './AdsTable'
+
+import { deleteAdsCategory, getAdsCategory } from '@/api/adsCategory'
 
 import * as types from '@/store/mutation-types'
 
@@ -84,7 +85,6 @@ export default {
       total: 0, // 总计数据的数
     }
   },
-
   
   created() {
     this.initData() // 初始化数据
@@ -92,19 +92,30 @@ export default {
   
   methods: {
     /**
+     * @description: 获取页数据操作
+     * @param {Number} start 从第几条开始获取
+     * @param {Number} count 一次获取多少条数据
+     * @return: 
+     */
+    getPageData (start, count) {
+      return getAdsCategory(start, count)
+    },
+
+    /**
      * @description: 页面初始化时获取数据
      * @param {type} 
      * @return: 
      */
     async initData () {
-      this.currentPage = this.$store.state.form.article.CurrentPage  // 从store 从获取当前页码
+      this.currentPage = this.$store.state.form.ads.CurrentPage  // 从store 从获取当前页码
 
+      const data = await this.getPageData(0,10)  // 从第一条数据开始，10条数据
 
       // 请求成功
-      // if (data) {
-      //   this.tableData = data.list  // 数据数组
-      //   this.total = data.total  // 数量
-      // }
+      if (data) {
+        this.tableData = data.list  // 数据数组
+        this.total = data.total  // 数量
+      }
 
     },
 
@@ -114,14 +125,13 @@ export default {
      * @param {Number|String} i 当前操作的表格列的索引 或者id
      * @return: 
      */
-    formOperation (op, i) {
+    formOperation ({op, i}) {
       
       this.formOp = op  // 表单操作名称
 
       switch (op) {
-        case 'editData': this.editData(i); break // 表单修改操作
-        case 'deleteData': this.deleteData(this.deleteId); break  // 表单删除操作
-        case 'deleteMultData': this.deleteData(this.deleteIdList); break  // 表单多选删除操作
+        case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
+        case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
       }
     },
 
@@ -131,30 +141,23 @@ export default {
      * @return: 
      */
     selectionOperation (ids) {
+      let idList = ids.split(',')
 
-      if (ids.indexOf(',') >= 0) {  // 多项删除
-        this.deleteIdList= ids
+      if (idList.length > 2) {  // 多项删除
+        this.deleteIdList = ids
       } else {
         this.deleteId = ids
+        this.deleteIdList = ids
       }
 
     },
 
     /**
-     * @description: // 切换表单显示状态
+     * @description: 新增分类事件
      * @return: 
      */
-    toggleFormVisible () {
-      this.formVisible = !this.formVisible
-    },
-
-    /**
-     * @description: 表单新增操作
-     * @return: 
-     */    
-    addData () {
-      this.toggleFormVisible()
-      this.formData = this.initFormData
+    handelAddCategory () {
+      this.$router.push('/addAds')
     },
 
     /**
@@ -162,8 +165,7 @@ export default {
      * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
      * @return: 
      */
-    deleteData (idList) {
-
+    deleteDataOp (idList) {
       // id 不能为空
       if (idList) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -172,13 +174,16 @@ export default {
           type: 'warning'
         }).then(() => {
 
-          return this.deleteDataOp(idList)
+          return this.deleteData(idList)
 
         }).then((result) => {
           this.$message({
             type: 'success',
             message: '删除成功！'
           })
+
+          this.initData()  // 更新表格
+
         }).catch ((err) => {
           this.$message({
             type: 'error',
@@ -204,20 +209,10 @@ export default {
 
       this.setPageNum(page)
 
-      const data = await this.getDataOp(page*count, count)  // 从第几条开始获取，10条数据
+      const data = await this.getDataOp((page-1)*count, count)  // 从第几条开始获取，10条数据
 
       if (data) this.tableData = data.list  // 数据数组
         
-    },
-
-    /**
-     * @description: 表单修改操作
-     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
-     * @return: 
-     */    
-    editData (i) {
-      this.toggleFormVisible()
-      this.$router.push('/editArticle/' + this.tableData[i].aid)
     },
 
     /**
@@ -225,8 +220,8 @@ export default {
      * @param {String} idList 操作的数据的id，单个或多个id组成的字符串
      * @return: 
      */
-    deleteDataOp (idList) {
-      // return deleteAdminUser(idList)
+    deleteData (idList) {
+      return deleteAdsCategory(idList)
     },
 
     /**
@@ -237,15 +232,6 @@ export default {
     setPageNum (page) {
       this.$store.commit(types.SET_ARTICLE_CURRENT_PAGE, page)
     },
-
-    /**
-     * @description: 
-     * @param {type} 
-     * @return: 
-     */    
-    handelAddArticle () {
-      this.$router.push('/addArticle')
-    }
 
   },
 }

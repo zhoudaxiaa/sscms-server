@@ -26,7 +26,7 @@ export default {
         return 'svg-icon'
       }
 
-      return 'svg-icon' + this.className
+      return `svg-icon ${this.className}`
     }
   }
 }

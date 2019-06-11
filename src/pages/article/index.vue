@@ -6,20 +6,11 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-17 23:31:51
- * @LastEditTime: 2019-05-08 16:51:19
+ * @LastEditTime: 2019-06-09 18:03:08
  -->
 
 <template>
   <div>
-
-    <!-- 用户表单 -->
-    <!-- <user-form
-      class="form-wrap"
-      @changeFormVisible="toggleFormVisible"
-      :formData="formData"
-      :formOp="formOp"
-      :formVisible="formVisible">
-    </user-form> -->
 
     <div class="table-wrap">
 
@@ -84,13 +75,7 @@ export default {
       
       formData: {},  // 表单数据
 
-      formOp: '',  // 表单操作名
-
-      formVisible: false,  // 表单显示状态
-
       tableData: [],  // 表格数据(对象数组)
-
-      currentPage: 1, // 当前的页码
 
       total: 0, // 总计数据的数
     }
@@ -99,6 +84,17 @@ export default {
   
   created() {
     this.initData() // 初始化数据
+  },
+
+  computed: {
+    currentPage: {
+      get () {
+        return this.$store.state.form.article.currentPage  // 从store 从获取当前页码
+      },
+      set (page) {
+        this.$store.commit(types.SET_ARTICLE_CURRENT_PAGE, page)
+      }
+    }
   },
   
   methods: {
@@ -117,9 +113,9 @@ export default {
      * @return: 
      */
     async initData () {
-      this.currentPage = this.$store.state.form.article.CurrentPage  // 从store 从获取当前页码
+      let currentPage = this.currentPage
 
-      const data = await this.getData(0,10)  // 从第一条数据开始，10条数据
+      const data = await this.getData((currentPage-1)*10, 10)  // 从第一条数据开始，10条数据
 
       // 请求成功
       if (data) {
@@ -136,12 +132,9 @@ export default {
      * @param {String} id 当前操作数据的id
      * @return: 
      */
-    formOperation (op, i, id) {
-      
-      this.formOp = op  // 表单操作名称
+    formOperation ({op, i, id}) {
 
       switch (op) {
-        case 'editDataOp': this.editDataOp(id); break // 表单修改操作
         case 'deleteDataOp': this.deleteDataOp(this.deleteId); break  // 表单删除操作
         case 'deleteMultDataOp': this.deleteDataOp(this.deleteIdList); break  // 表单多选删除操作
       }
@@ -219,16 +212,6 @@ export default {
         })
       }
 
-    },
-
-    /**
-     * @description: 表单修改操作
-     * @param {String} 当前操作数据的id
-     * @return: 
-     */    
-    editDataOp (id) {
-      this.$router.push(`/editArticle/${id}`)
-      this.toggleFormVisible()
     },
 
     /**

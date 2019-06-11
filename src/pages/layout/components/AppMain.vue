@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2019-01-17 17:49:50
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-03-17 16:39:22
+ * @LastEditTime: 2019-06-07 15:42:16
  -->
 
 <template>
@@ -30,6 +30,7 @@ export default {
 
 <style scoped>
 .main-container {
+  position: relative;
   padding: 20px 15px;
 }
 </style>

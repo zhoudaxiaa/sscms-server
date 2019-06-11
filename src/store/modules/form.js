@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 17:04:28
- * @LastEditTime: 2019-04-21 21:51:28
+ * @LastEditTime: 2019-06-10 23:04:19
  */
 
 import { getter, setMutation } from '@/utils/localStore' // 封装本地存储的 getters，mutations 的方法
@@ -25,6 +25,10 @@ export default {
 
     article: {  // 文章
       currentPage: getter('article.currentPage') || 1, // 当前页码
+    },
+
+    ads: {  // 广告
+      currentPage: getter('ads.currentPage') || 1,  // 当前页码
     }
   },
   

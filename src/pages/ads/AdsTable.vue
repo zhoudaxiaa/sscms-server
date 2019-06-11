@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-21 22:05:59
- * @LastEditTime: 2019-04-25 22:11:15
+ * @LastEditTime: 2019-06-08 23:02:47
  -->
 <template>
   <div>
@@ -22,42 +22,34 @@
       </el-table-column>
 
       <el-table-column
-        width="1"
-        label="id">
-        <template slot-scope="scope">
-          <input
-            type="hidden"
-            :value="scope.row.id">
-        </template>
+        width="200"
+        prop="id"
+        label="广告分类id">
       </el-table-column>
 
       <el-table-column
-        prop="title"
-        label="广告名">
-      </el-table-column>
-
-      <el-table-column
-        prop="author.name"
-        label="广告类型">
+        prop="name"
+        label="广告分类">
       </el-table-column>
 
       <el-table-column
         label="是否显示">
         <template slot-scope="scope">
           <i
-            :class="scope.row.is_active ? 'el-icon-success' : 'el-icon-error'"
-            :style="scope.row.is_active ? green : red">
+            :class="scope.row.is_show ? 'el-icon-success' : 'el-icon-error'"
+            :style="scope.row.is_show ? green : red">
           </i>
         </template>
       </el-table-column>
 
       <el-table-column
-        label="广告描述">
-      </el-table-column>
-
-      <el-table-column
-        prop="publish_time"
-        label="创建时间">
+        label="是否轮播">
+        <template slot-scope="scope">
+          <i
+            :class="scope.row.is_carousel ? 'el-icon-success' : 'el-icon-error'"
+            :style="scope.row.is_carousel ? green : red">
+          </i>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -65,8 +57,7 @@
         label="操作">
         <template slot-scope="op">
           <div>
-            
-            <router-link to="">
+            <router-link :to="`/editAds/${op.row.id}`">
               <el-button
                 size="small"
                 type="primary"
@@ -128,24 +119,13 @@ export default {
     },
 
     /**
-     * @description: 修改数据
-     * @param {number} i 操作的表格索引 
-     * @return: 
-     */
-    handleEditData (i) {
-
-      this.$emit('formOperation', 'editData', i)
-
-    },
-
-    /**
      * @description: 删除数据
      * @param {number} id 要删除的数据id 
      * @return: 
      */
     handleDeleteData (id) {
       this.$emit("selectionOperation", id)
-      this.$emit('formOperation', 'deleteData')
+      this.$emit('formOperation', {op: 'deleteDataOp'})
     },
   },
   

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-11 22:08:11
- * @LastEditTime: 2019-04-20 17:28:43
+ * @LastEditTime: 2019-06-11 22:03:36
  */
 
 /**
@@ -16,7 +16,8 @@
  * @return: 
  */ 
 export function warn (msg, err = '') {
+  let say = 'console.log'
   if (process.env.NODE_ENV !== 'production') {
-    console.log(`[SSCMS warn]: ${msg}${err}`)
+    [say] (`[SSCMS warn]: ${msg}${err}`)
   }
 }

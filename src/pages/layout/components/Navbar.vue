@@ -6,22 +6,22 @@
  * @Version: 1.0
  * @Date: 2019-01-11 12:45:36
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-04-20 18:10:42
+ * @LastEditTime: 2019-06-11 20:35:49
  -->
 
 <template>
   <div class="navbar-wrap">
     <!-- 汉堡菜单折叠 -->
     <hamburger
-      class="hamburger-wrap fl"
+      class="hamburger-wrap"
       :isActive="sidebarCollapse"
       :toggleClick="toggleSidebar">
     </hamburger>
 
     <!-- 面包屑导航 -->
-    <breadcrumb class="breadcrumb-wrap fl"></breadcrumb>
+    <breadcrumb class="breadcrumb-wrap"></breadcrumb>
 
-    <div class="right-menu fr">
+    <div class="right-menu">
       <el-tooltip
         effect="dark"
         content="全屏"
@@ -95,6 +95,7 @@ export default {
     // 系统登出
     logout () {
       this.$store.commit(types.DELETE_TOKEN)
+      this.$store.commit(types.DELETE_RESOURCE)
 
       this.$message({
         message: '登出成功！',
@@ -120,16 +121,19 @@ export default {
 }
 
 .hamburger-wrap {
+  float: left;
   line-height: 58px;
   padding: 0 10px;
 }
 
 .breadcrumb-wrap {
+  float: left;
   line-height: 50px;
   margin-left: 10px;
 }
 
 .right-menu {
+  float: right;
   height: 50px;
   line-height: 50px;
 }

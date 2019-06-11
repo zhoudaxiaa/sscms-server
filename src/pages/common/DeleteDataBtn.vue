@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-14 20:15:59
- * @LastEditTime: 2019-05-06 21:39:06
+ * @LastEditTime: 2019-06-07 12:59:48
  -->
 
 <template>
@@ -29,7 +29,7 @@ export default {
      * @return: 
      */    
     handleDeleteForm () {
-      this.$emit('formOperation', 'deleteMultDataOp')
+      this.$emit('formOperation', {op: 'deleteMultDataOp'})
     },
   }
 }

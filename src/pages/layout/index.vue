@@ -53,6 +53,7 @@ export default {
 
 .app-wrap {
   @include clearfix;
+  
   position: relative;
   height: 100%;
   width: 100%;

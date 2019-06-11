@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-21 22:05:59
- * @LastEditTime: 2019-05-08 15:53:03
+ * @LastEditTime: 2019-06-11 16:01:44
  -->
 <template>
   <div>
@@ -62,7 +62,7 @@
         label="来源">
         <template slot-scope="scope">
           <div>
-            {{scope.row.form ? '原创' : '转载'}}
+            {{scope.row.from ? '原创' : '转载'}}
           </div>
         </template>
       </el-table-column>
@@ -86,8 +86,8 @@
         label="是否显示">
         <template slot-scope="scope">
           <i
-            :class="scope.row.is_active ? 'el-icon-success' : 'el-icon-error'"
-            :style="scope.row.is_active ? green : red">
+            :class="scope.row.is_show ? 'el-icon-success' : 'el-icon-error'"
+            :style="scope.row.is_show ? green : red">
           </i>
         </template>
       </el-table-column>
@@ -103,9 +103,8 @@
         <template slot-scope="op">
           <div>
             
-            <router-link to="">
+            <router-link :to="`/editArticle/${op.row.id}`">
               <el-button
-                @click='handleEditData(op.row.id)'
                 size="small"
                 type="primary"
                 icon="el-icon-edit"
@@ -172,8 +171,9 @@ export default {
      */
     handleDeleteData (id) {
       this.$emit("selectionOperation", id)
-      this.$emit('formOperation', 'deleteDataOp')
+      this.$emit('formOperation', {op: 'deleteDataOp'})
     },
+
   },
   
 }

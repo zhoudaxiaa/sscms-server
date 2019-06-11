@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-07 13:39:19
- * @LastEditTime: 2019-05-07 22:33:14
+ * @LastEditTime: 2019-06-07 13:03:10
  -->
 
 <template>
@@ -273,7 +273,7 @@ export default {
      * @return: 
      */
     initData () {
-      this.$emit('formOperation', 'initData')
+      this.$emit('formOperation', {op: 'initData'})
     },
     
     /**

@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-25 21:41:25
- * @LastEditTime: 2019-05-07 16:54:30
+ * @LastEditTime: 2019-06-08 10:58:13
  -->
 <template>
   <el-dialog
@@ -27,7 +27,7 @@
 
         </el-form-item>
 
-        <el-form-item label="是否开启">
+        <el-form-item label="是否显示">
           <el-switch v-model="formData.is_active"></el-switch>
         </el-form-item>
 
@@ -77,7 +77,8 @@
 
         </el-form-item>
 
-        <el-form-item>
+        <el-form-item
+          label="排序">
           <el-input-number v-model="formData.sort"></el-input-number>
         </el-form-item>
 
@@ -170,7 +171,7 @@ export default {
      * @return: 
      */
     initData () {
-      this.$emit('formOperation', 'initData')
+      this.$emit('formOperation', {op: 'initData'})
     },
 
     /**
@@ -205,13 +206,12 @@ export default {
 
           await this.updateData (this.formData, this.opId)
 
-          this.initData()  // 更新表格
-
           this.$message({
-          type: 'success',
+            type: 'success',
           message: '更新成功！'
           })
 
+          this.initData()  // 更新表格
           this.closeForm()
 
         } else {
@@ -233,13 +233,12 @@ export default {
         if (valid) {
           await this.addData (this.formData)
 
-          this.initData()  // 更新表格
-
           this.$message({
             type: 'success',
             message: '添加成功！'
           })
 
+          this.initData()  // 更新表格
           this.closeForm()
 
         } else {

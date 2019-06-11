@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-03-18 11:22:10
- * @LastEditTime: 2019-05-07 14:13:25
+ * @LastEditTime: 2019-06-11 22:27:42
  -->
 
 <template>
@@ -118,7 +118,7 @@ export default {
      * @return: 
      */
     initData () {
-      this.$emit('formOperation', 'initData')
+      this.$emit('formOperation', {op: 'initData'})
     },
 
     /**
@@ -149,11 +149,11 @@ export default {
 
         if (valid) {
 
-          await this.updateData (this.formData, this.opId)
+          let result = await this.updateData (this.formData, this.opId)
 
           this.initData()  // 更新表格
 
-          this.$message({
+          !result.code && this.$message({
           type: 'success',
           message: '更新成功！'
           })

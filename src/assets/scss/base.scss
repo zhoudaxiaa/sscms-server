@@ -18,6 +18,12 @@ html {
   box-sizing: border-box;
 }
 
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
 body {
   height: 100%;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
@@ -25,12 +31,4 @@ body {
 
 label {
   font-weight: bold;
-}
-
-.fl {
-  float: left;
-}
-
-.fr {
-  float: right;
 }

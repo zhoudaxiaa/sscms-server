@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-02-26 09:38:03
- * @LastEditTime: 2019-05-06 21:47:11
+ * @LastEditTime: 2019-06-07 13:04:47
  -->
 
 <template>
@@ -151,7 +151,7 @@ export default {
      * @param {String} id 当前操作的id
      * @return: 
      */
-    formOperation (op, i, id) {
+    formOperation ({op, i, id}) {
       
       this.formOp = op  // 表单操作名称（新增还是更新）
 
@@ -203,8 +203,8 @@ export default {
 
     /**
      * @description: 表单修改操作
-     * @param {Number} 当前操作的表格列的索引（第几个表格数据）
-     * @param {String} 操作的id
+     * @param {Number} i 当前操作的表格列的索引（第几个表格数据）
+     * @param {String} id 操作的id
      * @return: 
      */    
     editDataOp (i, id) {

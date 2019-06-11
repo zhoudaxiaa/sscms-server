@@ -6,13 +6,17 @@
  * @Version: 1.0
  * @LastEditors: zhoudaxiaa
  * @Date: 2019-04-24 22:04:03
- * @LastEditTime: 2019-04-25 22:11:57
+ * @LastEditTime: 2019-05-11 15:51:41
  -->
 <template>
   <el-tree
-    class="category-tree"
+    class="tree-wrap"
+    @check-change="handleSelectionChange"
+    ref="tree"
     show-checkbox
     default-expand-all
+    node-key="id"
+    :check-strictly="true"
     :expand-on-click-node="false"
     :data="tableData"
     :render-content="renderContent">
@@ -35,11 +39,31 @@ export default {
 
     /**
      * @description: 新增分类事件
-     * @param {type} 
+     * @param {Object} data 操作数据对象，element-ui 提供 
      * @return: 
      */    
-    handleAddData () {
-      this.$emit('formOperation', 'addData')
+    handleAddData (data) {
+      this.$emit('formOperation', 'addDataOp', 0, data.id)
+    },
+
+    /**
+     * @description: 修改数据
+     * @param {Object} data 操作数据对象，element-ui 提供 
+     * @return: 
+     */
+    handleEditData (data) {
+      this.$emit('formOperation', 'editDataOp', 0, data.id)
+
+    },
+
+    /**
+     * @description: 删除数据
+     * @param {Object} data 操作数据对象，element-ui 提供 
+     * @return: 
+     */
+    handleDeleteData (data) {
+      this.$emit("selectionOperation", data.id)
+      this.$emit('formOperation', 'deleteDataOp')
     },
 
     /**
@@ -47,37 +71,10 @@ export default {
      * @param {object} 表格数据对象 
      * @return: string id组成的字符串
      */
-    handleSelectionChange (val) {
-      let ids = []
+    handleSelectionChange () {
+      let ids = this.$refs.tree.getCheckedKeys()
 
-      if (val && val.length > 0) {
-        ids = val.map((item, index) => {
-          return item.id;
-        });
-      }
-      
       this.$emit("selectionOperation", ids.join(','));
-    },
-
-    /**
-     * @description: 修改数据
-     * @param {number} i 操作的表格索引 
-     * @return: 
-     */
-    handleEditData (i) {
-
-      this.$emit('formOperation', 'editData', i)
-
-    },
-
-    /**
-     * @description: 删除数据
-     * @param {number} id 要删除的数据id 
-     * @return: 
-     */
-    handleDeleteData (id) {
-      this.$emit("selectionOperation", id)
-      this.$emit('formOperation', 'deleteData')
     },
 
     renderContent(h, { node, data, store }) {
@@ -93,14 +90,14 @@ export default {
               circle>
             </el-button>
             <el-button
-              type="danger"
+              type="success"
               size="mini"
               on-click={ () => this.handleEditData(data) }
               icon="el-icon-edit"
               circle>
             </el-button>
             <el-button
-              type="success"
+              type="danger"
               size="mini"
               on-click={ () => this.handleDeleteData(data) }
               icon="el-icon-delete"
@@ -114,7 +111,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.category-tree {
+.tree-wrap {
+  margin-top: 20px;
   padding: 0 20px;
 
   /deep/ {

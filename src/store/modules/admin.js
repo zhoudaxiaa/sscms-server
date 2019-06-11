@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-20 13:27:38
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-04 23:14:24
+ * @LastEditTime: 2019-06-11 20:35:16
  */
 
 import { getRoleOpResource } from '@/api/role'
@@ -45,6 +45,10 @@ export default {
     // 存储角色资源（不缓存到本地，以备刷新浏览器重新获取角色资源来重新生成动态路由）
     [types.SET_RESOURCE] (state, resource) {
       state.resource = resource
+    },
+
+    [types.DELETE_RESOURCE] (state) {
+      state.resource = null
     },
 
     // 存储并本地缓存管理员头像

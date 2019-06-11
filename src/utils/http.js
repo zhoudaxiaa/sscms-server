@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-19 16:09:11
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-08 10:57:50
+ * @LastEditTime: 2019-06-11 22:02:44
  */
 
 import axios from 'axios'
@@ -65,6 +65,7 @@ server.interceptors.response.use(
       switch (res.code) {
         case 2002: message = '用户名或密码'; break
         case 403: message = '您的权限不足！'; break
+        case 404: message = '数据不存在！'; break
       }
 
       Message.error({ message })
@@ -75,10 +76,8 @@ server.interceptors.response.use(
   },
   err => {
     loading && loading.close();
-
-    console.log(err)
     
-    let message = '未知错误!'
+    let message = '响应超时!'
 
     if (err.response) {
       switch (err.response.status) {

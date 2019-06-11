@@ -6,7 +6,7 @@
  * @Version: 1.0
  * @Date: 2018-12-24 19:43:07
  * @LastEditors: zhoudaxiaa
- * @LastEditTime: 2019-05-05 18:30:24
+ * @LastEditTime: 2019-06-11 20:26:34
  */
 import router, { baseRouter } from '@/router/index.js'
 import { buildRouter } from '@/utils/router.js'  // 构建动态路由方法
@@ -24,7 +24,7 @@ router.beforeEach(async (to, from, next) => {
   
   // 判断是否登录了，没登录就不去获取动态路由
   if (store.state.app.token) {
-    // 判断是否已经获取到了角色资源信息
+    // // 判断是否已经获取到了角色资源信息
     if (store.state.admin.resource === null) {
 
       //没有就去获取角色资源信息（刷新浏览器也重新获取，来重新生成动态路由）
